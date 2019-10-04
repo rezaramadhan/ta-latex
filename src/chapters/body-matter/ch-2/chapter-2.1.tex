@@ -9,9 +9,15 @@ Untuk menangani operasi matematis yang menggunakan bilangan yang lebih besar dar
 \textit{Big integer} sering digunakan pada perhitungan kriptografi, mengingat bahwa perhitungan kriptografi membutuhkan bilangan yang besar agar kunci yang digunakan aman. Untuk implementasi kriptografi yang aman, disarankan untuk menggunakan kunci sebesar 256bit untuk AES dan kunci sebesar 1024 bit untuk RSA \citep{key_suggestion}, lebih besar dari jumlah bit yang dimiliki oleh ALU. Selain perhitungan kriptografi, big number juga umum digunakan untuk menghitung nilai konstanta matematis seperti $\pi$ \citep{bn_pi}, .
 % \blindtext
 \subsection{Struktur Big Integer}
-% Representasi logical
+
+Big integer memiliki dua representasi yang umum digunakan, yaitu Fixed Radix Number Systems (FRNS) dan Residue Number Systems (RNS). FRNS merupakan representasi bilangan dimana bilangan dituliskan sebagai penjumlahan dari komponen-komponennya \citep{modern_comp_math}. Sebuah RNS memiliki himpunan $H$ yang memiliki elemen bilangan bulat $\{m_1,m_2,...,m_p\}$, representasi integer $X$ adalah sebuah himpunan $H_x$ dimana elemennya adalah $X \mod m_i$ \citep{rns_survey}. Subbab \ref{frns} menjelaskan lebih lanjut mengenai FRNS, sementara RNS dijelaskan lebih jauh pada subbab \ref{rns}.
+
+Penggunaan RNS maupun FRNS masing-masing memiliki kekurangan dan kelebihan yang berbeda. Pendekatan berbasis komponen pada RNS menyebabkan operasi aritmatika pada RNS dapat dijalankan secara paralel, dengan tidak adanya ketergantungan untuk masing-masing elemen himpunan. Namun, beberapa operasi aritmatika dasar seperti pembagian dan perbandingan antar dua bilangan akan menjadi lebih lambat \citep{gpu_bignum}.
+
+\subsubsection{Fixed Radix Number Systems} \label{frns}
+
 \citet{modern_comp_math} menyatakan bahwa sebuah bilangan bulat dapat direpresentasikan sebagai penjumlahan dari komponen-komponennya. Jika kita memilih sebuah bilangan bulat positif $\beta$ sebagai basis dengan $\beta > 1 $ semua bilangan bulat positif $A$ berbasis $\beta$ yang memiliki panjang $n$ dapat dituliskan sebagai:
-\begin{equation}
+\begin{equation} \label{eq:frns_rep}
   A = \alpha_{n-1}\beta^{n-1}+...+\alpha_{1}\beta+\alpha_{0}
 \end{equation}
 dengan $0 \leq \alpha \leq \beta -1$.
@@ -20,22 +26,84 @@ Representasi integer positif di komputer 64 bit menggunakan $\beta = 2$ dan $n =
 
 % Physical yang umum, array
 % masuk bab 3?
-Representasi ideal big integer pada komputer adalah menggunakan list of integer atau array of integer. Penggunaan list menyebabkan big integer tidak memiliki nilai maksimum, sementara itu penggunaan array membuat akses nilai yang tersimpan lebih cepat. Dengan demikian, penggunaan array of integer lebih umum digunakan untuk merepresentasikan big integer. Ilustrasi array of integer yang merepresentasikan big integer dapat dilihat pada Gambar XXX. 
+Representasi ideal big integer pada komputer adalah menggunakan list of integer atau array of integer. Penggunaan list menyebabkan big integer tidak memiliki nilai maksimum, sementara itu penggunaan array membuat akses nilai yang tersimpan lebih cepat. Dengan demikian, penggunaan array of integer lebih umum digunakan untuk merepresentasikan big integer. Ilustrasi array of integer yang merepresentasikan big integer dapat dilihat pada Gambar XXX.
 \colorbox{BurntOrange}{Tambahin gambar disini, kotak2 array biasa aja}
 % \blindtext
-\subsection{Operasi}
+\subsubsection{Residue Number Systems} \label{rns}
+\citet{rns_survey} menyatakan bahwa RNS memiliki sebuah himpunan bilangan bulat relatif prima $\{m_1,m_2,...,m_p\}$. Nilai terbesar yang dapat direpresentasikan oleh RNS adalah sebesar $M$, dimana
+
+\begin{equation}
+  M = m_1 * m_2 * ... * m_p
+\end{equation}
+
+Sebuah bilangan bulat $X$ memiliki sebuah representasi RNS ${x_1,x_2,...,x_p}$ dengan $X_i$ adalah
+
+\begin{equation}
+  X_i = X mod m_i
+\end{equation}
+
+\colorbox{BurntOrange}{Tambahin penjelasan lebih jauh tentang Chinese Remainder Theorem disini}
+
+\subsection{Operasi Aritmatika}
 % \blindtext
-\subsubsection{Penjumlahan dan Penguragan}
-% \blindtext
+Proses operasi aritmatika yang dilakukan dalam representasi FRNS dan RNS berbeda. Karena itu, subbab \ref{add_sub_theory} sampai subbab \ref{mod_mul_theory} akan membahas bagaimana setiap operasi aritmatika dilakukan pada masing-masing operasi.
+
+\subsubsection{Penjumlahan dan Penguragan} \label{add_sub_theory}
+\subparagraph{Representasi FRNS}
+
+Operasi penjumlahan dan pengurangan pada FRNS dilakukan dengan cara penjumlahan dan pengurangan manual oleh tangan. Merujuk pada persamaan \ref{eq:frns_rep}, proses penjumlahan dan pengurangan dilakukan dari $\alpha_0$ hingga $\alpha_{n-1}$ dengan menggunakan bilangan \textit{carry over} dan \textit{borrow} jika dibutuhkan.
+
+Untuk penjumlahan dan pengurangan dua bilangan $A = a_{n-1}\beta^{n-1}+...+a_{1}\beta+a_{0}$ dan $B = b_{n-1}\beta^{n-1}+...+b_{1}\beta+b_{0}$, akan dihasilkan bilangan $C = c_{n-1}\beta^{n-1}+...+c_{1}\beta+c_{0}$. Algoritma yang dapat digunakan untuk menghitung C adalah
+\begin{lstlisting}[basicstyle=\footnotesize\rmfamily]
+  C := add(A, B) {
+    carry := 0
+    iterate 0 to n as i:
+      c := carry + a$_i$ + b$_i$
+      carry := c div beta
+      c$_i$ := c mod beta
+
+    return C, carry
+  }
+
+  C := sub(A, B) { //A - B
+    if a is bigger than b {
+      iterate 0 to n as i:
+        c := a$_i$ - b$_i$ - d
+        carry := c div beta
+        c$_i$ := c mod beta
+
+      return C, carry
+    } else {
+      C := -1 * sub(B, A)
+    }
+
+  }
+\end{lstlisting}
+
+% Cek lagi pengurangan. Ga yakin..
+
+\subparagraph{Representasi RNS}
+
+\citet{rns_sharoun} menyatakan bahwa dalam sistem RNS dengan elemen $\{m_1,m_2,...,m_p\}$, penjumlahan dan pengurangan dua bilangan $A$ dan $B$ yang memiliki representasi RNS $\{b_1,b_2,...,b_p\}$ dan $\{b_1,b_2,...,b_p\}$,  menghasilkan $C$ yang memiliki representasi $\{c_1,c_2,...,c_p\}$ dengan nilai $c_i$ sebagai berikut
+\begin{equation}
+    c_i = (a_i \pm b_i) \mod m_i
+\end{equation}
+
+
 \subsubsection{Perkalian}
-% \blindtext
+
+\subparagraph{Representasi FRNS}
+
+\subparagraph{Representasi RNS}
+
 \subsubsection{Pembagian}
+
+\subparagraph{Representasi FRNS}
+
+\subparagraph{Representasi RNS}
+
+\subsubsection{Perpangkatan}
 % \blindtext
 \subsubsection{Modulo}
 % \blindtext
-\subsubsection{Perpangkatan}
-% \blindtext
-\subsubsection{Perkalian Modulo}
-% \blindtext
-\subsubsection{GCD}
-% \blindtext
+\subsubsection{Perkalian Modulo} \label{mod_mul_theory}
