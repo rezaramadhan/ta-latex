@@ -17,6 +17,6 @@
 texmf
 thesis.pdf
 .directory
-output/*
-build/*
+output/
+build/
 natbib_references.pdf

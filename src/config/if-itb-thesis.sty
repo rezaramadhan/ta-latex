@@ -80,9 +80,27 @@
 
 % Listing Code
 % \lstnewenvironment{code}[][]{
-%     \renewcommand\lstlistingname{Algorithm}
-%     \setcounter{lstlisting}{\value{algorithm}}
-%
+%     \renewcommand{\lstlistingname}{Source Code}
+%     % \setcounter{lstlisting}{\value{code}}
+%     \lstset{
+%         belowcaptionskip=\baselineskip,
+%         breaklines=true,
+%         frame=L,
+%         xleftmargin=40pt,
+%         framexleftmargin=10pt,
+%         numbersep=20pt,
+%         numbers=left,
+%         stepnumber=1,
+%         language=C,
+%         % showstringspaces=false,
+%         % basicstyle=\footnotesize,
+%         basicstyle=\footnotesize\ttfamily,
+%         keywordstyle=\bfseries\color{green!40!black},
+%         commentstyle=\itshape\color{purple!40!black},
+%         stringstyle=\color{orange},
+%         mathescape=true,
+%         literate={:=}{$\leftarrow{}$}{1}{beta}{$\beta$}{1},
+%     }
 % }{}
 
 \lstset{
@@ -95,7 +113,6 @@
     numbers=left,
     stepnumber=1,
     language=C,
-    % showstringspaces=false,
     % basicstyle=\footnotesize,
     basicstyle=\footnotesize\ttfamily,
     keywordstyle=\bfseries\color{green!40!black},
@@ -122,7 +139,9 @@
 \titlespacing*{\chapter}{0pt}{-25pt}{40pt}
 
 % Setting nomor pada subbsubsubbab
-\setcounter{secnumdepth}{4}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+
 
 \titleformat{\paragraph}
 {\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
