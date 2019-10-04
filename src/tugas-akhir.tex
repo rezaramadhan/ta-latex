@@ -1,0 +1,123 @@
+%--------------------------------------------------------------------%
+%
+% Berkas utama templat LaTeX.
+%
+% author Petra Barus, Peb Ruswono Aryan
+%
+%--------------------------------------------------------------------%
+%
+% Berkas ini berisi struktur utama dokumen LaTeX yang akan dibuat.
+%
+%--------------------------------------------------------------------%
+
+\documentclass[11pt, a4paper, onecolumn, oneside, final]{book}
+
+\input{config/if-itb-thesis.sty}
+%
+% \makeatletter
+%
+% \makeatother
+
+\begin{document}
+    
+    %-------------------------------------------------------------------------%
+    % Basic Configuration
+    %-------------------------------------------------------------------------%
+    \title{Paralelisasi Library big integer pada Transport Layer Security (TLS) Handshake}
+    \date{Oktober 2018}
+    \author{
+        Muhammad Reza Ramadhan \\
+        NIM: 13514107
+    }
+
+
+    %-------------------------------------------------------------------------%
+    % Front Matter
+    %-------------------------------------------------------------------------%
+    \frontmatter
+    \input{chapters/front-matter/cover}
+    \input{chapters/front-matter/approval}
+    % \input{chapters/front-matter/statement}
+
+    \pagestyle{plain}
+
+    % \input{chapters/front-matter/abstract-id}
+    % \input{chapters/front-matter/abstract-en}
+    % \input{chapters/front-matter/forewords}
+
+    \titleformat*{\section}{\centering\bfseries\Large\MakeUpperCase}
+
+    %-------------------------------------------------------------------------%
+    % Daftar Isi, Tabel & Gambar
+    %-------------------------------------------------------------------------%
+    \addcontentsline{toc}{chapter}{DAFTAR ISI}
+    \afterpage{\null\newpage}
+    {\tableofcontents}
+
+    {
+        \let\oldnumberline\numberline
+        \renewcommand{\numberline}{\figurename~\oldnumberline}
+        \listoffigures
+    }
+    \addcontentsline{toc}{chapter}{DAFTAR GAMBAR}
+
+    {
+        \let\oldnumberline\numberline
+        \renewcommand{\numberline}{\tablename~\oldnumberline}
+        \listoftables
+    }
+    \addcontentsline{toc}{chapter}{DAFTAR TABEL}
+    %-------------------------------------------------------------------------%
+    % Konfigurasi Bab
+    %-------------------------------------------------------------------------%
+    \renewcommand{\chaptername}{BAB}
+    \renewcommand{\thechapter}{\Roman{chapter}}
+
+    \titleformat*{\section}{\bfseries\large}
+    \mainmatter
+
+
+    % -------------------------------------------------------------------------%
+    % Daftar BAB
+    % -------------------------------------------------------------------------%
+    \input{chapters/body-matter/chapter-1}
+    \input{chapters/body-matter/chapter-2}
+    \input{chapters/body-matter/chapter-3}
+    \input{chapters/body-matter/chapter-4}
+    \input{chapters/body-matter/chapter-5}
+
+    % -------------------------------------------------------------------------%
+    % Daftar Pustaka
+    % -------------------------------------------------------------------------%
+    % Bibliography to Daftar Pustaka
+    \renewcommand{\bibname}{Daftar Pustaka}
+    \cleardoublepage
+    \phantomsection
+    \addcontentsline{toc}{chapter}{DAFTAR PUSTAKA}
+    \bibliography{references}
+
+
+    %-------------------------------------------------------------------------%
+    % Index
+    %-------------------------------------------------------------------------%
+    \backmatter
+    \appendix
+    % \addtocontents{toc}{\protect\setcounter{tocdepth}{-1}}
+
+    \cleardoublepage
+    \phantomsection
+    \part*{Lampiran}
+    \addcontentsline{toc}{part}{LAMPIRAN}
+
+    % Setting judul appendix
+    \chapterfont{\Large}
+    \titleformat{\chapter}[hang]
+      {\Large\bfseries}
+      {\chaptertitlename\ \thechapter.\ }{0pt}
+        {\Large\bfseries}
+    \titlespacing*{\chapter}{0pt}{-25pt}{10pt}
+
+    \input{chapters/back-matter/appendix-1}
+    \input{chapters/back-matter/appendix-2}
+
+\end{document}
