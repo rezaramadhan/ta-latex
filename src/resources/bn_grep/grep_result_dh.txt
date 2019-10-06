@@ -1,0 +1,160 @@
+grep -rE BN_sub\(.+\) openssl/crypto/dh
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_usub\(.+\) openssl/crypto/dh
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_uadd\(.+\) openssl/crypto/dh
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_add\(.+\) openssl/crypto/dh
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mul\(.+\) openssl/crypto/dh
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_sqr\(.+\) openssl/crypto/dh
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_div\(.+\) openssl/crypto/dh
+openssl/crypto/dh/dh_check.c:        if (!BN_div(t1, t2, dh->p, dh->q, ctx))
+Jumlah Penggunaan: 1
+
+
+grep -rE BN_mod\(.+\) openssl/crypto/dh
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_nnmod\(.+\) openssl/crypto/dh
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_add\(.+\) openssl/crypto/dh
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_add_quick\(.+\) openssl/crypto/dh
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_sub\(.+\) openssl/crypto/dh
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_sub_quick\(.+\) openssl/crypto/dh
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_mul\(.+\) openssl/crypto/dh
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_sqr\(.+\) openssl/crypto/dh
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_lshift1\(.+\) openssl/crypto/dh
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_lshift1_quick\(.+\) openssl/crypto/dh
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_lshift\(.+\) openssl/crypto/dh
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_lshift_quick\(.+\) openssl/crypto/dh
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_word\(.+\) openssl/crypto/dh
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_div_word\(.+\) openssl/crypto/dh
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mul_word\(.+\) openssl/crypto/dh
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_add_word\(.+\) openssl/crypto/dh
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_sub_word\(.+\) openssl/crypto/dh
+openssl/crypto/dh/dh_check.c:    if (BN_copy(tmp, dh->p) == NULL || !BN_sub_word(tmp, 1))
+openssl/crypto/dh/dh_check.c:    if (BN_copy(tmp, dh->p) == NULL || !BN_sub_word(tmp, 1))
+Jumlah Penggunaan: 2
+
+
+grep -rE BN_get_word\(.+\) openssl/crypto/dh
+openssl/crypto/dh/dh_rfc7919.c:    if (BN_get_word(dh->g) != 2)
+Jumlah Penggunaan: 1
+
+
+grep -rE BN_exp\(.+\) openssl/crypto/dh
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_exp\(.+\) openssl/crypto/dh
+openssl/crypto/dh/dh_check.c:            if (!BN_mod_exp(t1, dh->g, dh->q, dh->p, ctx))
+openssl/crypto/dh/dh_check.c:        if (!BN_mod_exp(tmp, pub_key, dh->q, dh->p, ctx))
+Jumlah Penggunaan: 2
+
+
+grep -rE BN_mod_exp_mont\(.+\) openssl/crypto/dh
+openssl/crypto/dh/dh_key.c:    return BN_mod_exp_mont(r, a, p, m, ctx, m_ctx);
+Jumlah Penggunaan: 1
+
+
+grep -rE BN_mod_exp_mont_consttime\(.+\) openssl/crypto/dh
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_exp_mont_word\(.+\) openssl/crypto/dh
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_exp2_mont\(.+\) openssl/crypto/dh
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_exp_simple\(.+\) openssl/crypto/dh
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_mul_montgomery\(.+\) openssl/crypto/dh
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_mul_reciprocal\(.+\) openssl/crypto/dh
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_exp_recp\(.+\) openssl/crypto/dh
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_div_recp\(.+\) openssl/crypto/dh
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_inverse\(.+\) openssl/crypto/dh
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_sqrt\(.+\) openssl/crypto/dh
+Jumlah Penggunaan: 0
+
+
+Total Penggunaan: 7

@@ -126,6 +126,18 @@
 
 
 
+\usepackage{fancyvrb}
+\usepackage{relsize}
+% redefine \VerbatimInput
+\RecustomVerbatimCommand{\VerbatimInput}{VerbatimInput}{
+  fontsize=\relsize{-2},
+  baselinestretch=0.75,
+  frame=lines,  % top and bottom rule only
+  framesep=1.5em, % separation between frame and text
+  labelposition=topline,
+}
+
+
 
 % Add comma between Author and Year
 %\renewcommand*{\nameyeardelim}{\addcomma\space}

@@ -1,0 +1,221 @@
+grep -rE BN_sub\(.+\) openssl/crypto/rsa
+openssl/crypto/rsa/rsa_ossl.c:        if (!BN_sub(f, rsa->n, ret))
+openssl/crypto/rsa/rsa_ossl.c:        if (!BN_sub(ret, rsa->n, ret))
+openssl/crypto/rsa/rsa_ossl.c:    if (!BN_sub(r0, r0, m1))
+openssl/crypto/rsa/rsa_ossl.c:            if (!BN_sub(r1, m[i], r0)) {
+openssl/crypto/rsa/rsa_ossl.c:        if (!BN_sub(vrfy, vrfy, I))
+openssl/crypto/rsa/rsa_chk.c:    if (!BN_sub(i, key->p, BN_value_one())) {
+openssl/crypto/rsa/rsa_chk.c:    if (!BN_sub(j, key->q, BN_value_one())) {
+openssl/crypto/rsa/rsa_chk.c:        if (!BN_sub(k, pinfo->r, BN_value_one())) {
+openssl/crypto/rsa/rsa_chk.c:        if (!BN_sub(i, key->p, BN_value_one())) {
+openssl/crypto/rsa/rsa_chk.c:        if (!BN_sub(i, key->q, BN_value_one())) {
+openssl/crypto/rsa/rsa_chk.c:        if (!BN_sub(i, pinfo->r, BN_value_one())) {
+openssl/crypto/rsa/rsa_gen.c:            if (!BN_sub(r2, prime, BN_value_one()))
+openssl/crypto/rsa/rsa_gen.c:    if (!BN_sub(r1, rsa->p, BN_value_one()))
+openssl/crypto/rsa/rsa_gen.c:    if (!BN_sub(r2, rsa->q, BN_value_one()))
+openssl/crypto/rsa/rsa_gen.c:        if (!BN_sub(pinfo->d, pinfo->r, BN_value_one()))
+openssl/crypto/rsa/rsa_crpt.c:    if (!BN_sub(r1, p, BN_value_one()))
+openssl/crypto/rsa/rsa_crpt.c:    if (!BN_sub(r2, q, BN_value_one()))
+openssl/crypto/rsa/rsa_x931g.c:    if (!BN_sub(r1, rsa->p, BN_value_one()))
+openssl/crypto/rsa/rsa_x931g.c:    if (!BN_sub(r2, rsa->q, BN_value_one()))
+Jumlah Penggunaan: 19
+
+
+grep -rE BN_usub\(.+\) openssl/crypto/rsa
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_uadd\(.+\) openssl/crypto/rsa
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_add\(.+\) openssl/crypto/rsa
+openssl/crypto/rsa/rsa_ossl.c:        if (!BN_add(r0, r0, rsa->p))
+openssl/crypto/rsa/rsa_ossl.c:        if (!BN_add(r0, r0, rsa->p))
+openssl/crypto/rsa/rsa_ossl.c:    if (!BN_add(r0, r1, m1))
+openssl/crypto/rsa/rsa_ossl.c:                if (!BN_add(r1, r1, pinfo->r)) {
+openssl/crypto/rsa/rsa_ossl.c:            if (!BN_add(r0, r0, r1)) {
+openssl/crypto/rsa/rsa_ossl.c:            if (!BN_add(vrfy, vrfy, rsa->n))
+Jumlah Penggunaan: 6
+
+
+grep -rE BN_mul\(.+\) openssl/crypto/rsa
+openssl/crypto/rsa/rsa_ossl.c:    if (!BN_mul(r1, r0, rsa->iqmp, ctx))
+openssl/crypto/rsa/rsa_ossl.c:    if (!BN_mul(r1, r0, rsa->q, ctx))
+openssl/crypto/rsa/rsa_ossl.c:            if (!BN_mul(r2, r1, pinfo->t, ctx)) {
+openssl/crypto/rsa/rsa_ossl.c:            if (!BN_mul(r1, r1, pinfo->pp, ctx)) {
+openssl/crypto/rsa/rsa_chk.c:    if (!BN_mul(i, key->p, key->q, ctx)) {
+openssl/crypto/rsa/rsa_chk.c:        if (!BN_mul(i, i, pinfo->r, ctx)) {
+openssl/crypto/rsa/rsa_chk.c:    if (!BN_mul(l, i, j, ctx)) {
+openssl/crypto/rsa/rsa_chk.c:        if (!BN_mul(l, l, k, ctx)) {
+openssl/crypto/rsa/rsa_gen.c:            if (!BN_mul(r1, rsa->p, rsa->q, ctx))
+openssl/crypto/rsa/rsa_gen.c:            if (!BN_mul(r1, rsa->n, prime, ctx))
+openssl/crypto/rsa/rsa_gen.c:    if (!BN_mul(r0, r1, r2, ctx))
+openssl/crypto/rsa/rsa_gen.c:        if (!BN_mul(r0, r0, pinfo->d, ctx))
+openssl/crypto/rsa/rsa_crpt.c:    if (!BN_mul(r0, r1, r2, ctx))
+openssl/crypto/rsa/rsa_x931g.c:    if (!BN_mul(rsa->n, rsa->p, rsa->q, ctx))
+openssl/crypto/rsa/rsa_x931g.c:    if (!BN_mul(r0, r1, r2, ctx))
+openssl/crypto/rsa/rsa_mp.c:        if (!BN_mul(pinfo->pp, p1, p2, ctx))
+Jumlah Penggunaan: 16
+
+
+grep -rE BN_sqr\(.+\) openssl/crypto/rsa
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_div\(.+\) openssl/crypto/rsa
+openssl/crypto/rsa/rsa_chk.c:    if (!BN_div(k, NULL, l, m, ctx)) { /* remainder is 0 */
+openssl/crypto/rsa/rsa_x931g.c:    if (!BN_div(r0, NULL, r0, r3, ctx))
+Jumlah Penggunaan: 2
+
+
+grep -rE BN_mod\(.+\) openssl/crypto/rsa
+openssl/crypto/rsa/rsa_ossl.c:        if (!BN_mod(r1, c, rsa->q, ctx)) {
+openssl/crypto/rsa/rsa_ossl.c:        if (!BN_mod(r1, c, rsa->p, ctx)) {
+openssl/crypto/rsa/rsa_ossl.c:            if (!BN_mod(r1, cc, pinfo->r, ctx)) {
+openssl/crypto/rsa/rsa_ossl.c:        if (!BN_mod(r0, pr1, rsa->p, ctx)) {
+openssl/crypto/rsa/rsa_ossl.c:            if (!BN_mod(r1, pr2, pinfo->r, ctx)) {
+openssl/crypto/rsa/rsa_ossl.c:        if (!BN_mod(vrfy, vrfy, rsa->n, ctx))
+openssl/crypto/rsa/rsa_chk.c:        if (!BN_mod(j, key->d, i, ctx)) {
+openssl/crypto/rsa/rsa_chk.c:        if (!BN_mod(j, key->d, i, ctx)) {
+openssl/crypto/rsa/rsa_chk.c:        if (!BN_mod(j, key->d, i, ctx)) {
+openssl/crypto/rsa/rsa_gen.c:        if (!BN_mod(rsa->dmp1, d, r1, ctx)
+openssl/crypto/rsa/rsa_gen.c:            || !BN_mod(rsa->dmq1, d, r2, ctx)) {
+openssl/crypto/rsa/rsa_gen.c:            if (!BN_mod(pinfo->d, d, pinfo->d, ctx)) {
+openssl/crypto/rsa/rsa_x931g.c:    if (!BN_mod(rsa->dmp1, rsa->d, r1, ctx))
+openssl/crypto/rsa/rsa_x931g.c:    if (!BN_mod(rsa->dmq1, rsa->d, r2, ctx))
+Jumlah Penggunaan: 14
+
+
+grep -rE BN_nnmod\(.+\) openssl/crypto/rsa
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_add\(.+\) openssl/crypto/rsa
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_add_quick\(.+\) openssl/crypto/rsa
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_sub\(.+\) openssl/crypto/rsa
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_sub_quick\(.+\) openssl/crypto/rsa
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_mul\(.+\) openssl/crypto/rsa
+openssl/crypto/rsa/rsa_chk.c:    if (!BN_mod_mul(i, key->d, key->e, k, ctx)) {
+Jumlah Penggunaan: 1
+
+
+grep -rE BN_mod_sqr\(.+\) openssl/crypto/rsa
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_lshift1\(.+\) openssl/crypto/rsa
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_lshift1_quick\(.+\) openssl/crypto/rsa
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_lshift\(.+\) openssl/crypto/rsa
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_lshift_quick\(.+\) openssl/crypto/rsa
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_word\(.+\) openssl/crypto/rsa
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_div_word\(.+\) openssl/crypto/rsa
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mul_word\(.+\) openssl/crypto/rsa
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_add_word\(.+\) openssl/crypto/rsa
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_sub_word\(.+\) openssl/crypto/rsa
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_get_word\(.+\) openssl/crypto/rsa
+openssl/crypto/rsa/rsa_gen.c:        bitst = BN_get_word(r2);
+Jumlah Penggunaan: 1
+
+
+grep -rE BN_exp\(.+\) openssl/crypto/rsa
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_exp\(.+\) openssl/crypto/rsa
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_exp_mont\(.+\) openssl/crypto/rsa
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_exp_mont_consttime\(.+\) openssl/crypto/rsa
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_exp_mont_word\(.+\) openssl/crypto/rsa
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_exp2_mont\(.+\) openssl/crypto/rsa
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_exp_simple\(.+\) openssl/crypto/rsa
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_mul_montgomery\(.+\) openssl/crypto/rsa
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_mul_reciprocal\(.+\) openssl/crypto/rsa
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_exp_recp\(.+\) openssl/crypto/rsa
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_div_recp\(.+\) openssl/crypto/rsa
+Jumlah Penggunaan: 0
+
+
+grep -rE BN_mod_inverse\(.+\) openssl/crypto/rsa
+openssl/crypto/rsa/rsa_chk.c:        if (!BN_mod_inverse(i, key->q, key->p, ctx)) {
+openssl/crypto/rsa/rsa_chk.c:        if (!BN_mod_inverse(i, pinfo->pp, pinfo->r, ctx)) {
+openssl/crypto/rsa/rsa_gen.c:            if (BN_mod_inverse(r1, r2, rsa->e, ctx) != NULL) {
+openssl/crypto/rsa/rsa_gen.c:        if (!BN_mod_inverse(rsa->d, rsa->e, pr0, ctx)) {
+openssl/crypto/rsa/rsa_gen.c:        if (!BN_mod_inverse(rsa->iqmp, rsa->q, p, ctx)) {
+openssl/crypto/rsa/rsa_gen.c:            if (!BN_mod_inverse(pinfo->t, pinfo->pp, p, ctx)) {
+openssl/crypto/rsa/rsa_crpt.c:    ret = BN_mod_inverse(NULL, d, r0, ctx);
+openssl/crypto/rsa/rsa_x931g.c:    rsa->d = BN_mod_inverse(NULL, rsa->e, r0, ctx2); /* d */
+openssl/crypto/rsa/rsa_x931g.c:    rsa->iqmp = BN_mod_inverse(NULL, rsa->q, rsa->p, ctx2);
+Jumlah Penggunaan: 9
+
+
+grep -rE BN_mod_sqrt\(.+\) openssl/crypto/rsa
+Jumlah Penggunaan: 0
+
+
+Total Penggunaan: 68
