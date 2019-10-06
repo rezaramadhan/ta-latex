@@ -4,14 +4,15 @@
 Komputasi paralel adalah sebuah mode komputasi dimana banyak komputasi dijalankan pada waktu yang sama \citep{highly_parallel_computing}. Sebuah proses pada komputasi paralel biasanya dibagi menjadi beberapa subproses kecil yang akan dijalankan secara independen. Sebuah proses kecil tersebut biasa dipanggil \textit{job}, dan pembagian sebuah proses menjadi job merupakan tantangan utama dalam pemrograman paralel.
 
 % Kenapa butuh -> perkembangan processor ke arah sana
-Pada awalnya, komputasi paralel hanya digunakan pada superkomputer mengingat keperluan \textit{hardware} yang tinggi yang diperlukan untuk melakukan komputasi paralel. Namun, setelah IBM memperkenalkan IBM POWER4, sebuah processor multicore pertama pada tahun 2001, komputasi paralel dapat dilakukan oleh komputer komersial umum. Intel Platinum D yang diluncurkan pada tahun 2005 merupakan awal dari jajaran multicore processor yang sekarang sudah umum digunakan pada laptop, komputer dekstop, ataupun smartphone yang kita gunakan.
+Pada awalnya, komputasi paralel hanya digunakan pada superkomputer mengingat keperluan \textit{hardware} yang tinggi yang diperlukan untuk melakukan komputasi paralel. Namun, setelah IBM memperkenalkan IBM POWER4, sebuah processor multicore pertama pada tahun 2001, komputasi paralel dapat dilakukan oleh komputer komersial umum. Intel Platinum D yang diluncurkan pada tahun 2005 merupakan awal dari jajaran multicore processor yang sekarang sudah umum digunakan pada laptop, komputer dekstop, ataupun smartphone yang kita gunakan. \todo{tambahin kutipan}
 
-Perkembangan processor pada dua dekade ke belakang berfokus ke pembuatan jumlah core yang banyak dibandingkan dengan perkembagan kinerja dari single core. Pada tahun 1986 hingga 2002, kinerja single core processor meningkat 50\% per tahun \citep{comp_arch_patterson}. Sementara itu, peningkatan kinerja single core dari tahun 2002 hanya meningkat sebesar 20\% \citep{intro_parallel} dan akan semakin berkurang pada setiap tahunnya. \textit{\textbf{Tambahin data dari rilis intel CPU, kenapa berkurang,  pake batas jumlah silicon/mm}}
+Perkembangan processor pada dua dekade ke belakang berfokus ke pembuatan jumlah core yang banyak dibandingkan dengan perkembagan kinerja dari single core. Pada tahun 1986 hingga 2002, kinerja single core processor meningkat 50\% per tahun \citep{comp_arch_patterson}. Sementara itu, peningkatan kinerja single core dari tahun 2002 hanya meningkat sebesar 20\% \citep{intro_parallel} dan akan semakin berkurang pada setiap tahunnya. \todo{Tambahin data dari performance increase / intel CPU}
+
 
 % Kelebihan
-Komputasi paralel biasa digunakan untuk memroses banyak data yang tidak berkaitan satu sama lain. Karena itulah komputasi paralel banyak digunakan pada bidang kecerdasan buatan untuk melakukan \textit{training} pada model yang dibutuhkan. Selain pemrosesan data, komputasi paralel unggul dalam melakukan komputasi aritmatika sederhana seperti perhitungan vektor dalam \textit{3D rendering}. Komputasi paralel juga banyak digunakan dalam komputasi pelipatan protein, permodelan iklim, pembuatan obat, serta penelitian energi \citep{intro_parallel}.
+Komputasi paralel biasa digunakan untuk memroses banyak data yang tidak berkaitan satu sama lain. Karena itulah komputasi paralel banyak digunakan pada bidang kecerdasan buatan untuk melakukan \textit{training} pada model yang dibutuhkan. Selain pemrosesan data, komputasi paralel unggul dalam melakukan komputasi aritmatika sederhana seperti perhitungan vektor dalam \textit{3D rendering}. Komputasi paralel juga banyak digunakan dalam komputasi pelipatan protein, permodelan iklim, pembuatan obat, serta penelitian energi \citep{intro_parallel}. \todo{tambahin kutipan}
 
-\textit{\textbf{Tambahin ngutip diatas}}
+
 
 Level paralel programming, ada yang dihardcore di Hardware, ada yang harus via software
 \subsection{Pemrograman Paralel pada Tingkat Hardware}

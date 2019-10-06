@@ -27,7 +27,7 @@ Representasi integer positif di komputer 64 bit menggunakan $\beta = 2$ dan $n =
 % Physical yang umum, array
 % masuk bab 3?
 Representasi ideal big integer pada komputer adalah menggunakan list of integer atau array of integer. Penggunaan list menyebabkan big integer tidak memiliki nilai maksimum, sementara itu penggunaan array membuat akses nilai yang tersimpan lebih cepat. Dengan demikian, penggunaan array of integer lebih umum digunakan untuk merepresentasikan big integer. Ilustrasi array of integer yang merepresentasikan big integer dapat dilihat pada Gambar XXX.
-\colorbox{BurntOrange}{Tambahin gambar disini, kotak2 array biasa aja}
+\missingfigure{kotak2 array biasa aja}
 % \blindtext
 \subsubsection{Residue Number Systems} \label{rns}
 \citet{rns_survey} menyatakan bahwa RNS memiliki sebuah himpunan bilangan bulat relatif prima $\{m_1,m_2,...,m_p\}$. Nilai terbesar yang dapat direpresentasikan oleh RNS adalah sebesar $M$, dimana
@@ -42,7 +42,7 @@ Sebuah bilangan bulat $X$ memiliki sebuah representasi RNS ${x_1,x_2,...,x_p}$ d
   X_i = X mod m_i
 \end{equation}
 
-\colorbox{BurntOrange}{Tambahin penjelasan lebih jauh tentang Chinese Remainder Theorem disini}
+\todo[inline]{Tambahin penjelasan lebih jauh tentang Chinese Remainder Theorem disini}
 
 \subsection{Operasi Aritmatika}
 % \blindtext
@@ -55,7 +55,7 @@ Operasi penjumlahan dan pengurangan pada FRNS dilakukan dengan cara penjumlahan 
 
 Untuk penjumlahan dan pengurangan dua bilangan $A = a_{n-1}\beta^{n-1}+...+a_{1}\beta+a_{0}$ dan $B = b_{n-1}\beta^{n-1}+...+b_{1}\beta+b_{0}$, akan dihasilkan bilangan $C = c_{n-1}\beta^{n-1}+...+c_{1}\beta+c_{0}$. Algoritma yang dapat digunakan untuk menghitung C adalah
 
-\begin{lstlisting}[basicstyle=\footnotesize\rmfamily]
+\begin{lstlisting}[basicstyle=\linespread{1.25}\footnotesize\rmfamily]
   C := add(A, B) {
     carry := 0
     iterate 0 to n as i:
