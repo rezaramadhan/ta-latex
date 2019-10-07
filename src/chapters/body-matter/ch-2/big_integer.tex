@@ -10,11 +10,11 @@ Untuk menangani operasi matematis yang menggunakan bilangan yang lebih besar dar
 % \blindtext
 \subsection{Struktur Big Integer}
 
-Big integer memiliki dua representasi yang umum digunakan, yaitu Fixed Radix Number Systems (FRNS) dan Residue Number Systems (RNS). FRNS merupakan representasi bilangan dimana bilangan dituliskan sebagai penjumlahan dari komponen-komponennya \citep{modern_comp_math}. Sebuah RNS memiliki himpunan $H$ yang memiliki elemen bilangan bulat $\{m_1,m_2,...,m_p\}$, representasi integer $X$ adalah sebuah himpunan $H_x$ dimana elemennya adalah $X \mod m_i$ \citep{rns_survey}. Subbab \ref{frns} menjelaskan lebih lanjut mengenai FRNS, sementara RNS dijelaskan lebih jauh pada subbab \ref{rns}.
+Big integer memiliki dua representasi yang umum digunakan, yaitu Fixed Radix Number Systems (FRNS) dan Residue Number Systems (RNS). FRNS merupakan representasi bilangan dimana bilangan dituliskan sebagai penjumlahan dari komponen-komponennya \citep{modern_comp_math}. Sebuah RNS memiliki himpunan $H$ yang memiliki elemen bilangan bulat $\{m_1,m_2,...,m_p\}$, representasi integer $X$ adalah sebuah himpunan $H_x$ dimana elemennya adalah $X \mod m_i$ \citep{rns_survey}. Subbab \ref{sec:frns} menjelaskan lebih lanjut mengenai FRNS, sementara RNS dijelaskan lebih jauh pada subbab \ref{sec:rns}.
 
 Penggunaan RNS maupun FRNS masing-masing memiliki kekurangan dan kelebihan yang berbeda. Pendekatan berbasis komponen pada RNS menyebabkan operasi aritmatika pada RNS dapat dijalankan secara paralel, dengan tidak adanya ketergantungan untuk masing-masing elemen himpunan. Namun, beberapa operasi aritmatika dasar seperti pembagian dan perbandingan antar dua bilangan akan menjadi lebih lambat \citep{gpu_bignum}.
 
-\subsubsection{Fixed Radix Number Systems} \label{frns}
+\subsubsection{Fixed Radix Number Systems} \label{sec:frns}
 
 \citet{modern_comp_math} menyatakan bahwa sebuah bilangan bulat dapat direpresentasikan sebagai penjumlahan dari komponen-komponennya. Jika kita memilih sebuah bilangan bulat positif $\beta$ sebagai basis dengan $\beta > 1 $ semua bilangan bulat positif $A$ berbasis $\beta$ yang memiliki panjang $n$ dapat dituliskan sebagai:
 \begin{equation} \label{eq:frns_rep}
@@ -27,9 +27,16 @@ Representasi integer positif di komputer 64 bit menggunakan $\beta = 2$ dan $n =
 % Physical yang umum, array
 % masuk bab 3?
 Representasi ideal big integer pada komputer adalah menggunakan list of integer atau array of integer. Penggunaan list menyebabkan big integer tidak memiliki nilai maksimum, sementara itu penggunaan array membuat akses nilai yang tersimpan lebih cepat. Dengan demikian, penggunaan array of integer lebih umum digunakan untuk merepresentasikan big integer. Ilustrasi array of integer yang merepresentasikan big integer dapat dilihat pada Gambar XXX.
-\missingfigure{kotak2 array biasa aja}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.5\textwidth]{resources/ch-2/frns-ref.png}
+  \caption{Representasi FRNS dalam bentuk Array of Integer}
+  \label{fig:frns_ref}
+\end{figure}
+
 % \blindtext
-\subsubsection{Residue Number Systems} \label{rns}
+\subsubsection{Residue Number Systems} \label{sec:rns}
 \citet{rns_survey} menyatakan bahwa RNS memiliki sebuah himpunan bilangan bulat relatif prima $\{m_1,m_2,...,m_p\}$. Nilai terbesar yang dapat direpresentasikan oleh RNS adalah sebesar $M$, dimana
 
 \begin{equation}
@@ -39,16 +46,16 @@ Representasi ideal big integer pada komputer adalah menggunakan list of integer 
 Sebuah bilangan bulat $X$ memiliki sebuah representasi RNS ${x_1,x_2,...,x_p}$ dengan $X_i$ adalah
 
 \begin{equation}
-  X_i = X mod m_i
+  X_i = X \mod m_i
 \end{equation}
 
 \todo[inline]{Tambahin penjelasan lebih jauh tentang Chinese Remainder Theorem disini}
 
 \subsection{Operasi Aritmatika}
 % \blindtext
-Proses operasi aritmatika yang dilakukan dalam representasi FRNS dan RNS berbeda. Karena itu, subbab \ref{add_sub_theory} sampai subbab \ref{mod_mul_theory} akan membahas bagaimana setiap operasi aritmatika dilakukan pada masing-masing operasi.
+Proses operasi aritmatika yang dilakukan dalam representasi FRNS dan RNS berbeda. Karena itu, subbab \ref{sec:add_sub_theory} sampai subbab \ref{sec:mod_mul_theory} akan membahas bagaimana setiap operasi aritmatika dilakukan pada masing-masing operasi.
 
-\subsubsection{Penjumlahan dan Penguragan} \label{add_sub_theory}
+\subsubsection{Penjumlahan dan Penguragan} \label{sec:add_sub_theory}
 \paragraph{Representasi FRNS}
 
 Operasi penjumlahan dan pengurangan pada FRNS dilakukan dengan cara penjumlahan dan pengurangan manual oleh tangan. Merujuk pada persamaan \ref{eq:frns_rep}, proses penjumlahan dan pengurangan dilakukan dari $\alpha_0$ hingga $\alpha_{n-1}$ dengan menggunakan bilangan \textit{carry over} dan \textit{borrow} jika dibutuhkan.
@@ -100,7 +107,7 @@ Karatsuba algorithm
 
 
 \paragraph{Representasi RNS}
-Sifat penjumlahan dan pengurangan yang dibahas pada subbab \ref{add_sub_theory} juga berlaku pada perkalian di representasi RNS. Perkalian dua bilangan $A$ dan $B$ dalam representasi RNS, akan menghasilkan $C$ yang memiliki representasi $\{c_1,c_2,...,c_p\}$ dengan nilai $c_i$ sebagai berikut
+Sifat penjumlahan dan pengurangan yang dibahas pada subbab \ref{sec:add_sub_theory} juga berlaku pada perkalian di representasi RNS. Perkalian dua bilangan $A$ dan $B$ dalam representasi RNS, akan menghasilkan $C$ yang memiliki representasi $\{c_1,c_2,...,c_p\}$ dengan nilai $c_i$ sebagai berikut
 \begin{equation}
     c_i = (a_i * b_i) \mod m_i
 \end{equation}
@@ -115,4 +122,4 @@ Sifat penjumlahan dan pengurangan yang dibahas pada subbab \ref{add_sub_theory} 
 % \blindtext
 \subsubsection{Modulo}
 % \blindtext
-\subsubsection{Perkalian Modulo} \label{mod_mul_theory}
+\subsubsection{Perkalian Modulo} \label{sec:mod_mul_theory}
