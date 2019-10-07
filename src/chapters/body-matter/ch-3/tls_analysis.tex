@@ -1,17 +1,27 @@
 
 \section{Analisis TLS}
-Penggunaan TLS pada sebuah infrastrukur internet dapat membantu penjaminan keamanan dari proses keluar masuknya data. Namun, penggunaan TLS memilki harga yang mahal secara komputasi yang dilakukan, sehingga membuat kinerjanya sendiri lambat. Pengurangan kinerja dari penggunaan TLS sendiri berdampak pada 3.4 hingga 9 kali dibandingkan dengan deployment tanpa penggunaan TLS \citep{perf_tls}. Mengingat beberapa tipe website seperti personal \textit{blog}, portal berita, ataupun \textit{search engine }tidak benar-benar membutuhkan keamanan informasi, tidak sedikit dari situs tersebut yang memilih untuk tidak menggunakan TLS demi mendapatkan kinerja yang maksimal.
+Penggunaan TLS pada sebuah infrastrukur internet dapat membantu penjaminan keamanan dari proses keluar masuknya data. Namun, penggunaan TLS memilki harga yang mahal secara komputasi yang dilakukan, sehingga membuat kinerjanya sendiri lambat. Pengurangan kinerja dari penggunaan TLS sendiri berdampak pada 3.4 hingga 9 kali dibandingkan dengan deployment tanpa penggunaan TLS \citep{perf_tls}. Mengingat beberapa tipe website seperti personal \textit{blog}, portal berita, ataupun \textit{search engine} tidak benar-benar membutuhkan keamanan informasi, tidak sedikit dari situs tersebut yang memilih untuk tidak menggunakan TLS demi mendapatkan kinerja yang maksimal.
+
+\todo[inline]{tambahin persentasi website yang ga pake TLS}
 
 Proses TLS dapat dibagi menjadi dua bagian, yaitu proses TLS \textit{Handshake} yang dilakukan saat membuat sebuah koneksi TLS, serta proses pertukaran data yang dilakukan setelah TLS \textit{Handshake} selesai dilakukan. Berdasarkan eksperimen yang dilakukan, \cite{perf_tls} menyatakan bahwa CPU melakukan lebih banyak pekerjaan untuk menyelesaikan TLS \textit{Handshake} dibandingkan dengan proses pertukaran data. Hal ini menyatakan bahwa TLS Handshake berdampak lebih besar pada kinerja sebuah TLS server dibandingkan dengan pertukaran data.
 
 Penggunaan alogritma kriptografi kunci publik pada proses pertukaran kunci  dalam TLS \textit{Handshake} adalah proses yang membutuhkan komputasi cukup besar, dimana proses tersebut menggunakan 13-59\% dari seluruh proses komputasi pada TLS. Selain itu, proses komputasi kriptografi lainnya seperti RC4, MD5, ataupun pembangkitan nomor random sudah cukup seimbang dan tidak memerlukan banyak komputasi pada TLS (Coarfa et. al, 2006).
 
 \subsection{Analisis Implementasi TLS}
-Jelasin salah satu yang popular itu OpenSSL
-Kenapa pilih OpenSSL sebagai implementasi yang diteliti
-%
+% Jelasin salah satu yang popular itu OpenSSL
+Terdapat banyak \textit{library} yang mengimplementasikan TLS, diantaranya adalah OpenSSL, BoringSSL, cryptlib, ataupun Java Secure Socket Extension (JSSE). Diantara banyak implementasi tersebut, OpenSSL merupakan implementasi yang paling banyak digunakan. OpenSSL merupakan aplikasi default yang digunakan sebagai implementasi TLS dalam hampir seluruh sistem operasi Linux. Sementara itu, lebih dari 85\% web server yang ada di internet menggunakan sistem operasi Linux \citep{server_os_marketshare}.
 
-\subsection{Penggunaan Big Integer dalam TLS}
-Big integer dipake dimana aja.
-Berapa jumlahnya, refer ke lampiran
-Fungsi apa yang banyak dipake.
+% Kenapa pilih OpenSSL sebagai implementasi yang diteliti
+Penulis memilih untuk menggunakan OpenSSL sebagai implementasi TLS yang akan dibahas lebih jauh. Selain karena banyak digunakan, OpenSSL memiliki dokumentasi yang lebih baik dibandingkan dengan implementasi yang lain, dengan demikian proses untuk melakukan modifikasi pada \textit{source code} OpenSSL akan lebih mudah. Modul big integer yang dimiliki oleh OpenSSL terpisah dari modul komputasi kriptografi yang lain. Dengan demikian akan memudahkan proses penelitian karena penulis hanya perlu berfokus pada source code di modul itu saja. Selain itu, OpenSSL sudah umum digunakan dalam implementasi HTTPS pada webserver Apache2 ataupun nginx. Hal ini menyebabkan penulis dapat menggunakan tools yang umum digunakan dalam melakukan testing benchmark dalam sebuah aplikasi web seperti Apache Bench.
+
+\subsection{Penggunaan Big Integer dalam OpenSSL}
+% Big integer dipake dimana aja.
+% Berapa jumlahnya, refer ke lampiran, sebutin juga fungsi yang dipake
+% Fungsi apa yang banyak dipake.
+Modul big integer yang dimiliki OpenSSL digunakan oleh beberapa modul lain seperti modul RSA, DSA, Diffie Hellman (DH), ASN1, serta modul elliptic curve. Sesuai dengan rumusan masalah pada subbab \ref{rumusan_masalah}, penelitian ini hanya membahas ciphersuite TLS\_DH\_RSA\_WITH\_AES\_256\_CBC\_SHA256. Pada penelitian ini, modul lain yang menggunakan modul big number hanyalah modul RSA dan DH.
+
+Terdapat beberapa fungsi yang disediakan oleh modul big integer pada OpenSSL. Dari fungsi yang disediakan tersebut, hanya sebagian yang merupakan sebuah operasi aritmatika seperti BN\_add(), BN\_mod(), serta BN\_mul(). Daftar fungsi dalam modul big integer yang berkaitan dengan operasi aritmatika dapat dilihat pada lampiran \ref{bn_func_all}.
+
+Operasi big integer yang paling banyak digunakan oleh modul DH adalah BN\_mod\_exp() serta variannya BN\_mod\_exp\_mont() dengan total tiga kali pemanggilan. Modul RSA menggunakan modul big integer jauh lebih banyak dibandingkan modul DH. BN\_sub() digunakan sebanyak sembilan belas kali dalam modul RSA. Selain itu BN\_mod() digunakan sebanyak enam belas kali. Informasi detail mengenai pemanggilan modul big number oleh modul RSA dan DH dapat dilihat pada lampiran \ref{bn_func_call}.
+\todo[inline]{Edit reference \& label in sections}

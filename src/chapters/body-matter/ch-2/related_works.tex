@@ -1,11 +1,15 @@
 \section{Penelitian Terkait}
 % Tentang apa, metode/algoritma, hasil
 \subsection{Paralelisasi Big Integer pada GPU}
-\citet{gpu_bignum} melakukan penenelitian mengenai penggunaan GPU dalam pemrosesan multiple precision arithmatic secara paralel. Dalam penelitiannya, Emmet membahas beberapa operasi arimatika, yaitu penjumlahan, pengurangan, serta perkalian untuk bilangan bulat dan bilangan real, perkalian modular, perpangkatan modular, dan pembagian.
+\citet{gpu_bignum} melakukan penenelitian mengenai penggunaan GPU dalam pemrosesan \textit{multiple precision arithmatic} secara paralel. Dalam penelitiannya, Emmet menganalisis beberapa operasi arimatika, yaitu penjumlahan, pengurangan, serta perkalian untuk bilangan bulat dan bilangan real, perkalian modular, perpangkatan modular, dan pembagian. Emmet berusaha untuk meningkatkan kinerja komputasi big number dalam beberapa faktor, diantaranya jumlah operasi per detik, jumlah operasi per detik per daya yang digunakan, serta jumlah operasi per detik untuk setiap dollar yang digunakan.
 
 % Pendekatan untuk setiap operasi
+Emmet melakukan penjumlahan dan pengurangan dengan divide and conquer. Array dalam BIGNUM dibagi menjadi beberapa \textit{chunks}, setiap chunks tersebut kemudian dijumlahkan dengan algoritma penjumlahan biasa, kemudian menggabungkan chunks tersebut dan menyelesaikan hasil \textit{carry over} dari setiap chunks. Operasi perkalian yang dilakukan oleh Emmet berbasis algoritma Strassen pada perkalian dalam format Fast Fourier Transform. Untuk operasi pembagian, Emmet melakukan paralelisasi pada algoritma pembagian pendek.
+% TODO: Perlu dijelasin algoritma pembagiannya ga?
+
 % Kok kalo basicnya doang kayak ga impressive
 
+Testing peneltian dilakukan pada dua CPU yaitu Core i5-7400 serta Xeon E5-2690v3, dan tiga GPU yaitu GTX Titan Black, GTX 980, Pascal P100, serta Volta V100. Emmet berhasil membuktikan bahwa untuk tiga faktor yang ditentukan, hasil yang didapat dari GPU lebih baik dibandingkan dengan CPU. Volta V100 memiliki jumlah operasi per detik terbesar, dengan speedup hingga 88 kali lebih besar dari Core i5. Penggunan daya pada Volta 2.2 kali lebih tinggi dibandingkan Xeon, namun Volta masih memiliki jumlah operasi per detik per daya yang lebih besar dibandingkan dengan CPU dan GPU yang lain. Untuk jumlah operasi per detik untuk setiap dollar yang digunakan, intel Core i5 merupakan \textit{socket} yang memiliki nilai terbesar. Namun, Emmet memperkirakan bahwa GTX1080 yang tidak digunakan dalam penelitian ini dapat memberikan nilai operasi per detik untuk setiap dollar yang lebih besar.
 
 \subsection{Fast Modular Squaring}
 \citep{drucker_gueron_2019}

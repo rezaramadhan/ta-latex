@@ -23,7 +23,7 @@ Jumlah Penggunaan: 0
 
 
 grep -rE BN_div\(.+\) openssl/crypto/dh
-openssl/crypto/dh/dh_check.c:        if (!BN_div(t1, t2, dh->p, dh->q, ctx))
+dh_check.c:        if (!BN_div(t1, t2, dh->p, dh->q, ctx))
 Jumlah Penggunaan: 1
 
 
@@ -92,13 +92,13 @@ Jumlah Penggunaan: 0
 
 
 grep -rE BN_sub_word\(.+\) openssl/crypto/dh
-openssl/crypto/dh/dh_check.c:    if (BN_copy(tmp, dh->p) == NULL || !BN_sub_word(tmp, 1))
-openssl/crypto/dh/dh_check.c:    if (BN_copy(tmp, dh->p) == NULL || !BN_sub_word(tmp, 1))
+dh_check.c:    if (BN_copy(tmp, dh->p) == NULL || !BN_sub_word(tmp, 1))
+dh_check.c:    if (BN_copy(tmp, dh->p) == NULL || !BN_sub_word(tmp, 1))
 Jumlah Penggunaan: 2
 
 
 grep -rE BN_get_word\(.+\) openssl/crypto/dh
-openssl/crypto/dh/dh_rfc7919.c:    if (BN_get_word(dh->g) != 2)
+dh_rfc7919.c:    if (BN_get_word(dh->g) != 2)
 Jumlah Penggunaan: 1
 
 
@@ -107,13 +107,13 @@ Jumlah Penggunaan: 0
 
 
 grep -rE BN_mod_exp\(.+\) openssl/crypto/dh
-openssl/crypto/dh/dh_check.c:            if (!BN_mod_exp(t1, dh->g, dh->q, dh->p, ctx))
-openssl/crypto/dh/dh_check.c:        if (!BN_mod_exp(tmp, pub_key, dh->q, dh->p, ctx))
+dh_check.c:            if (!BN_mod_exp(t1, dh->g, dh->q, dh->p, ctx))
+dh_check.c:        if (!BN_mod_exp(tmp, pub_key, dh->q, dh->p, ctx))
 Jumlah Penggunaan: 2
 
 
 grep -rE BN_mod_exp_mont\(.+\) openssl/crypto/dh
-openssl/crypto/dh/dh_key.c:    return BN_mod_exp_mont(r, a, p, m, ctx, m_ctx);
+dh_key.c:    return BN_mod_exp_mont(r, a, p, m, ctx, m_ctx);
 Jumlah Penggunaan: 1
 
 

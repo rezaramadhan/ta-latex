@@ -42,14 +42,14 @@ Dalam penyelesaian tugas akhir ini terdapat beberapa tujuan yang akan dicapai, y
   \item Mengukur peningkatan kinerja dari TLS \textit{handshake} setelah mengimplementasikan algoritma paralel RSA.
 \end{enumerate}
 
-\section{Batasan Masalah}
+\section{Batasan Masalah}\label{rumusan_masalah}
 
 Tugas akhir ini akan membahas mengenai optimisasi algoritma RSA pada sebuah implementasi TLS \textit{handshake}. Adapun batasan masalah yang terdapat pada tugas akhir ini adalah:
 
 \begin{enumerate}
   \item Paralelisasi library big integer tidak memperhatikan masalah keamanan pada sistem yang menggunakannya.
   \item Implementasi TLS memanfaatkan perangkat lunak opensource OpenSSL versi 1.1.1.
-  \item Ciphersuite yang digunakan dalam penelitian ini adalah TLS\_DH\_RSA\_WITH\_AES\_256\_CBC\_SHA256.
+  \item Ciphersuite yang digunakan dalam penelitian ini adalah TLS\_DH\_RSA\_WITH\_AES\_ 256\_CBC\_SHA256.
   \item CPU yang digunakan pada implementasi ini adalah Intel 64-bit yang minimal memiliki enam belas \textit{core}.
 \end{enumerate}
 
@@ -59,7 +59,9 @@ Pengerjaan tugas akhir ini akan melalui beberapa tahap, yaitu:
 \begin{enumerate}
   \item Analisis Masalah
 
-  Tugas akhir akan dimulai dengan dilakukannya analisis mengenai masalah terhadap implementasi TLS \textit{handshake} yang ada pada saat ini. Pada tahap ini akan dipelajari juga mengenai solusi-solusi untuk meningkatkan kinerja dari TLS \textit{handshake} yang sudah tersedia pada saat ini. Dari solusi yang sudah ada tersebut, penulis akan mencari penyebab solusi itu belum diimplementasikan pada TLS \textit{handshake} dan mencari solusi baru yang mungkin untuk diimplementasikan.
+  % Tugas akhir akan dimulai dengan dilakukannya analisis mengenai implementasi TLS \textit{handshake} yang ada pada saat ini. Pada tahap ini akan dipelajari juga mengenai solusi-solusi untuk meningkatkan kinerja dari TLS \textit{handshake} yang sudah tersedia pada saat ini. Dari solusi yang sudah ada tersebut, penulis akan mencari penyebab solusi itu belum diimplementasikan pada TLS \textit{handshake} dan mencari solusi baru yang mungkin untuk diimplementasikan.
+
+  Tugas akhir akan dimulai dengan dilakukannya analisis mengenai implementasi TLS yang ada pada saat ini. Pada tahap ini akan dipelajari lebih lanjut mengenai penggunaan \textit{library} big integer yang digunakan dalam implementasi TLS. Analisis akan dilakukan pada struktur dan algoritma operasi aritmatika yang digunakan dalam \textit{library} big integer tersebut. Penulis akan mencari struktur dan algoritma lain yang dapat dijalankan secara paralel untuk  digunakan sebagai pengganti algoritma yang awal digunakan.
 
   \item Perancangan Solusi dan Pengujian
 
