@@ -2,12 +2,21 @@
 % \blindtext
 
 \subsection{Algoritma yang Digunakan oleh OpenSSL}
+Selain langsung melakukan operasi aritmatika, terdapat juga bagian kode dalam OpenSSL yang melakukan beberapa fungsi lain. Sebagai contohnya, terdapat bagian kode yang melakukan pengecekan apakah OPENSSL\_SMALL\_FOOTPRINT terdefinisi dan melakukan fungsi yang diperlukan untuk mengkonversi tipe data yang digunakan agar cocok untuk versi OpenSSL yang terinstall. Pada subbab ini, bagian kode yang akan dibahas hanyalah bagian kode yang relevan dengan algoritma operasi aritmatika tertentu. Bagian kode yang melakukan tugas lain seperti konfigurasi tipe data ataupun \textit{memory management} tidak akan dibahas.
+
 % Kalo refer ke code, how to cite?
 % \blindtext
 \subsubsection{Penjumlahan dan Pengurangan}
+OpenSSL menggunakan algoritma penjumlahan dan pengurangan standar dalam representasi FRNS seperti yang dibahas pada subbab \ref{sec:add_sub_theory}. OpenSSL melakukan operasi $mod$ dan $div$ dengan manipulasi bit, yaitu melakukan AND terhadap sebuah konstan untuk mendapat nilai $mod$ dan melakukan penggeseran bit untuk mendapatkan nilai $div$. Dengan demikian, OpenSSL dapat memotong overhead yang terjadi dibandingkan dengan melakukan operasi $div$ ataupun $mod$ yang terdapat dalam bahasa C.
+% TODO: Cek lagi atas ^^
+
 \subsubsection{Perkalian}
-\subsubsection{Pengurangan}
-% etc, ntar ditambahin
+OpenSSL menggunakan algoritma karatsuba++
+
+\subsubsection{Pembagian dan Modulo}
+Jelasin pembagian
+
+OpenSSL tidak memiliki fungsi khusus untuk operasi modulo. Karena fungsi untuk operasi pembagian sudah mengembalikan sisa dari pembagian, operasi modulo hanya perlu memanggil fungsi pembagian dengan argumen menggunakan argumen yang telah disesuaikan.
 
 \subsection{Paralelisasi Algoritma}
 % \blindtext
