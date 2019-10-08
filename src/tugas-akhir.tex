@@ -13,22 +13,23 @@
 \documentclass[11pt, a4paper, onecolumn, oneside, final]{book}
 
 \input{config/if-itb-thesis.sty}
-%
-% \makeatletter
-%
-% \makeatother
+
 
 \begin{document}
 
     %-------------------------------------------------------------------------%
-    % Basic Configuration
+    % Set Variable
     %-------------------------------------------------------------------------%
-    \title{Paralelisasi Library big integer pada Transport Layer Security (TLS) Handshake}
-    \date{Oktober 2018}
-    \author{
-        Muhammad Reza Ramadhan \\
-        NIM: 13514107
-    }
+    \newcommand{\thetitle}
+      {Paralelisasi Library big integer pada Transport Layer Security (TLS) Handshake}
+    \newcommand{\thedatemy}
+      {Oktober 2019}
+    \newcommand{\thedatedmy}
+      {8 Oktober 2019}
+    \newcommand{\theauthor}
+      {Muhammad Reza Ramadhan}
+    \newcommand{\thestudentnumber}
+      {13514107}
 
 
     %-------------------------------------------------------------------------%
@@ -37,13 +38,13 @@
     \frontmatter
     \input{chapters/front-matter/cover}
     \input{chapters/front-matter/approval}
-    % \input{chapters/front-matter/statement}
+    \input{chapters/front-matter/statement}
 
     \pagestyle{plain}
 
-    % \input{chapters/front-matter/abstract-id}
+    \input{chapters/front-matter/abstract-id}
     % \input{chapters/front-matter/abstract-en}
-    % \input{chapters/front-matter/forewords}
+    \input{chapters/front-matter/forewords}
 
     \titleformat*{\section}{\centering\bfseries\Large\MakeUpperCase}
 
@@ -51,7 +52,6 @@
     % Daftar Isi, Tabel & Gambar
     %-------------------------------------------------------------------------%
     \addcontentsline{toc}{chapter}{DAFTAR ISI}
-    \afterpage{\null\newpage}
     {\tableofcontents}
 
     {
@@ -59,6 +59,7 @@
         \renewcommand{\numberline}{\figurename~\oldnumberline}
         \listoffigures
     }
+
     \addcontentsline{toc}{chapter}{DAFTAR GAMBAR}
 
     {
@@ -66,9 +67,11 @@
         \renewcommand{\numberline}{\tablename~\oldnumberline}
         \listoftables
     }
+
     \addcontentsline{toc}{chapter}{DAFTAR TABEL}
+
     %-------------------------------------------------------------------------%
-    % Konfigurasi Bab
+    % Konfigurasi Numbering di Bab
     %-------------------------------------------------------------------------%
     \renewcommand{\chaptername}{BAB}
     \renewcommand{\thechapter}{\Roman{chapter}}
@@ -89,7 +92,6 @@
     % -------------------------------------------------------------------------%
     % Daftar Pustaka
     % -------------------------------------------------------------------------%
-    % Bibliography to Daftar Pustaka
     \renewcommand{\bibname}{Daftar Pustaka}
     \cleardoublepage
     \phantomsection
@@ -98,24 +100,19 @@
 
 
     %-------------------------------------------------------------------------%
-    % Index
+    % Lampiran
     %-------------------------------------------------------------------------%
-    \backmatter
-    \appendix
-    % \addtocontents{toc}{\protect\setcounter{tocdepth}{-1}}
-
-    \cleardoublepage
-    \phantomsection
-    \part*{Lampiran}
-    \addcontentsline{toc}{part}{LAMPIRAN}
-
-    % Setting judul appendix
     \chapterfont{\Large}
-    \titleformat{\chapter}[hang]
+    \titleformat{\chapter}[block]
       {\Large\bfseries}
-      {\chaptertitlename\ \thechapter.\ }{0pt}
+      {\chaptertitlename\ \thechapter}{0pt}
         {\Large\bfseries}
-    \titlespacing*{\chapter}{0pt}{-25pt}{10pt}
+    \titlespacing*{\chapter}{0pt}{-25pt}{20pt}
+
+    \setcounter{chapter}{0}
+
+    \renewcommand{\chaptername}{Lampiran}
+    \renewcommand{\thechapter}{\Alph{chapter}. }
 
     \input{chapters/back-matter/bn_func_all.tex}
     \input{chapters/back-matter/bn_func_call.tex}
