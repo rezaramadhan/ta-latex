@@ -8,7 +8,7 @@ Proses TLS dapat dibagi menjadi dua bagian, yaitu proses TLS \textit{Handshake} 
 
 Penggunaan alogritma kriptografi kunci publik pada proses pertukaran kunci  dalam TLS \textit{Handshake} adalah proses yang membutuhkan komputasi cukup besar, dimana proses tersebut menggunakan 13-59\% dari seluruh proses komputasi pada TLS. Selain itu, proses komputasi kriptografi lainnya seperti RC4, MD5, ataupun pembangkitan nomor random sudah cukup seimbang dan tidak memerlukan banyak komputasi pada TLS (Coarfa et. al, 2006).
 
-\subsection{Analisis Implementasi TLS}
+\subsection{Implementasi TLS}
 % Jelasin salah satu yang popular itu OpenSSL
 Terdapat banyak \textit{library} yang mengimplementasikan TLS, diantaranya adalah OpenSSL, BoringSSL, cryptlib, ataupun Java Secure Socket Extension (JSSE). Diantara banyak implementasi tersebut, OpenSSL merupakan implementasi yang paling banyak digunakan. OpenSSL merupakan aplikasi default yang digunakan sebagai implementasi TLS dalam hampir seluruh sistem operasi Linux. Sementara itu, lebih dari 85\% web server yang ada di internet menggunakan sistem operasi Linux \citep{server_os_marketshare}.
 
