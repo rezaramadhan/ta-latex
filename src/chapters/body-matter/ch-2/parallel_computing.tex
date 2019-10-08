@@ -20,6 +20,6 @@ Pada komputasi paralel, terdapat beberapa hal yang perlu diperhatikan yang biasa
   \item \textit{Race condition}, yaitu kondisi dimana hasil yang dihasilkan dari komputasi paralel tidak konsisten karena kurangnya sinkronisasi antar \textit{job}. Sebagai contoh, job A menulis nilai baru pada memori M, sementara itu job B membaca memori M sebelum job A menulis nilai baru tersebut ketika job B membutuhkan nilai memori M yang terbaru.
   \item \textit{Deadlock} terjadi ketika dua \textit{job} menunggu satu sama lain untuk menggunakan sebuah resource yang sama.
   \item \textit{Scaling} program lebih susah, hal ini terjadi karena sinkronisasi yang terlalu tinggi. Karena sinkronisasi antar job sangat tinggi, program tidak berbeda jauh dengan program yang dijalankan secara sekuensial. Jika program menggunakan lock dan mutex, bisa jadi waktu operasi lock tersebut justru memakan waktu yang lebih lama dibandingkan dengan job yang perlu dijalankan.
-  \item \textit{Load imbalance} antar job.
+  \item \textit{Load imbalance} antar job. Terjadi ketika pembagian pekerjaan dalam job tidak seimbang.  
   \item \textit{Overhead} pembuatan job. Jika jumlah job yang dibuat program terlalu banyak, waktu yang diperlukan dalam pembuatan dan penghancuran job menjadi semakin signifikan. Perlu dicari jumlah job yang cukup sehingga overhead tidak terlalu besar namun program tetap dijalankan secara paralel dengan efektif.
 \end{itemize}

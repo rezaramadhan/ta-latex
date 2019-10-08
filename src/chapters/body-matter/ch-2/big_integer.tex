@@ -60,33 +60,36 @@ Proses operasi aritmatika yang dilakukan dalam representasi FRNS dan RNS berbeda
 
 Operasi penjumlahan dan pengurangan pada FRNS dilakukan dengan cara penjumlahan dan pengurangan manual oleh tangan. Merujuk pada persamaan \ref{eq:frns_rep}, proses penjumlahan dan pengurangan dilakukan dari $\alpha_0$ hingga $\alpha_{n-1}$ dengan menggunakan bilangan \textit{carry over} dan \textit{borrow} jika dibutuhkan.
 
-Untuk penjumlahan dan pengurangan dua bilangan $A = a_{n-1}\beta^{n-1}+...+a_{1}\beta+a_{0}$ dan $B = b_{n-1}\beta^{n-1}+...+b_{1}\beta+b_{0}$, akan dihasilkan bilangan $C = c_{n-1}\beta^{n-1}+...+c_{1}\beta+c_{0}$. Algoritma yang dapat digunakan untuk menghitung C adalah
+Untuk penjumlahan dan pengurangan dua bilangan $A = a_{n-1}\beta^{n-1}+...+a_{1}\beta+a_{0}$ dan $B = b_{n-1}\beta^{n-1}+...+b_{1}\beta+b_{0}$, akan dihasilkan bilangan $C = c_{n-1}\beta^{n-1}+...+c_{1}\beta+c_{0}$. Algoritma yang dapat digunakan untuk menghitung C
 
 \begin{lstlisting}[basicstyle=\linespread{1.25}\footnotesize\rmfamily]
-  C := add(A, B) {
-    carry := 0
-    iterate 0 to n as i:
-      c := carry + a$_i$ + b$_i$
-      carry := c div beta
-      c$_i$ := c mod beta
-
-    return C, carry
+  function add(A[0..n], B[0..n]) {
+      C := [0..n]
+      carry := 0
+      iterate 0 to n as i {
+          n := carry + A[i] + B[i]
+          carry := n div $\beta$
+          C[i] := n mod $\beta$
+      }
+      return C, carry
   }
 
-  C := sub(A, B) { //A - B
-    if a is bigger than b {
-      iterate 0 to n as i:
-        c := a$_i$ - b$_i$ - d
-        carry := c div beta
-        c$_i$ := c mod beta
-
-      return C, carry
-    } else {
-      C := -1 * sub(B, A)
-    }
-
+  function sub(A[0..n], B[0..n]) { //A - B
+      if a is bigger than b {
+          C := [0..n]
+          borrow := 0
+          iterate 0 to n as i {
+              n := A[i] - B[i] - d
+              borrow := n div $\beta$
+              C[i] := n mod $\beta$
+          }
+      } else {
+          C , borrow := sub(B, A)
+      }
+      return C, borrow
   }
 \end{lstlisting}
+
 
 % Cek lagi pengurangan. Ga yakin..
 
@@ -101,9 +104,48 @@ Untuk penjumlahan dan pengurangan dua bilangan $A = a_{n-1}\beta^{n-1}+...+a_{1}
 \subsubsection{Perkalian}
 
 \paragraph{Representasi FRNS}
-Terdapat beberapa algoritma yang dapat dilakukan dalam perkalian dua bilangan besar.
-Perkalian baisa, kasih gambar
-Karatsuba algorithm
+Terdapat beberapa algoritma yang dapat dilakukan dalam perkalian dua bilangan besar. Pada subbab ini hanya akan dibahas dua algoritma perkalian, yaitu algoritma perkalian panjang dan algoritma perkalian Karatsuba. Dua algoritma tersebut dibahas karena algoritma perkalian dasar dibutuhkan untuk memahami dasar dari proses perkalian, sementara itu algoritma Karatsuba digunakan dalam implementasi perkalian pada OpenSSL.
+
+Algoritma perkalian panjang adalah algoritma perkalian yang biasa diajarkan dalam sekolah dasar. Algoritma perkalian panjang $A*B$ berdasarkan pada proses mengkalikan satu digit A pada B, geser hasilnya sesuai posisi digit A yang digunakan, lalu jumlahkan seluruh hasil perkalian tersebut. Algoritma ini memiliki kompeksitas $O(n^2)$ terhadap perkalian. Berikut adalah algoritma perkalian panjang pada pseudocode.
+
+\begin{lstlisting}[basicstyle=\linespread{1.25}\footnotesize\rmfamily]
+    function mul(A[0..p], B[0..q], $\beta$) {
+        C := [0..p+q]
+        iterate 0 to p as i {
+            carry := 0
+            iterate 0 to q as j {
+                n += carry + a[i] * b[j]
+                carry = n div $\beta$
+                C[i+j-1] = n mod $\beta$
+            }
+            C := carry
+        }
+        return C
+    }
+\end{lstlisting}
+
+Algoritma karatsuba berdasarkan bahwa perkalian dua bilangan A dan B dapat direpresentasikan dalam tiga perkalian bilangan bulat yang lebih kecil. Algoritma ini memiliki kompeksitas $O(n^{\log_2 3})$ terhadap operasi perkalian. Penggunaan algoritma karatsuba dalam komputer dapat dilakukan dengan pemanggilan fungsi secara rekursif. Berikut adalah algoritma perkalian Karatsuba dalam pseudocode.
+\todo{perlu dijelasin teori lebih lanjut ga?}
+
+\begin{lstlisting}[basicstyle=\linespread{1.25}\footnotesize\rmfamily]
+    function mul_karatsuba(A[1..p], B[1..q], $\beta$) {
+        if (p = 1) or (q = 1)
+            return B*A
+
+        mid := floor(min(p,q)/2)
+
+        low_a := A[1..mid]
+        high_a := A[mid..p]
+        low_b := B[1..mid]
+        high_b := B[mid..q]
+
+        x = karatsuba(low_a, low_b)
+        y = karatsuba((low_a + high_a), (low_b + high_b))
+        z = karatsuba(high_a, high_b)
+
+        return (z * $\beta$ ^ (mid * 2)) + ((y - z - x) * $\beta$ ^ mid) + x
+    }
+\end{lstlisting}
 
 
 \paragraph{Representasi RNS}
@@ -112,14 +154,33 @@ Sifat penjumlahan dan pengurangan yang dibahas pada subbab \ref{sec:add_sub_theo
     c_i = (a_i * b_i) \mod m_i
 \end{equation}
 
-\subsubsection{Pembagian}
+\subsubsection{Pembagian dan Modulo}
 
-\subparagraph{Representasi FRNS}
+\paragraph{Representasi FRNS}
+Seperti perkalian, terdapat beberapa algoritma yang dapat digunakan dalam pembagian. Algoritma yang paling mudah dilakukan adalah dengan melakukan pengurangan berkali-kali seperti yang dijelaskan oleh Euclid. \todo{tambahin citation}. Berikut adalah algoritma pembagian dengan pengurangan berkali-kali dalam pseudocode.
 
-\subparagraph{Representasi RNS}
+\begin{lstlisting}[basicstyle=\linespread{1.25}\footnotesize\rmfamily]
+  function div_repeated_sub(N, D) {
+      Q := 0
+      R := N
+      while R >= D {
+          Q := Q + 1
+          R := R - D
+      }
 
-\subsubsection{Perpangkatan}
-% \blindtext
-\subsubsection{Modulo}
-% \blindtext
-\subsubsection{Perkalian Modulo} \label{sec:mod_mul_theory}
+      return (Q, R)
+  }
+\end{lstlisting}
+
+\citet{div_burnikel_ziegler} memperkenalkan algoritma pembagian cepat yang berjalan pada kompleksitas $2K(n)+O(n \log n)$ dengan $K(n)$ adalah waktu berjalannya algoritma perkalian karatsuba.
+\todo[inline]{jelasin dasarnya apa, div\&conquer, recursive}
+
+\begin{lstlisting}[basicstyle=\linespread{1.25}\footnotesize\rmfamily]
+  function div_burnikel_ziegler(N, D) {
+
+  }
+\end{lstlisting}
+
+\paragraph{Representasi RNS}
+
+Pembagian dalam RNS cukup kompleks. Mengingat bahwa kinerja pembagian pada RNS pasti lebih buruk dibandingkan dengan pembagian pada FRNS, maka algoritma pembagian pada RNS tidak dibahas lebih lanjut.
