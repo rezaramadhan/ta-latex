@@ -1,9 +1,9 @@
 
 \section{Implementasi Algoritma Paralel pada Library big integer}
 \subsection{Lingkungan Implementasi}
-Sesuai dengan pertimbangan pada subbab \ref{sec:parallel_env}, implementasi algoritma paralel akan dilakukan dengan kakas ....
+Sesuai dengan pertimbangan pada subbab \ref{sec:parallel_env}, implementasi algoritma paralel akan dilakukan dengan menggunakan pthread. Implementasi akan dilakukan menggunakan \textit{compiler} GCC versi 5.4.0 dan dijalankan pada sistem operasi Ubuntu 18.04. Penggunaan TLS akan diuji pada penggunaan HTTPS pada web server yang diinstall pada sistem operasi. Web server yang digunakan adalah Apache2 dengan menggunakan modul tambahan mod\_ssl. Arsitektur sistem yang digunakan dapat dilihat pada Gambar \ref{fig:openssl_arch}
 
-tambahin arsitekturnya, openssl+apache
+
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.4\textwidth]{resources/ch-4/implementation_arch.png}
@@ -15,8 +15,7 @@ tambahin arsitekturnya, openssl+apache
 Fungsi mana yang engga dihandle, kenapa
 Batasin cuma di satu ciphertext doang. TLS\_DH\_RSA\_WITH\_AES\_256\_CBC\_SHA256.
 
-\subsection{Struktur Data big integer}
-\subsubsection{BIGNUM}
+\subsection{Struktur Data Big Integer} \label{sec:bignum_struct}
 Pada OpenSSL, sebuah big integer direpresentasikan dalam struktur data BIGNUM. BIGNUM terdiri dari sebuah array dengan ukuran dinamis, dengan demikian secara teori BIGNUM tidak memiliki nilai maksimum. Untuk keperluan paralelisasi, BIGNUM dapat digunakan tanpa mengubah strukturnya sedikitpun. BIGNUM sendiri merupakan sebuah \textit{struct} yang memiliki deklarasi sebagai berikut.
 
 \begin{lstlisting}[style = code]

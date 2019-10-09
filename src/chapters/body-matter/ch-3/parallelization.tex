@@ -1,7 +1,21 @@
 \section{Rancangan Paralelisasi}
 \subsection{Implementasi Komputasi Paralel} \label{sec:parallel_env}
 
-Jelasin MPI, OpenMP, POSIX. Kelebihan, kekurangan, mana yang cocok dipake.
+% Jelasin MPI, OpenMP, POSIX. Kelebihan, kekurangan, mana yang cocok dipake.
+Terdapat beberapa kakas yang dapat dimanfaatkan untuk menjalankan komputasi paralel dalam sebuah program.
+Dalam implementasi komputasi paralel dalam bahasa C, terdapat tiga kakas yang umum digunakan yaitu POSIX threads, OpenMP, dan MPI. Setiap kakas tersebut memiliki kelebihan dan kekurangan yang berbeda. Setiap kakas memiliki usecase khusus dimana penggunaannya akan menghasilkan kinerja yang baik dan implementasi komputasi paralel dapat dilakukan dengan relatif mudah.
+
+
+% Kasih usecase buat tiap model
+% jelasin thread, kekurangan ribet serba manual, kelebihan sudah native, ga nambah overhead banyak, relatif sederhana
+
+OpenMP (Open Multi-Processing) adalah API yang dapat digunakan untuk melakukan multipro
+
+MPI (Message Passing Interface) merupakan protokol komunikasi untuk melakukan koordinasi antar process dalam menyelesaikan sebuah pekerjaan tertentu.
+
+POSIX threads (pthread) adalah sebuah model eksekusi dalam komputasi paralel yang dimiliki sistem operasi UNIX secara native. Salah satu kelebihan pthread adalah sedikitnya overhead yang ada dalam pemanggilan sebuah job baru. Overhead dalam pemanggilan job baru kurang lebih sama dengan pemanggilan thread baru jika dilakukan oleh OS. Kekurangan pthread terdapat pada kurangnya fitur yang dimilikinya. pthread hanya menyediakan fungsionalitas untuk manajemen thread, mutex, condition variable, serta . Pthread tidak menyediakan fungsionalitas untuk melakukan sinkronisasi antar job lebih jauh seperti yang disediakan oleh OpenMP .... ataupun MPI.
+
+Dari tiga kakas yang telah dijelaskan tersebut, pthread adalah kakas yang paling cocok untuk digunakan dalam implementasi komputasi paralel dalam OpenSSL. Pthread sudah terdapat dalam sistem operasi secara native, dengan demikian instalasi OpenSSL setelah implementasi komputasi paralel tidak bergantung pada ketersediaan kakas pthread atau tidak. Alasan utama pemilihan pthread adalah kecilnya overhead yang dibutuhkan dalam pemanggilan job baru. Overhead yang kecil cocok untuk program seperti OpenSSL dimana tingginya kinerja sangat dibutuhkan.
 
 \subsection{Paralelisasi Algoritma}
 % \blindtext
