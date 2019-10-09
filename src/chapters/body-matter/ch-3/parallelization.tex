@@ -1,0 +1,52 @@
+\section{Rancangan Paralelisasi}
+\subsection{Implementasi Komputasi Paralel} \label{sec:parallel_env}
+
+Jelasin MPI, OpenMP, POSIX. Kelebihan, kekurangan, mana yang cocok dipake.
+
+\subsection{Paralelisasi Algoritma}
+% \blindtext
+Terdapat dua strategi yang dapat digunakan untuk melakukan paralelisasi algoritma penjumlahan, pengurangan, dan perkalian. Strategi pertama adalah melakukan paralelisasi untuk algoritma dalam representasi FRNS. Sementara itu, strategi yang lain adalah melakukan konversi struktur FRNS yang digunakan oleh OpenSSL menjadi struktur RNS kemudian menjalankan operasi yang dibutuhkan dalam bentuk RNS.
+
+Seperti yang dibahas pada subbab \ref{sec:rns}, RNS lebih mudah diparalelkan karena strukturnya terdiri dari komponen yang independen. Namun, konversi dari FRNS ke RNS memakan waktu yang cukup signifikan \todo{cite here, kasih data kalo nemu}. Selain itu, OpenSSL telah membuat stuktur BN\_CTX yang dapat menyimpan sejumlah struktur BIGNUM dalam memori. Penggunaan BN\_CTX membuat program dijalankan lebih cepat karena program tidak menunggu selesainya alokasi memori dalam pembuatan struktur BIGNUM. Program dapat menggunakan struktur yang tersimpan tersebut dibandingkan dengan membuat sebuah struktur baru yang hanya digunakan sesaat.
+
+Subbab \ref{sec:add_sub_parallel} hingga \ref{sec:div_parallel} akan membahas cara paralelisasi algoritma operasi aritmatika dalam representasi FRNS.
+
+\subsubsection{Penjumlahan dan Pengurangan}\label{sec:add_sub_parallel}
+Algoritma XX \todo{coba package untuk algorithm/pseudocode} yang digunakan untuk melakukan penjumlahan dan pengurangan pada big number sudah merupakan algoritma yang paling efektif. Algoritma ini memiliki kompleksitas $O(n)$ untuk operasi penjumlahan/pengurangan. Setiap elemen dalam array big integer harus dibaca, karena itu tidak terdapat algoritma lain yang dapat mengurangi kompleksitas algoritma tersebut. Penulis dapat menggunakan algoritma ini sebagai dasar untuk melakukan paralelisasi algoritma.
+
+\todo[inline]{bikin daftar istilah buat parallel computing -> job, task, subroutine, etc}
+
+Paralelisasi yang dilakukan adalah memecah array menjadi beberapa sub-array sebanyak jumlah task yang akan berjalan. Setiap sub-array tersebut akan dijumlahkan secara independen oleh masing-masing job. Setelah semua penjumlahan selesai, perlu dilakukan penghitungan nilai akhir penjumlahan sesuai dengan nilai \textit{carry} yang dihasilkan oleh setiap sub-array. Teknik ini sama dengan teknik yang digunakan oleh \citet{gpu_bignum} dalam proses penjumlahan dan pengurangan. Namun, teknik pemecahan array menjadi beberapa sub-array merupakan teknik yang umum digunakan dalam paralelisasi algoritma pengolahan array, seperti dalam pencarian nilai maksimum atau minimum serta untuk mencari jumlah nilai yang tersimpan dalam array \citep{intro_parallel}. Berikut adalah pseudocode paralelisasi fungsi add().
+
+\begin{algorithm}
+  \caption{Paralelisasi fungsi penjumlahan}
+  \label{alg:parallel_add}
+  \begin{algorithmic}[1]
+    \Require{$x$ dan $y$ adalah array [1..n] yang merepresentasikan Big Integer, $num$ adalah jumlah task}
+    \Statex
+    \Function{AddParallel}{$x$, $y$, $num$}
+      \Let{$x_{chunks}$}{Split($x$, $num$)}
+      \Let{$y_{chunks}$}{Split($y$, $num$)}
+      \Let{$result\_arr$}{NewArray}
+      \ForAll{$i$, $j$ in $x_{chunks}$, $y_{chunks}$}
+          \Let{$job$}{StartJob(add($i$,$j$))}
+          \Let{$sum$, $carry$}{GetJobResult($job$)}
+          \State append((sum, carry), $result\_arr$)
+      \EndFor
+      \State \Return{ResolveCarry($result\_arr$)}
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
+
+Algoritma pengurangan juga menggunakan pseudocode \ref{alg:parallel_add} untuk melakukan pemecahan data dan menjalankan job. Hal yang perlu diganti hanyalah fungsi yang dipanggil oleh StartJob menjadi fungsi sub().
+
+Jika kita mengasumsikan bahwa proses pembagian array, memulainya sebuah job, serta penghitungan carry di akhir dapat dilakukan dengan instan, fungsi penjumlahan dapat dipercepat sebanyak sebesar $num$ kali dari waktu awalnya. Pada kenyataannya, proses memulai sebuah job memiliki \textit{overhead} sendiri yang bergantung pada lingkungan komputasi yang digunakan. Sebagai contoh, POSIX thread memiliki overhead yang lebih kecil dalam memulai sebuah job dibandingkan dengan MPI. Selain itu, perhitungan carry akan memakan waktu yang cukup signifikan.
+
+\todo[inline]{tambahin algoritma resolve carry juga, paralelin}
+
+\subsubsection{Perkalian}
+
+Penggunaan Algoritma Karatsuba oleh OpenSSL mempermudah, cuma perlu
+
+\subsubsection{Pembagian}\label{sec:div_parallel}
+% etc, ntar ditambahin

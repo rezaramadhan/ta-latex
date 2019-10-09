@@ -107,34 +107,7 @@
 \renewcommand{\BOthers}{dkk}
 
 
-%
-% Setting package listing untuk kode/algoritma
-%
-% \lstnewenvironment{code}[][]{
-%     \renewcommand{\lstlistingname}{Source Code}
-%     % \setcounter{lstlisting}{\value{code}}
-%     \lstset{
-%         belowcaptionskip=\baselineskip,
-%         breaklines=true,
-%         frame=L,
-%         xleftmargin=40pt,
-%         framexleftmargin=10pt,
-%         numbersep=20pt,
-%         numbers=left,
-%         stepnumber=1,
-%         language=C,
-%         % showstringspaces=false,
-%         % basicstyle=\footnotesize,
-%         basicstyle=\footnotesize\ttfamily,
-%         keywordstyle=\bfseries\color{green!40!black},
-%         commentstyle=\itshape\color{purple!40!black},
-%         stringstyle=\color{orange},
-%         mathescape=true,
-%         literate={:=}{$\leftarrow{}$}{1}{beta}{$\beta$}{1},
-%     }
-% }{}
-
-\lstset{
+\lstdefinestyle{code}{
     belowcaptionskip=\baselineskip,
     breaklines=true,
     frame=L,
@@ -148,11 +121,40 @@
     keywordstyle=\bfseries\color{green!40!black},
     commentstyle=\itshape\color{purple!40!black},
     stringstyle=\color{orange},
+}
+\lstMakeShortInline[columns=fixed]|
+
+\lstdefinestyle{algorithm}{
+    belowcaptionskip=\baselineskip,
+    breaklines=true,
+    frame=tblr,
+    xleftmargin=25pt,
+    framexleftmargin=5pt,
+    numbersep=15pt,
+    numbers=left,
+    stepnumber=1,
+    language=pascal,
+    basicstyle=\linespread{1.15}\footnotesize\rmfamily,
+    keywordstyle=\bfseries\color{green!40!black},
+    commentstyle=\itshape\color{purple!40!black},
+    stringstyle=\color{orange},
     mathescape=true,
     literate={:=}{$\leftarrow{}$}{1}{beta}{$\beta$}{1},
 }
-\renewcommand{\lstlistingname}{Source Code}
-\lstMakeShortInline[columns=fixed]|
+
+\usepackage[chapter]{algorithm}
+\usepackage{algorithmicx}
+\usepackage[noend]{algpseudocode}
+
+\makeatletter  % Add this!!!!
+ \renewcommand{\ALG@name}{Pseudocode} %doesnt work
+\makeatother   % Add this also
+
+% \renewcommand{\thealgorithm}{\arabic{chapter}.\arabic{algorithm}}
+% \renewcommand{\algorithmicxname}{Pseudocode}%
+\newcommand*\Let[2]{\State #1 $\gets$ #2}
+\algrenewcommand\algorithmicrequire{\textbf{Precondition:}}
+\algrenewcommand\algorithmicensure{\textbf{Postcondition:}}
 
 
 %
