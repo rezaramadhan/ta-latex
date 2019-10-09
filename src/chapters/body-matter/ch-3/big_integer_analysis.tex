@@ -1,8 +1,10 @@
 \section{Analisis Komputasi Big Integer pada OpenSSL}
 % \blindtext
 
-\subsection{Algoritma yang Digunakan oleh OpenSSL}
-Selain langsung melakukan operasi aritmatika, terdapat juga bagian kode dalam OpenSSL yang melakukan beberapa fungsi lain. Sebagai contohnya, terdapat bagian kode yang melakukan pengecekan apakah OPENSSL\_SMALL\_FOOTPRINT terdefinisi dan melakukan fungsi yang diperlukan untuk mengkonversi tipe data yang digunakan agar cocok untuk versi OpenSSL yang terinstall. Pada subbab ini, bagian kode yang akan dibahas hanyalah bagian kode yang relevan dengan algoritma operasi aritmatika tertentu. Bagian kode yang melakukan tugas lain seperti konfigurasi tipe data ataupun \textit{memory management} tidak akan dibahas.
+\subsection{Implementasi Big Integer pada OpenSSL}
+\todo[inline]{Jelasin openssl pake frns.}
+
+Selain langsung melakukan operasi aritmatika terdapat juga bagian kode dalam OpenSSL yang melakukan beberapa fungsi lain. Sebagai contohnya, terdapat bagian kode yang melakukan pengecekan apakah OPENSSL\_SMALL\_FOOTPRINT terdefinisi dan melakukan fungsi yang diperlukan untuk mengkonversi tipe data yang digunakan agar cocok untuk versi OpenSSL yang terinstall. Pada subbab ini, bagian kode yang akan dianalisis hanyalah bagian kode yang relevan dengan algoritma operasi aritmatika tertentu. Bagian kode yang melakukan tugas lain seperti konfigurasi tipe data ataupun \textit{memory management} tidak akan dibahas.
 
 % Kalo refer ke code, how to cite?
 % \blindtext
@@ -20,7 +22,19 @@ OpenSSL tidak memiliki fungsi khusus untuk operasi modulo. Karena fungsi untuk o
 
 \subsection{Paralelisasi Algoritma}
 % \blindtext
-\subsubsection{Penjumlahan dan Pengurangan}
+Terdapat dua strategi yang dapat digunakan untuk melakukan paralelisasi algoritma penjumlahan, pengurangan, dan perkalian. Strategi pertama adalah melakukan paralelisasi untuk algoritma dalam representasi FRNS. Sementara itu, strategi yang lain adalah melakukan konversi struktur FRNS yang digunakan oleh OpenSSL menjadi struktur RNS kemudian menjalankan operasi yang dibutuhkan dalam bentuk RNS.
+
+Seperti yang dibahas pada subbab \ref{sec:rns}, RNS lebih mudah diparalelkan karena strukturnya terdiri dari komponen yang independen. Namun, konversi dari FRNS ke RNS memakan waktu yang cukup signifikan \todo{cite here, kasih data kalo nemu}. Selain itu, OpenSSL telah membuat stuktur BN\_CTX yang dapat menyimpan sejumlah struktur BIGNUM dalam memori. Penggunaan BN\_CTX membuat program dijalankan lebih cepat karena program tidak menunggu selesainya alokasi memori dalam pembuatan struktur BIGNUM. Program dapat menggunakan struktur yang tersimpan tersebut dibandingkan dengan membuat sebuah struktur baru yang hanya digunakan sesaat.
+
+Subbab \ref{sec:add_sub_parallel} hingga \ref{sec:div_parallel} akan membahas cara paralelisasi algoritma operasi aritmatika dalam representasi FRNS.
+
+\subsubsection{Penjumlahan dan Pengurangan}\label{sec:add_sub_parallel}
+bagi chunks, assign ke berbeda, gabungin, parallel array processing biasa
+
+\missingfigure{Ilustrasi pembagian penjumlahan}
+
 \subsubsection{Perkalian}
-\subsubsection{Pengurangan}
+Penggunaan Algoritma Karatsuba oleh OpenSSL mempermudah, cuma perlu
+
+\subsubsection{Pembagian}\label{sec:div_parallel}
 % etc, ntar ditambahin
