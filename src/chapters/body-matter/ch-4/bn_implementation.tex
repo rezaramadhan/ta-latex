@@ -1,8 +1,7 @@
 
 \section{Implementasi Algoritma Paralel pada Library big integer}
 \subsection{Lingkungan Implementasi}
-Sesuai dengan pertimbangan pada subbab \ref{sec:parallel_env}, implementasi algoritma paralel akan dilakukan dengan menggunakan pthread. Implementasi akan dilakukan menggunakan \textit{compiler} GCC versi 5.4.0 dan dijalankan pada sistem operasi Ubuntu 18.04. Penggunaan TLS akan diuji pada penggunaan HTTPS pada web server yang diinstall pada sistem operasi. Web server yang digunakan adalah Apache2 dengan menggunakan modul tambahan mod\_ssl. Arsitektur sistem yang digunakan dapat dilihat pada Gambar \ref{fig:openssl_arch}
-
+Sesuai dengan pertimbangan pada subbab \ref{sec:parallel_env}, implementasi algoritma paralel akan dilakukan dengan menggunakan pthread. Implementasi akan dilakukan menggunakan \textit{compiler} GCC versi 5.4.0 dan dijalankan pada sistem operasi Ubuntu 18.04 64-bit. Penggunaan TLS akan diuji pada penggunaan HTTPS pada web server yang diinstall pada sistem operasi. Web server yang digunakan adalah Apache2 dengan menggunakan modul tambahan mod\_ssl. Arsitektur sistem yang digunakan dapat dilihat pada Gambar \ref{fig:openssl_arch}
 
 \begin{figure}[h]
   \centering
@@ -11,12 +10,19 @@ Sesuai dengan pertimbangan pada subbab \ref{sec:parallel_env}, implementasi algo
   \label{fig:openssl_arch}
 \end{figure}
 
+% Cek lagi jumlahnya
+Secara default, jumlah maksimal thread maksimum yang akan digunakan oleh OpenSSL untuk menjalankan komputasi big integer secara paralel akan bergantung pada jumlah core yang terdapat pada lingkungan instalasi. Dalam aplikasi yang membutuhkan komputasi yang tinggi setiap thread akan berjalan secara terus menerus. Dengan demikian jumlah thread maksimum akan sama dengan jumlah aplikasi \todo{cite disini}. Namun, aplikasi juga memiliki pilihan konfigurasi untuk menentukan jumlah thread maksimum yang dapat digunakan.
+
 \subsection{Batasan Implementasi}
-Fungsi mana yang engga dihandle, kenapa
-Batasin cuma di satu ciphertext doang. TLS\_DH\_RSA\_WITH\_AES\_256\_CBC\_SHA256.
+Implementasi dilakukan pada sistem operasi 64 bit. Karena itu, implementasi library big number hanya berfokus pada openssl dengan configurasi makro sebagai berikut:
+\begin{itemize}
+  \item BN\_ULONG
+  \item OPENSSL\_SMALL\_FOOTPRINT tidak terdefine.
+  \item etc, tambahin seperlunya
+\end{itemize}
 
 \subsection{Struktur Data Big Integer} \label{sec:bignum_struct}
-Pada OpenSSL, sebuah big integer direpresentasikan dalam struktur data BIGNUM. BIGNUM terdiri dari sebuah array dengan ukuran dinamis, dengan demikian secara teori BIGNUM tidak memiliki nilai maksimum. Untuk keperluan paralelisasi, BIGNUM dapat digunakan tanpa mengubah strukturnya sedikitpun. BIGNUM sendiri merupakan sebuah \textit{struct} yang memiliki deklarasi sebagai berikut.
+Pada OpenSSL, sebuah big integer direpresentasikan dalam struktur data BIGNUM. BIGNUM terdiri dari sebuah array dengan ukuran dinamis dan beberapa integer yang menyimpan informasi tambahan. Dengan demikian secara teori BIGNUM tidak memiliki nilai maksimum. Untuk keperluan paralelisasi, BIGNUM dapat digunakan tanpa mengubah strukturnya sedikitpun. BIGNUM sendiri merupakan sebuah \textit{struct} yang memiliki deklarasi sebagai berikut.
 
 \begin{lstlisting}[style = code]
 struct bignum_st {
@@ -38,7 +44,7 @@ struct bignum_st {
 
 BIGNUM telah memiliki beberapa fungsi primitif yang dapat digunakan untuk membuat, memanipulasi, dan menghancurkan \textit{struct} tersebut. Primitif yang ada adalah seperti berikut.
 
-\begin{lstlisting}[caption=Primitif BIGNUM]
+\begin{lstlisting}[style = code]
  BIGNUM *BN_new(void);
  void BN_init(BIGNUM *);
  void BN_clear(BIGNUM *a);
@@ -53,14 +59,30 @@ BIGNUM telah memiliki beberapa fungsi primitif yang dapat digunakan untuk membua
 |BN_clear()| mengubah nilai seluruh komponen BIGNUM a (d, top, dmax) menjadi 0. |BN_clear()| dapat digunakan untuk menghapus data sensitif yang sudah tidak digunakan lagi seperti nilai kunci RSA atau AES.
 
 |BN_free()| mengembalikan memori komponen BIGNUM pada sistem.
-
+operand
 |BN_clear_free()| mengubah nilai seluruh komponen BIGNUM a menjadi 0 kemudian mengembalikan memori BIGNUM pada sistem.
-
 
 % Sebutin fungsi yang dipake?
 \subsection{Modul Operasi Aritmatika}
-snippet code aja pemanggilan
 \subsubsection{Modul Penjumlahan}
+Modul penjumlahan dan pengurangan terdapat pada file |BN_add.c|. Fungsi |BN_add(result, a, b)| pada modul ini melakukan pengolahan data pada a dan b seperti mengecek negatif dan mengecek panjang masing-masing array. Hasil pengecekan tersebut akan digunakan untuk melakukan operasi lebih lanjut. Jika a dan b memiliki tanda yang berbeda, akan dipanggil fungsi |BN_usub()| selain itu akan dipanggil fungsi |BN_uadd()|. |BN_uadd()| dan |BN_usub()| melakukan pengolahan data pada a dan b sehingga terdapat representasi array yang dapat diolah oleh |BN_add_words()| dan |BN_sub_words()|.
+
+|BN_add_words| merupakan fungsi yang menerima masukan dua array dengan ukuran yang sama dan menjumlahkannya secara sekuensial. Penerapan algoritma \ref{alg:add} pada OpenSSL terdapat pada fungsi ini.
+
+Paralelisasi dilakukan pada pemanggilan fungsi |BN_add_word()| oleh |BN_uadd()|. \todo{ini masukin kode? banyak banget? Kalo snippet ga ada context}
+
+\begin{lstlisting}
+    //rp -> result array, ap & bp original array, n length of ap & bp
+
+    a_split = split_array(ap, n);
+    b_split = split_array(bp, n);
+
+    ...
+
+\end{lstlisting}
+
+
+
 \subsubsection{Modul Pengurangan}
 \subsubsection{Modul Perkalian}
 \subsubsection{etc.}

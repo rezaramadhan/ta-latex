@@ -146,14 +146,15 @@
 \usepackage{algorithmicx}
 \usepackage[noend]{algpseudocode}
 
-\makeatletter  % Add this!!!!
- \renewcommand{\ALG@name}{Pseudocode} %doesnt work
-\makeatother   % Add this also
+\makeatletter
+ \renewcommand{\ALG@name}{Pseudocode}
+\makeatother
 
 % \renewcommand{\thealgorithm}{\arabic{chapter}.\arabic{algorithm}}
 % \renewcommand{\algorithmicxname}{Pseudocode}%
 \newcommand*\Let[2]{\State #1 $\gets$ #2}
-\algrenewcommand\algorithmicrequire{\textbf{Precondition:}}
+\MakeRobust{\Call}
+\algrenewcommand\algorithmicrequire{\textbf{Prekondisi:}}
 \algrenewcommand\algorithmicensure{\textbf{Postcondition:}}
 
 

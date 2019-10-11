@@ -13,10 +13,29 @@ Pengujian dilakukan pada \textit{cloud provider} DigitalOcean. Cloud dipilih kar
   \label{fig:testing_arch}
 \end{figure}
 
-Pengujian menggunakan empat Droplet, yaitu lab, test01, test16, dan test32. Setiap droplet terhubung melalui DigitalOcean Private Networking, dengan demikian latency antar droplet dapat dikurangi hingga seminimum mungkin. Droplet test01, test16, dan test32 merupakan droplet tempat diinstallnya Apache dan OpenSSL. Arsitektur aplikasi yang terinstall pada test01, test16, dan test32 sama dengan arsitektur implementasi pada Gambar \ref{fig:openssl_arch}. Droplet lab digunakan sebagai tempat melakukan testing dan tempat dijalankannya kakas ApacheBench. Komunikasi antar droplet lab dan personal workstation dilakukan dengan ssh.
+Pengujian menggunakan empat Droplet, yaitu lab, test01, test16, dan test32. Setiap droplet terhubung melalui DigitalOcean Private Networking, dengan demikian latency antar droplet dapat dikurangi hingga seminimum mungkin. Droplet test01, test16, dan test32 merupakan droplet tempat diinstallnya Apache dan OpenSSL. Arsitektur aplikasi yang terinstall pada test01, test16, dan test32 sama dengan arsitektur implementasi pada Gambar \ref{fig:openssl_arch}. Droplet lab digunakan sebagai tempat melakukan testing dan tempat dijalankannya kakas ApacheBench. Komunikasi antar droplet lab dan personal workstation dilakukan dengan ssh. Tabel \ref{tab:droplet_specs} menjelaskan spesifikasi yang dimiliki setiap droplet.
+
+\begin{table}[ht]
+\caption{Spesifikasi Droplet} % title of Table
+\label{tab:droplet_specs}
+\centering % used for centering table
+\begin{tabular}{|| c | c c c c ||} % centered columns (4 columns)
+\hline\hline %inserts double horizontal lines
+Spesifikasi\#1 & lab & test01 & test16 & test32\\[0.5ex] % inserts table
+%heading
+\hline % inserts single horizontal line
+Memori    & 1GB   & 1GB   & 32GB  & 64 \\
+vCPU      & 1     & 1     & 16    & 32 \\
+SSD Disk  & 25GB  & 25GB  & 200GB & 400 \\ [1ex] % [1ex] adds vertical space
+\hline\hline %inserts single line
+\end{tabular}
+\label{table:nonlin} % is used to refer this table in the text
+\end{table}
 
 \subsection{Skenario Pengujian}
 Install apache, test pake apachebench, get waktu, rata2 tiga kali
+
+
 \subsection{Hasil dan Analisis}
 \subsubsection{Hasil Pengujian}
   Langsung data speedup aja, data raw simpen di lampiran

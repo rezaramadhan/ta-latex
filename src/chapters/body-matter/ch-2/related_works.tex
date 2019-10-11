@@ -5,14 +5,20 @@
 
 % Pendekatan untuk setiap operasi
 Emmet melakukan penjumlahan dan pengurangan dengan divide and conquer. Array dalam BIGNUM dibagi menjadi beberapa \textit{chunks}, setiap chunks tersebut kemudian dijumlahkan dengan algoritma penjumlahan biasa, kemudian menggabungkan chunks tersebut dan menyelesaikan hasil \textit{carry over} dari setiap chunks. Operasi perkalian yang dilakukan oleh Emmet berbasis algoritma Strassen pada perkalian dalam format Fast Fourier Transform. Untuk operasi pembagian, Emmet melakukan paralelisasi pada algoritma pembagian pendek.
-% TODO: Perlu dijelasin algoritma pembagiannya ga?
 
 % Kok kalo basicnya doang kayak ga impressive
 
 Testing peneltian dilakukan pada dua CPU yaitu Core i5-7400 serta Xeon E5-2690v3, dan tiga GPU yaitu GTX Titan Black, GTX 980, Pascal P100, serta Volta V100. Emmet berhasil membuktikan bahwa untuk tiga faktor yang ditentukan, hasil yang didapat dari GPU lebih baik dibandingkan dengan CPU. Volta V100 memiliki jumlah operasi per detik terbesar, dengan speedup hingga 88 kali lebih besar dari Core i5. Penggunan daya pada Volta 2.2 kali lebih tinggi dibandingkan Xeon, namun Volta masih memiliki jumlah operasi per detik per daya yang lebih besar dibandingkan dengan CPU dan GPU yang lain. Untuk jumlah operasi per detik untuk setiap dollar yang digunakan, intel Core i5 merupakan \textit{socket} yang memiliki nilai terbesar. Namun, Emmet memperkirakan bahwa GTX1080 yang tidak digunakan dalam penelitian ini dapat memberikan nilai operasi per detik untuk setiap dollar yang lebih besar.
 
-\subsection{Fast Modular Squaring}
-\citep{drucker_gueron_2019}
+\subsection{Parallel Karatsuba Multiplication} \label{sec:parallel_karatsuba}
+\citep{parallel_karatsuba_analysis} melakukan peneltian pada paralelisasi algoritma perkalian Karatsuba dalam implementasi distributed memory multiprocessing. Cesari dan Maeder melakukan analisis  kinerja dan analisis asimtotik pada tiga algoritma paralel yang berbeda. Tiga algoritma tersebut memiliki cara pembagian job yang berbeda.
+
+Algoritma pertama memiliki kompleksitas waktu sebesar $O(n)$ dengan menggunakan $n^{\log_2 3}$ processor. Algoritma pertama memiliki basis pembagian master-slave, process master akan menjalankan algoritma karatsuba hingga sebuah level rekursif tertentu, kemudian membuat daftar task yang perlu dijalankan. Setelah terdapat daftar task yang perlu dijalankan, master akan membuat sejumlah slave yang masing-masing akan menjalankan task tersebut secara sekuensial. Master kemudian akan menggabungkan hasil komputasi slave setelah komputasi selesai dilakukan.
+
+Algoritma kedua mengikuti pendektatan fork-join. Proses master akan menjalankan algoritma, kemudian memanggil proses baru untuk setiap pemanggilan fungsi secara rekursif. Proses ini akan berulang dengan proses akan memanggil subproses hingga sebuah level rekursif tertentu. Jika level sudah tercapai, pemanggilan fungsi rekursif akan dilakukan secara sekuensial. Algoritma ini memiliki kompleksitas waktu yang sama dengan algoritma pertama.
+
+Algoritma ketiga juga mengikuti pendekatan fork-join dengan algoritma pembagian job yang mirip dengan algoritma kedua. Namun, pada level rekursif tertentu hanya dua pemanggilan fungsi yang dilakukan secara paralel, fungsi ketiga akan dijalankan setelah komputasi dua fungsi tersebut selesai. Algoritma ini memiliki kompleksitas waktu sebesar $O(n\log_2n)$ dengan menggunakan n processor. Algoritma ini memiliki kompleksitas waktu yang lebih buruk dibandingkan dengan dua algoritma lainnya, namun algoritma ini memiliki efisiensi yang lebih baik.
+
 
 % \blindtext
 \subsection{Fast Multi-Precision Multiplication}

@@ -50,7 +50,8 @@ Sebuah bilangan bulat $X$ memiliki sebuah representasi RNS ${x_1,x_2,...,x_p}$ d
 \end{equation}
 
 \todo[inline]{Tambahin penjelasan lebih jauh tentang Chinese Remainder Theorem disini}
-\todo[inline]{Jelasin karena bentuknya set, tiap elemen ga mempengaruhi satu sama lain, lebih mudah diparalelkan}
+
+Representasi RNS dalam komputer dapat menggunakan set dibandingkan dengana array ataupun list. Setiap elemen dalam representasi RNS relatif independen satu sama lainnya. Dengan demikian, urutan penyimpanan setiap elemen tersebut serta urutan operasi setiap elemen tidak berpengaruh pada nilai big integer yang direpresentasikan dalam RNS. Penggunaan RNS membuat beberapa operasi aritmatika terhadap big integer dapat dilakukan secara paralel dengan mudah.
 
 \subsection{Operasi Aritmatika}
 % \blindtext
@@ -64,37 +65,25 @@ Operasi penjumlahan dan pengurangan pada FRNS dilakukan dengan cara penjumlahan 
 Untuk penjumlahan dan pengurangan dua bilangan $A = a_{n-1}\beta^{n-1}+...+a_{1}\beta+a_{0}$ dan $B = b_{n-1}\beta^{n-1}+...+b_{1}\beta+b_{0}$, akan dihasilkan bilangan $C = c_{n-1}\beta^{n-1}+...+c_{1}\beta+c_{0}$. Algoritma yang dapat digunakan untuk menghitung C
 
 \begin{algorithm}
-  \caption{Paralelisasi fungsi penjumlahan}
-    \label{alg:packed-dna-hamming}
+  \caption{Algoritma Penjumlahan}
+    \label{alg:add}
   \begin{algorithmic}[1]
-    \Require{$x$ dan $y$ adalah array [1..n] yang merepresentasikan Big Integer, $num$ adalah jumlah task}
+    \Require{$x$ dan $y$ adalah array [1..n] yang merepresentasikan Big Integer, $\beta$ adalah basis yang digunakan}
     \Statex
-    \Function{AddParallel}{$x$, $y$, $num$}
-      \Let{$x_{chunks}$}{Split($x$)}
-      \Let{$y_{chunks}$}{Split($y$)}
-      \Let{$result\_arr$}{NewArray}
-      \ForAll{$i$, $j$ in $x_{chunks}$, $y_{chunks}$}
-          \Let{$job$}{StartJob(add($i$,$j$))}
-          \Let{$sum$, $carry$}{GetJobResult($job$)}
-          \State append((sum, carry), $result\_arr$)
+    \Function{Add}{$x$, $y$, $num$}
+      \Let{$z$}{\Call{NewArray}{$n$}}
+      \Let{$carry$}{0}
+      \For{$i \gets 1$, $i \gets i + 1$ to $n$}
+        \Let{$n$}{$carry$ + $x[i]$ + $y[i]$}
+        \Let{$carry$}{$n \div \beta$}
+        \Let{$z[i]$}{$n \mod \beta$}
       \EndFor
-      \State \Return{ResolveCarry($result\_arr$)}
+      \Let{$z[n+1]$}{$carry$}
+      \State \Return{$z$}
     \EndFunction
   \end{algorithmic}
 \end{algorithm}
 
-\begin{lstlisting}[style=algorithm]
-function add(A[0..n], B[0..n]) {
-    C := [0..n]
-    carry := 0
-    iterate 0 to n as i {
-        n := carry + A[i] + B[i]
-        carry := n div $\beta$
-        C[i] := n mod $\beta$
-    }
-    return C, carry
-}
-\end{lstlisting}
 
 
 % Cek lagi pengurangan. Ga yakin..
@@ -107,51 +96,63 @@ function add(A[0..n], B[0..n]) {
 \end{equation}
 
 
-\subsubsection{Perkalian}
+\subsubsection{Perkalian} \label{sec:mul_theory}
 
 \paragraph{Representasi FRNS}
 Terdapat beberapa algoritma yang dapat dilakukan dalam perkalian dua bilangan besar. Pada subbab ini hanya akan dibahas dua algoritma perkalian, yaitu algoritma perkalian panjang dan algoritma perkalian Karatsuba. Dua algoritma tersebut dibahas karena algoritma perkalian dasar dibutuhkan untuk memahami dasar dari proses perkalian, sementara itu algoritma Karatsuba digunakan dalam implementasi perkalian pada OpenSSL.
 
 Algoritma perkalian panjang adalah algoritma perkalian yang biasa diajarkan dalam sekolah dasar. Algoritma perkalian panjang $A*B$ berdasarkan pada proses mengkalikan satu digit A pada B, geser hasilnya sesuai posisi digit A yang digunakan, lalu jumlahkan seluruh hasil perkalian tersebut. Algoritma ini memiliki kompeksitas $O(n^2)$ terhadap perkalian. Berikut adalah algoritma perkalian panjang pada pseudocode.
 
-\begin{lstlisting}[style=algorithm]
-function mul(A[0..p], B[0..q], $\beta$) {
-    C := [0..p+q]
-    iterate 0 to p as i {
-        carry := 0
-        iterate 0 to q as j {
-            n += carry + a[i] * b[j]
-            carry = n div $\beta$
-            C[i+j-1] = n mod $\beta$
-        }
-        C := carry
-    }
-    return C
-}
-\end{lstlisting}
+\begin{algorithm}
+  \caption{Algoritma Perkalian Panjang}
+    \label{alg:mul}
+  \begin{algorithmic}[1]
+    \Require{$A$ = [1..p], $B$ = [1..q] yang merepresentasikan Big Integer, $\beta$ adalah basis yang digunakan representasi Big Integer}
+    \Statex
+    \Function{Mul}{$A$, $B$, $\beta$}
+      \Let{C}{\Call{NewArray}{p+q}}
+      \For{$i \gets 1$, $i \gets i + 1$ to $p$}
+        \Let{$carry$}{0}
+        \For{$j \gets 1$, $j \gets j + 1$ to $q$}
+          \Let{$n$}{$n + carry + A[i] * A[j]$}
+          \Let{$carry$}{$n \div \beta$}
+          \Let{$C[i+j-1]$}{$n \mod \beta$}
+        \EndFor
+        \Let{$C[j + q]$}{$carry$}
+      \EndFor
+      \State \Return{$C$}
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
 
-Algoritma karatsuba berdasarkan bahwa perkalian dua bilangan A dan B dapat direpresentasikan dalam tiga perkalian bilangan bulat yang lebih kecil. Algoritma ini memiliki kompeksitas $O(n^{\log_2 3})$ terhadap operasi perkalian. Penggunaan algoritma karatsuba dalam komputer dapat dilakukan dengan pemanggilan fungsi secara rekursif. Berikut adalah algoritma perkalian Karatsuba dalam pseudocode.
-\todo{perlu dijelasin teori lebih lanjut ga?}
+Algoritma karatsuba berdasarkan bahwa perkalian dua bilangan A dan B dapat direpresentasikan dalam tiga perkalian bilangan bulat yang lebih kecil. Algoritma ini memiliki kompeksitas $O(n^{\log_2 3})$ terhadap operasi perkalian. Penggunaan algoritma karatsuba dalam komputer dapat dilakukan dengan pemanggilan fungsi secara rekursif. Algoritma karatsuba dalam pseudocode dapat dilihat pada Pseudocode \ref{alg:karatsuba_mul}
 
-\begin{lstlisting}[style=algorithm]
-function mul_karatsuba(A[1..p], B[1..q], $\beta$) {
-    if (p = 1) or (q = 1)
-        return B*A
+\begin{algorithm}
+  \caption{Algoritma Perkalian Karatsuba}
+  \label{alg:karatsuba_mul}
+  \begin{algorithmic}
+    \Require{$A$ = [1..p], $B$ = [1..q] yang merepresentasikan Big Integer, $\beta$ adalah basis yang digunakan}
+    \Statex
+    \Function{MulKaratsuba}{$A$, $B$, $\beta$}
+      \If{($p = 1$) or ($q = 1$)}
+        \State \Return $A * B$
+      \EndIf
+      \Let{$mid$}{\Call{Floor}{\Call{Min}{$p, q$}/2}}
+      \Let{$A_{low}, A_{high}$}{\Call{SplitIn}{$A, mid$}}
+      \Comment{Split $A$ into two subarray at $mid$}
+      \Let{$B_{low}, B_{high}$}{\Call{SplitIn}{$B, mid$}}
+      \Let{$C_0$}{\Call{MulKaratsuba}{$A_{low}, B_{low}$}}
+      \Let{$C_1$}{\Call{MulKaratsuba}{($A_{low} + A_{high}$), ($B_{low} + B_{high}$)}
+      }
+      \Let{$C_2$}{\Call{MulKaratsuba}{$A_{high}, B_{high}$}}
+      \State
+      \Let{$x$}{$C_2 * \beta ^ {mid * 2}$}
+      \Let{$y$}{$(C_1 - C_2 - C_0) * \beta ^ {mid}$}
 
-    mid := floor(min(p,q)/2)
-
-    low_a := A[1..mid]
-    high_a := A[mid..p]
-    low_b := B[1..mid]
-    high_b := B[mid..q]
-
-    x = karatsuba(low_a, low_b)
-    y = karatsuba((low_a + high_a), (low_b + high_b))
-    z = karatsuba(high_a, high_b)
-
-    return (z * $\beta$ ^ (mid * 2)) + ((y - z - x) * $\beta$ ^ mid) + x
-}
-\end{lstlisting}
+      \State \Return{$x + y + C_1$}
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
 
 
 \paragraph{Representasi RNS}
@@ -165,27 +166,38 @@ Sifat penjumlahan dan pengurangan yang dibahas pada subbab \ref{sec:add_sub_theo
 \paragraph{Representasi FRNS}
 Seperti perkalian, terdapat beberapa algoritma yang dapat digunakan dalam pembagian. Algoritma yang paling mudah dilakukan adalah dengan melakukan pengurangan berkali-kali seperti yang dijelaskan oleh Euclid. \todo{tambahin citation}. Berikut adalah algoritma pembagian dengan pengurangan berkali-kali dalam pseudocode.
 
-\begin{lstlisting}[style=algorithm]
-function div_repeated_sub(N, D) {
-    Q := 0
-    R := N
-    while R >= D {
-        Q := Q + 1
-        R := R - D
-    }
-
-    return (Q, R)
-}
-\end{lstlisting}
+\begin{algorithm}
+  \caption{Algoritma Pembagian dengan Pengurangan berulang}
+  \label{alg:div_repeated_sub}
+  \begin{algorithmic}
+    \Require{$N$ dan $D$ adalah bilangan bulat}
+    \Statex
+    \Function{DivRepeatedSub}{$N$, $D$}
+      \Let{$Q$}{0}
+      \Let{$R$}{$N$}
+      \While{$R \geq D$}
+        \Let{$Q$}{$Q + 1$}
+        \Let{$R$}{$R - D$}
+      \EndWhile
+      \State \Return{$Q, R$}
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
 
 \citet{div_burnikel_ziegler} memperkenalkan algoritma pembagian cepat yang berjalan pada kompleksitas $2K(n)+O(n \log n)$ dengan $K(n)$ adalah waktu berjalannya algoritma perkalian karatsuba.
 \todo[inline]{jelasin dasarnya apa, div\&conquer, recursive}
 
-\begin{lstlisting}[style=algorithm]
-function div_burnikel_ziegler(N, D) {
+\begin{algorithm}
+  \caption{Algoritma Pembagian Burnikel-Ziegler}
+  \label{alg:div_burnikel_ziegler}
+  \begin{algorithmic}
+    \Require{$N$ dan $D$ adalah bilangan bulat}
+    \Statex
+    \Function{DivRepeatedSub}{$N$, $D$}
 
-}
-\end{lstlisting}
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
 
 \paragraph{Representasi RNS}
 

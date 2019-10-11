@@ -5,15 +5,13 @@
 Terdapat beberapa kakas yang dapat dimanfaatkan untuk menjalankan komputasi paralel dalam sebuah program.
 Dalam implementasi komputasi paralel dalam bahasa C, terdapat tiga kakas yang umum digunakan yaitu POSIX threads, OpenMP, dan MPI. Setiap kakas tersebut memiliki kelebihan dan kekurangan yang berbeda. Setiap kakas memiliki usecase khusus dimana penggunaannya akan menghasilkan kinerja yang baik dan implementasi komputasi paralel dapat dilakukan dengan relatif mudah.
 
-
 % Kasih usecase buat tiap model
 % jelasin thread, kekurangan ribet serba manual, kelebihan sudah native, ga nambah overhead banyak, relatif sederhana
+POSIX threads (pthread) adalah sebuah model eksekusi dalam komputasi paralel yang dimiliki sistem operasi UNIX secara native. POSIX thread merupakan sebuah implementasi shared memory multiprocessing, dimana sebuah job akan dijalankan dalam \textit{thread} yang berbeda. Salah satu kelebihan pthread adalah sedikitnya overhead yang ada dalam pemanggilan sebuah job baru. Overhead dalam pemanggilan job baru kurang lebih sama dengan pemanggilan thread baru jika dilakukan oleh OS. Kekurangan pthread terdapat pada kurangnya fitur yang dimilikinya. pthread hanya menyediakan fungsionalitas untuk manajemen thread, mutex, condition variable, serta sinkronisasi melalui \textit{lock} dan \textit{barriers}. Pthread tidak menyediakan fungsionalitas untuk melakukan sinkronisasi antar job lebih jauh seperti yang disediakan oleh OpenMP ataupun MPI.
 
-OpenMP (Open Multi-Processing) adalah API yang dapat digunakan untuk melakukan multipro
+OpenMP (Open Multi-Processing) adalah sebuah API yang dapat digunakan untuk melakukan shared memory multiprocessing. Seperti pthreads, setiap job yang dijalankan oleh OpenMP akan berbagi memori dan data yang sama. OpenMP memberikan fungsi sinkronisasi yang lebih banyak dibandingkan dengan pthread. \textit{Directive} \textit{barriers, atomic, ordered, nowait,} dan \textit{critical} dapat digunakan untuk melakukan sinkronisasi antar threads dengan lebih sederhana dibandingkan dengan penggunaan barriers dan lock pada pthread. Namun OpenMP adalah library yang memiliki level abstraksi yang lebih tinggi dibandingkan dengan pthread, dengan demikian OpenMP menyediakan level kontrol yang lebih rendah dibandingkan dengan pthread. Selain itu, OpenMP memiliki overhead yang lebih tinggi dibandingkan dengan pthread.
 
-MPI (Message Passing Interface) merupakan protokol komunikasi untuk melakukan koordinasi antar process dalam menyelesaikan sebuah pekerjaan tertentu.
-
-POSIX threads (pthread) adalah sebuah model eksekusi dalam komputasi paralel yang dimiliki sistem operasi UNIX secara native. Salah satu kelebihan pthread adalah sedikitnya overhead yang ada dalam pemanggilan sebuah job baru. Overhead dalam pemanggilan job baru kurang lebih sama dengan pemanggilan thread baru jika dilakukan oleh OS. Kekurangan pthread terdapat pada kurangnya fitur yang dimilikinya. pthread hanya menyediakan fungsionalitas untuk manajemen thread, mutex, condition variable, serta . Pthread tidak menyediakan fungsionalitas untuk melakukan sinkronisasi antar job lebih jauh seperti yang disediakan oleh OpenMP .... ataupun MPI.
+Berbeda dengan pthread dan OpenMP, MPI (Message Passing Interface) merupakan sebuah kakas yang digunakan untuk melakukan distributed memory multiprocessing. MPI merupakan protokol komunikasi untuk melakukan koordinasi antar process dalam menyelesaikan sebuah pekerjaan tertentu. Penggunaan distributed memory multiprocessing tidak cocok untuk digunakan dalam penelitian ini, mengingat overhead komunikasi pengiriman struktur big integer akan cukup tinggi.
 
 Dari tiga kakas yang telah dijelaskan tersebut, pthread adalah kakas yang paling cocok untuk digunakan dalam implementasi komputasi paralel dalam OpenSSL. Pthread sudah terdapat dalam sistem operasi secara native, dengan demikian instalasi OpenSSL setelah implementasi komputasi paralel tidak bergantung pada ketersediaan kakas pthread atau tidak. Alasan utama pemilihan pthread adalah kecilnya overhead yang dibutuhkan dalam pemanggilan job baru. Overhead yang kecil cocok untuk program seperti OpenSSL dimana tingginya kinerja sangat dibutuhkan.
 
@@ -26,7 +24,7 @@ Seperti yang dibahas pada subbab \ref{sec:rns}, RNS lebih mudah diparalelkan kar
 Subbab \ref{sec:add_sub_parallel} hingga \ref{sec:div_parallel} akan membahas cara paralelisasi algoritma operasi aritmatika dalam representasi FRNS.
 
 \subsubsection{Penjumlahan dan Pengurangan}\label{sec:add_sub_parallel}
-Algoritma XX \todo{coba package untuk algorithm/pseudocode} yang digunakan untuk melakukan penjumlahan dan pengurangan pada big number sudah merupakan algoritma yang paling efektif. Algoritma ini memiliki kompleksitas $O(n)$ untuk operasi penjumlahan/pengurangan. Setiap elemen dalam array big integer harus dibaca, karena itu tidak terdapat algoritma lain yang dapat mengurangi kompleksitas algoritma tersebut. Penulis dapat menggunakan algoritma ini sebagai dasar untuk melakukan paralelisasi algoritma.
+Algoritma \ref{alg:add} yang digunakan untuk melakukan penjumlahan dan pengurangan pada big number sudah merupakan algoritma yang paling efektif. Algoritma ini memiliki kompleksitas $O(n)$ untuk operasi penjumlahan/pengurangan. Setiap elemen dalam array big integer harus dibaca, karena itu tidak terdapat algoritma lain yang dapat mengurangi kompleksitas algoritma tersebut. Penulis dapat menggunakan algoritma ini sebagai dasar untuk melakukan paralelisasi algoritma.
 
 \todo[inline]{bikin daftar istilah buat parallel computing -> job, task, subroutine, etc}
 
@@ -39,15 +37,16 @@ Paralelisasi yang dilakukan adalah memecah array menjadi beberapa sub-array seba
     \Require{$x$ dan $y$ adalah array [1..n] yang merepresentasikan Big Integer, $num$ adalah jumlah task}
     \Statex
     \Function{AddParallel}{$x$, $y$, $num$}
-      \Let{$x_{chunks}$}{Split($x$, $num$)}
-      \Let{$y_{chunks}$}{Split($y$, $num$)}
-      \Let{$result\_arr$}{NewArray}
+      \Let{$x_{chunks}$}{\Call{Split}{$x$, $num$}}
+      \Comment{Split Array $x$ into $num$ smaller array}
+      \Let{$y_{chunks}$}{\Call{Split}{$y$, $num$}}
+      \Let{$result\_arr$}{\Call{NewArray}{$n$}}
       \ForAll{$i$, $j$ in $x_{chunks}$, $y_{chunks}$}
-          \Let{$job$}{StartJob(add($i$,$j$))}
-          \Let{$sum$, $carry$}{GetJobResult($job$)}
-          \State append((sum, carry), $result\_arr$)
+          \Let{$job$}{\Call{StartJob}{\Call{Add}{$i$,$j$}}}
+          \Let{$sum$, $carry$}{\Call{GetJobResult}{$job$}}
+          \State \Call{Append}{($sum$, $carry$), $result\_arr$}
       \EndFor
-      \State \Return{ResolveCarry($result\_arr$)}
+      \State \Return{\Call{ResolveCarry}{$result\_arr$}}
     \EndFunction
   \end{algorithmic}
 \end{algorithm}
@@ -60,7 +59,71 @@ Jika kita mengasumsikan bahwa proses pembagian array, memulainya sebuah job, ser
 
 \subsubsection{Perkalian}
 
-Penggunaan Algoritma Karatsuba oleh OpenSSL mempermudah, cuma perlu
+Algoritma Karatsuba yang digunakan oleh OpenSSL merupakan sebuah algoritma rekursif. Paralelisasi fungsi yang menggunakan algoritma rekursif lebih mudah untuk dilakukan. Pemanggilan job secara paralel dilakukan dalam pemanggilan fungsi secara paralel\todo{tambahin citation ke buku}.
+
+\citet{parallel_karatsuba_analysis} mengenalkan bahwa terdapat tiga strategi yang dapat dilakukan dalam batas pembagian job serta proses pembuatan job. Penelitian tersebut telah dibahas lebih lanjut  pada subbab \ref{sec:parallel_karatsuba}. Berdasarkan hasil penelitian yang dilakukan, strategi terbaik yang dapat dilakukan adalah menjalankan sebuah task pada job baru dan pada titik tertentu fungsi akan dijalankan secara sekuensial dan tidak secara paralel lagi. Berikut adalah pseudocode yang dapat digunakan untuk paralelisasi algoritma karatsuba.
+
+\begin{algorithm}
+  \caption{Algoritma Perkalian Karatsuba Paralel}
+  \begin{algorithmic}
+    \Require{$A$ = [1..p], $B$ = [1..q] yang merepresentasikan Big Integer, $\beta$ adalah basis yang digunakan, $cutoff$ adalah batas maksimum Job yang dipanggil, $job_c$ adalah jumlah job saat ini yang diinisialisasi 1}
+    \Statex
+    \Function{MulKaratsubaParallel}{$A$, $B$, $\beta$, $cutoff$}
+      \If{($p = 1$) or ($q = 1$)}
+        \State \Return $A * B$
+      \EndIf
+      \Let{$mid$}{\Call{Floor}{\Call{Min}{$p, q$}/2}}
+      \Let{$A_{low}, A_{high}$}{\Call{SplitIn}{$A, mid$}}
+      \Let{$B_{low}, B_{high}$}{\Call{SplitIn}{$B, mid$}}
+      \State
+      \Let{$job_c$}{$job_c + 3$}
+      \If{$job_c < cutoff$}
+        \Let{$job_1$}{\Call{StartJob}{\Call{MulKaratsubaParallel}{$A_{low}, B_{low}$}}}
+        \Let{$C_0$}{\Call{GetJobResult}{$job$}}
+
+        \Let{$job_2$}{\Call{StartJob}{\Call{MulKaratsubaParallel}{($A_{low} + A_{high}$), ($B_{low} + B_{high}$)}}}
+        \Let{$C_0$}{\Call{GetJobResult}{$job$}}
+
+        \Let{$job_3$}{\Call{StartJob}{\Call{MulKaratsubaParallel}{$A_{high}, B_{high}$}}}
+        \Let{$C_0$}{\Call{GetJobResult}{$job$}}
+      \Else
+        \Let{$C_0$}{\Call{MulKaratsuba}{$A_{low}, B_{low}$}}
+        \Let{$C_1$}{\Call{MulKaratsuba}{($A_{low} + A_{high}$), ($B_{low} + B_{high}$)}}
+        \Let{$C_2$}{\Call{MulKaratsuba}{$A_{high}, B_{high}$}}
+      \EndIf
+
+      \State
+      \Let{$x$}{$C_2 * \beta ^ {mid * 2}$}
+      \Let{$y$}{$(C_1 - C_2 - C_0) * \beta ^ {mid}$}
+
+      \State \Return{$x + y + C_1$}
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
+
+Algoritma perkalian panjang serta algoritma perkalian comba merupakan algoritma yang berbasis proses iterasi pada sebuah array. Dengan demikian, metode paralelisasi yang dapat digunakan mirip dengan proses paralelisasi untuk fungsi penjumlahan dan pengurangan pada subbab \ref{sec:add_sub_parallel}. Array dibagi menjadi beberapa subarray yang akan dikomputasi oleh sebuah job secara paralel. Pseudocode yang dapat digunakan untuk paralelisasi algoritma adalah ...
+
+\begin{algorithm}
+  \caption{Algoritma Perkalian Panjang Paralel}
+    \label{alg:mul_parallel}
+  \begin{algorithmic}[1]
+    \Require{$A$ = [1..p], $B$ = [1..q] yang merepresentasikan Big Integer, $\beta$ adalah basis yang digunakan representasi Big Integer}
+    \Statex
+    \Function{Mul}{$A$, $B$, $\beta$}
+      \Let{C}{\Call{NewArray}{p+q}}
+      \For{$i \gets 1$, $i \gets i + 1$ to $p$}
+        \Let{$carry$}{0}
+        \For{$j \gets 1$, $j \gets j + 1$ to $q$}
+          \Let{$n$}{$n + carry + A[i] * A[j]$}
+          \Let{$carry$}{$n \div \beta$}
+          \Let{$C[i+j-1]$}{$n \mod \beta$}
+        \EndFor
+        \Let{$C[j + q]$}{$carry$}
+      \EndFor
+      \State \Return{$C$}
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
 
 \subsubsection{Pembagian}\label{sec:div_parallel}
 % etc, ntar ditambahin

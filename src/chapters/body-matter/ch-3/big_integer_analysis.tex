@@ -24,7 +24,7 @@ OpenSSL menggunakan algoritma penjumlahan dan pengurangan standar dalam represen
 % TODO: Cek lagi atas ^^
 
 \subsubsection{Perkalian}
-OpenSSL menggunakan algoritma karatsuba++
+Terdapat tiga implementasi algoritma perkalian yang ada dalam OpenSSL yaitu algoritma perkalian panjang, algoritma perkalian karatsuba, dan algoritma perkalian comba. Tiga algoritma tersebut telah dijelaskan pada subbab \ref{sec:mul_theory}. Pemilihan algoritma yang digunakan oleh OpenSSL bergantung pada macro yang diset pada kompilasi OpenSSL. Secara default, algoritma yang digunakan adalah Algoritma Karatsuba dengan algoritma perkalian Comba untuk melakukan perkalian pada basis rekursif Karatsuba.
 
 \subsubsection{Pembagian dan Modulo}
 Jelasin pembagian
