@@ -84,10 +84,6 @@ Untuk penjumlahan dan pengurangan dua bilangan $A = a_{n-1}\beta^{n-1}+...+a_{1}
   \end{algorithmic}
 \end{algorithm}
 
-
-
-% Cek lagi pengurangan. Ga yakin..
-
 \paragraph{Representasi RNS}
 
 \citet{rns_sharoun} menyatakan bahwa dalam sistem RNS dengan elemen $\{m_1,m_2,...,m_p\}$, penjumlahan dan pengurangan dua bilangan $A$ dan $B$ yang memiliki representasi RNS $\{b_1,b_2,...,b_p\}$ dan $\{b_1,b_2,...,b_p\}$,  menghasilkan $C$ yang memiliki representasi $\{c_1,c_2,...,c_p\}$ dengan nilai $c_i$ sebagai berikut
@@ -99,7 +95,7 @@ Untuk penjumlahan dan pengurangan dua bilangan $A = a_{n-1}\beta^{n-1}+...+a_{1}
 \subsubsection{Perkalian} \label{sec:mul_theory}
 
 \paragraph{Representasi FRNS}
-Terdapat beberapa algoritma yang dapat dilakukan dalam perkalian dua bilangan besar. Pada subbab ini hanya akan dibahas dua algoritma perkalian, yaitu algoritma perkalian panjang dan algoritma perkalian Karatsuba. Dua algoritma tersebut dibahas karena algoritma perkalian dasar dibutuhkan untuk memahami dasar dari proses perkalian, sementara itu algoritma Karatsuba digunakan dalam implementasi perkalian pada OpenSSL.
+Terdapat beberapa algoritma yang dapat dilakukan dalam perkalian dua bilangan besar. Pada subbab ini akan dibahas tiga algoritma perkalian, yaitu algoritma perkalian panjang, algoritma comba, dan algoritma perkalian Karatsuba. Ketiga algoritma tersebut merupakan algoritma yang digunakan oleh OpenSSL.
 
 Algoritma perkalian panjang adalah algoritma perkalian yang biasa diajarkan dalam sekolah dasar. Algoritma perkalian panjang $A*B$ berdasarkan pada proses mengkalikan satu digit A pada B, geser hasilnya sesuai posisi digit A yang digunakan, lalu jumlahkan seluruh hasil perkalian tersebut. Algoritma ini memiliki kompeksitas $O(n^2)$ terhadap perkalian. Berikut adalah algoritma perkalian panjang pada pseudocode.
 
@@ -111,26 +107,28 @@ Algoritma perkalian panjang adalah algoritma perkalian yang biasa diajarkan dala
     \Statex
     \Function{Mul}{$A$, $B$, $\beta$}
       \Let{C}{\Call{NewArray}{p+q}}
-      \For{$i \gets 1$, $i \gets i + 1$ to $p$}
+      \For{$i \gets 1$, $i \gets i + 1$ to $q$}
         \Let{$carry$}{0}
         \For{$j \gets 1$, $j \gets j + 1$ to $q$}
-          \Let{$n$}{$n + carry + A[i] * A[j]$}
-          \Let{$carry$}{$n \div \beta$}
-          \Let{$C[i+j-1]$}{$n \mod \beta$}
+          \Let{$C[i+j-1]$}{$C[i+j-1] + carry + A[i] * A[j]$}
+          \Let{$carry$}{$C[i+j-1] \div \beta$}
+          \Let{$C[i+j-1]$}{$C[i+j-1] \mod \beta$}
         \EndFor
-        \Let{$C[j + q]$}{$carry$}
+        \Let{$C[j+p]$}{$carry$}
       \EndFor
       \State \Return{$C$}
     \EndFunction
   \end{algorithmic}
 \end{algorithm}
 
+Algoritma Comba merupakan modifikasi dari algoritma perkalian panjang. Algoritma comba mengoptimasi penggunaan carry serta mengurangi jumlah penulisan terhadap memori.
+
 Algoritma karatsuba berdasarkan bahwa perkalian dua bilangan A dan B dapat direpresentasikan dalam tiga perkalian bilangan bulat yang lebih kecil. Algoritma ini memiliki kompeksitas $O(n^{\log_2 3})$ terhadap operasi perkalian. Penggunaan algoritma karatsuba dalam komputer dapat dilakukan dengan pemanggilan fungsi secara rekursif. Algoritma karatsuba dalam pseudocode dapat dilihat pada Pseudocode \ref{alg:karatsuba_mul}
 
 \begin{algorithm}
   \caption{Algoritma Perkalian Karatsuba}
   \label{alg:karatsuba_mul}
-  \begin{algorithmic}
+  \begin{algorithmic}[1]
     \Require{$A$ = [1..p], $B$ = [1..q] yang merepresentasikan Big Integer, $\beta$ adalah basis yang digunakan}
     \Statex
     \Function{MulKaratsuba}{$A$, $B$, $\beta$}
@@ -169,7 +167,7 @@ Seperti perkalian, terdapat beberapa algoritma yang dapat digunakan dalam pembag
 \begin{algorithm}
   \caption{Algoritma Pembagian dengan Pengurangan berulang}
   \label{alg:div_repeated_sub}
-  \begin{algorithmic}
+  \begin{algorithmic}[1]
     \Require{$N$ dan $D$ adalah bilangan bulat}
     \Statex
     \Function{DivRepeatedSub}{$N$, $D$}
@@ -182,6 +180,38 @@ Seperti perkalian, terdapat beberapa algoritma yang dapat digunakan dalam pembag
       \State \Return{$Q, R$}
     \EndFunction
   \end{algorithmic}
+\end{algorithm}
+
+Selain itu, terdapat algoritma pembagian panjang. Algoritma ini merupakan algoritma yang biasa dilakukan pada melakukan pembagian dengan tangan. Algoritma ini memiliki prekondisi divisor yang telah dinormalisasi. Divisor yang dinormalisasi adalah untuk divisor $D = [0..n-1]$ yang menggunakan basis $\beta$, berlaku $D[n-1] > \beta/2$. Pseudocode \ref{alg:long_div} menjelaskan algor ini dalam bentuk pseudocode.
+
+\begin{algorithm}
+  \caption{Algoritma Pembagian Panjang}
+  \label{alg:long_div}
+  \begin{algorithmic}[1]
+    \Require{$N = [0..n+m-1], D = [0..n-1]$ bilangan bulat dalam representasi array.}
+    \Statex
+    \Function{LongDiv}{$D, N, \beta$}
+      \Let{$Q$}{\Call{NewArray}{m}}
+      \Let{$is_bigger$}{\Call{BigIntCompare}{$N$, \Call{Mul}{$D, \beta^m$}}}
+      \If{$is_bigger$}
+        \Let{$Q[m]$}{1}
+      \Else
+        \Let{$Q[m]$}{0}
+      \EndIf
+      \For{$i \gets m$, $i \gets i - 1$ downto $n$}
+        \Let{$Q[i]$}{$\lfloor\frac{N[n+i]\beta + N[n+j-1]}{D[n-1]}\rfloor$}
+        \Let{$Q[i]$}{\Call{Min}{$Q[i],\beta$}}
+        \Let{$N$}{$N$-\Call{Mul}{$Q[i], D}*\beta^i$}
+        \While{$A$ < 0}
+          \Let{$Q[i]$}{$Q[i] - 1$}
+          \Let{$N$}{$N+N\beta^i$}
+        \EndWhile
+        \Let{$R$}{$A$}
+        \State \Return{$Q, R$}
+      \EndFor
+    \EndFunction
+  \end{algorithmic}
+
 \end{algorithm}
 
 \citet{div_burnikel_ziegler} memperkenalkan algoritma pembagian cepat yang berjalan pada kompleksitas $2K(n)+O(n \log n)$ dengan $K(n)$ adalah waktu berjalannya algoritma perkalian karatsuba.
@@ -201,4 +231,4 @@ Seperti perkalian, terdapat beberapa algoritma yang dapat digunakan dalam pembag
 
 \paragraph{Representasi RNS}
 
-Pembagian dalam RNS cukup kompleks. Mengingat bahwa kinerja pembagian pada RNS pasti lebih buruk dibandingkan dengan pembagian pada FRNS, maka algoritma pembagian pada RNS tidak dibahas lebih lanjut.
+Pembagian dalam RNS cukup kompleks. Mengingat bahwa kinerja pembagian pada RNS pasti lebih buruk dibandingkan dengan pembagian pada FRNS, maka algoritma pembagian pada RNS tidak dibahas lebih lanjut. 

@@ -126,4 +126,4 @@ Algoritma perkalian panjang serta algoritma perkalian comba merupakan algoritma 
 \end{algorithm}
 
 \subsubsection{Pembagian}\label{sec:div_parallel}
-% etc, ntar ditambahin
+Algoritma pembagian panjang yang digunakan OpenSSL tidak bisa dijalankan secara paralel. Setiap iterasi pencarian quotient membutuhkan nilai N yang telah diupdate dari langkah sebelumnya. Namun, terdapat beberapa algoritma yang dapat membantu langkah pemilihan quotient pada baris ke-9.  

@@ -27,6 +27,6 @@ OpenSSL menggunakan algoritma penjumlahan dan pengurangan standar dalam represen
 Terdapat tiga implementasi algoritma perkalian yang ada dalam OpenSSL yaitu algoritma perkalian panjang, algoritma perkalian karatsuba, dan algoritma perkalian comba. Tiga algoritma tersebut telah dijelaskan pada subbab \ref{sec:mul_theory}. Pemilihan algoritma yang digunakan oleh OpenSSL bergantung pada macro yang diset pada kompilasi OpenSSL. Secara default, algoritma yang digunakan adalah Algoritma Karatsuba dengan algoritma perkalian Comba untuk melakukan perkalian pada basis rekursif Karatsuba.
 
 \subsubsection{Pembagian dan Modulo}
-Jelasin pembagian
+OpenSSL menggunakan algoritma pembagian panjang pada pseudocode \ref{alg:long_div}. Proses normalisasi pembagian dilakukan dengan menggeser bit pada number dan divisor hingga divisor memenuhi syarat $D[top] > \beta/2$. 
 
 OpenSSL tidak memiliki fungsi khusus untuk operasi modulo. Karena fungsi untuk operasi pembagian sudah mengembalikan sisa dari pembagian, operasi modulo hanya perlu memanggil fungsi pembagian dengan argumen menggunakan argumen yang telah disesuaikan.

@@ -14,12 +14,16 @@ Sesuai dengan pertimbangan pada subbab \ref{sec:parallel_env}, implementasi algo
 Secara default, jumlah maksimal thread maksimum yang akan digunakan oleh OpenSSL untuk menjalankan komputasi big integer secara paralel akan bergantung pada jumlah core yang terdapat pada lingkungan instalasi. Dalam aplikasi yang membutuhkan komputasi yang tinggi setiap thread akan berjalan secara terus menerus. Dengan demikian jumlah thread maksimum akan sama dengan jumlah aplikasi \todo{cite disini}. Namun, aplikasi juga memiliki pilihan konfigurasi untuk menentukan jumlah thread maksimum yang dapat digunakan.
 
 \subsection{Batasan Implementasi}
-Implementasi dilakukan pada sistem operasi 64 bit. Karena itu, implementasi library big number hanya berfokus pada openssl dengan configurasi makro sebagai berikut:
+Implementasi dilakukan pada sistem operasi Ubuntu 64 bit. Karena itu, implementasi library big number hanya berfokus pada openssl dengan yang memiliki konfigurasi makro sebagai berikut:
 \begin{itemize}
-  \item BN\_ULONG
-  \item OPENSSL\_SMALL\_FOOTPRINT tidak terdefine.
-  \item etc, tambahin seperlunya
+  \item BN\_ULONG = unsigned long long
+  \item OPENSSL\_SMALL\_FOOTPRINT = false
+  \item BN\_MUL\_COMBA = true
+  \item BN\_RECURSION = true
+
 \end{itemize}
+
+Konfigurasi makro tersebut digunakan dalam pemilihan dan manajemen struktur data yang digunakan serta pemilihan algoritma pada bagian tertentu. Sebagai contoh, algoritma yang digunakan dalam perkalian adalah algoritma karatsuba dan algoritma comba pada basis rekursif.
 
 \subsection{Struktur Data Big Integer} \label{sec:bignum_struct}
 Pada OpenSSL, sebuah big integer direpresentasikan dalam struktur data BIGNUM. BIGNUM terdiri dari sebuah array dengan ukuran dinamis dan beberapa integer yang menyimpan informasi tambahan. Dengan demikian secara teori BIGNUM tidak memiliki nilai maksimum. Untuk keperluan paralelisasi, BIGNUM dapat digunakan tanpa mengubah strukturnya sedikitpun. BIGNUM sendiri merupakan sebuah \textit{struct} yang memiliki deklarasi sebagai berikut.
