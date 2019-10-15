@@ -2,7 +2,6 @@
 
 
 \section{Latar Belakang}
-\todo[inline]{configure hyphenation}
 % basically overview TLS, apa itu TLS
 \textit{Transport Layer Security} (TLS) merupakan sebuah protokol yang berguna untuk menjamin keamanan dan kerahasiaan dari sebuah pesan yang dikirim melalui jaringan. Saat ini, TLS umum digunakan sebagai sebuah \textit{security layer} dari berbagai protokol yang saat ini umum digunakan di Internet seperti \textit{Hyper-Text Transfer Protocol}, (HTTP) \textit{File Transfer Protocol} (FTP), ataupun \textit{Simple Mail Transfer Protocol} (SMTP). Penggunaan TLS sebagai \textit{layer} tambahan membuat TLS dapat digunakan untuk berbagai protokol dimana keamanan informasi merupakan hal yang penting.
 
@@ -79,17 +78,15 @@ Pengerjaan tugas akhir ini akan melalui beberapa tahap, yaitu:
 
 
 \section{Sistematika Laporan}
-\todo[inline]{Diisi nanti kalo laporan udah beres}
-
 % \blindtext
-% Penulisan tugas akhir ini akan terdiri dari lima bab yaitu: BAB I Pendahuluan, BAB II Studi Literatur, BAB III Analisis Solusi, BAB IV Rancangan, Implementasi dan Pengujian, BAB V Penutup.
-%
-% Bab satu memaparkan mengenai latar belakang pembuatan tugas akhir ini, masalah utama yang dibahas, tujuan pembuatan tugas akhir, serta metodologi yang akan dilakukan selama pembuatan tugas akhir. Bab ini dibuat sebagai pendahuluan dan akan mencakup ringkasan dari sebagian besar hal yang dibahas pada tugas akhir.
-%
-% Bab dua akan membahas mengenai teori dasar yang sudah ada mengenai protokol TLS, algoritma RSA, serta pengembangan dari algoritma RSA melalui pemrograman paralel yang sudah ada. Teori yang diambil akan bersumber dari literatur terpercaya serta dokumentasi resmi dari protokol TLS.
-%
-% Bab tiga menggambarkan solusi yang digunakan untuk menyelesaikan masalah yang ada, kenapa digunakan solusi tersebut, serta hipotesa peningkatan kinerja dari TLS handshake setelah solusi yang dibuat diimplementasikan.
-%
-% Bab empat memperlihatkan rancangan implementasi dari solusi, proses implementasi solusi tersebut, serta hasil pengujian dari implementasi tersebut pada kinerja TLS handshake.
-%
-% Bab lima mendeskripsikan hasil kesimpulan dari solusi yang dibuat untuk menyelesaikan masalah serta saran yang dapat dilakukan untuk pengembangan dan perbaikan agar implementasi ini dapat menghasilkan hasil yang lebih baik.
+Penulisan tugas akhir ini akan terdiri dari lima bab yaitu: BAB I Pendahuluan, BAB II Studi Literatur, BAB III Analisis Solusi, BAB IV Rancangan, Implementasi dan Pengujian, BAB V Penutup.
+
+Bab pertama memaparkan mengenai latar belakang pembuatan tugas akhir ini, masalah utama yang dibahas, tujuan pembuatan tugas akhir, serta metodologi yang akan dilakukan selama pembuatan tugas akhir. Bab ini dibuat sebagai pendahuluan dan akan mencakup ringkasan dari sebagian besar hal yang dibahas pada tugas akhir.
+
+Bab kedua membahas mengenai teori dasar yang sudah ada mengenai teori dasar kriptografi, algoritma RSA, TLS, teori dasar perhitungan aritmatika dalam big integer, serta penelitian yang terkait dengan proses paralelisasi operasi aritmatika dalam big integer. Teori yang diambil akan bersumber dari literatur terpercaya, dokumentasi dari protokol TLS, serta dokumentasi kakas yang digunakan. Bab ini akan digunakan sebagai referensi dari analisis yang akan dilakukan pada bab ketiga.
+
+Bab ketiga terdiri dari analisis terhadap kinerja dan implementasi TLS, analisis terhadap implementasi big number pada OpenSSL. Dari hasil analisis implementasi big integer pada OpenSSL, akan dibuat analisis mengenai paralelisasi yang mungkin dilakukan pada implementasi tersebut.
+
+Bab keempat memperlihatkan implementasi dari solusi, serta evaluasi yang berisi hasil dan analisis dari implementasi yang telah dibuat. Evaluasi akan memperlihatkan apakah solusi yang telah dirancang berhasil untuk meningkatkan kinerja TLS. Selain itu, analisis evaluasi akan memperlihatkan bagian mana dari solusi yang masih mungkin diperbaiki lebih lanjut.
+
+Bab kelima mendeskripsikan hasil kesimpulan dari solusi yang dibuat untuk menyelesaikan masalah. Terdapat juga saran yang dapat dilakukan untuk pengembangan dan perbaikan agar implementasi ini dapat menghasilkan hasil yang lebih baik.

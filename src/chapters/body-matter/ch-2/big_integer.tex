@@ -121,7 +121,7 @@ Algoritma perkalian panjang adalah algoritma perkalian yang biasa diajarkan dala
   \end{algorithmic}
 \end{algorithm}
 
-Algoritma Comba merupakan modifikasi dari algoritma perkalian panjang. Algoritma comba mengoptimasi penggunaan carry serta mengurangi jumlah penulisan terhadap memori.
+Algoritma Comba merupakan modifikasi dari algoritma perkalian panjang. Berbeda dengan algoritma perkalian panjang, algoritma comba melakukan proses iterasi perkalian berbasis kolom, sementara algoritma perkalian panjang berbasis baris. Penggunaan kolom dibandingkan baris membuat carry pada setiap iterasi perkalian lebih sedikit. Dengan demikian, algoritma comba mengurangi kompleksitas ruang serta mengurangi jumlah penulisan terhadap memori.
 
 Algoritma karatsuba berdasarkan bahwa perkalian dua bilangan A dan B dapat direpresentasikan dalam tiga perkalian bilangan bulat yang lebih kecil. Algoritma ini memiliki kompeksitas $O(n^{\log_2 3})$ terhadap operasi perkalian. Penggunaan algoritma karatsuba dalam komputer dapat dilakukan dengan pemanggilan fungsi secara rekursif. Algoritma karatsuba dalam pseudocode dapat dilihat pada Pseudocode \ref{alg:karatsuba_mul}
 
@@ -231,4 +231,4 @@ Selain itu, terdapat algoritma pembagian panjang. Algoritma ini merupakan algori
 
 \paragraph{Representasi RNS}
 
-Pembagian dalam RNS cukup kompleks. Mengingat bahwa kinerja pembagian pada RNS pasti lebih buruk dibandingkan dengan pembagian pada FRNS, maka algoritma pembagian pada RNS tidak dibahas lebih lanjut. 
+Pembagian dalam RNS cukup kompleks. Mengingat bahwa kinerja pembagian pada RNS pasti lebih buruk dibandingkan dengan pembagian pada FRNS, maka algoritma pembagian pada RNS tidak dibahas lebih lanjut.
