@@ -2,7 +2,7 @@
 \section{Analisis TLS}
 Penggunaan TLS pada sebuah infrastrukur internet dapat membantu penjaminan keamanan dari proses keluar masuknya data. Namun, penggunaan TLS memilki harga yang mahal secara komputasi yang dilakukan, sehingga membuat kinerjanya sendiri lambat. Pengurangan kinerja dari penggunaan TLS sendiri berdampak pada 3.4 hingga 9 kali dibandingkan dengan deployment tanpa penggunaan TLS \citep{perf_tls}. Mengingat beberapa tipe website seperti personal \textit{blog}, portal berita, ataupun \textit{search engine} tidak benar-benar membutuhkan keamanan informasi, tidak sedikit dari situs tersebut yang memilih untuk tidak menggunakan TLS demi mendapatkan kinerja yang maksimal.
 
-\todo[inline]{tambahin persentasi website yang ga pake TLS}
+% \todo[inline]{tambahin persentasi website yang ga pake TLS}
 
 Proses TLS dapat dibagi menjadi dua bagian, yaitu proses TLS \textit{Handshake} yang dilakukan saat membuat sebuah koneksi TLS, serta proses pertukaran data yang dilakukan setelah TLS \textit{Handshake} selesai dilakukan. Berdasarkan eksperimen yang dilakukan, \cite{perf_tls} menyatakan bahwa CPU melakukan lebih banyak pekerjaan untuk menyelesaikan TLS \textit{Handshake} dibandingkan dengan proses pertukaran data. Hal ini menyatakan bahwa TLS Handshake berdampak lebih besar pada kinerja sebuah TLS server dibandingkan dengan pertukaran data.
 

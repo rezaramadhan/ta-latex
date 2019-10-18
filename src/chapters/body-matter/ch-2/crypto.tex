@@ -30,9 +30,9 @@
 
     Kriptografi kunci publik adalah sebuah sistem kriptografi dimana proses enkripsi dan dekripsi dilakukan dengan kunci yang berbeda. Umumnya terdapat dua macam kunci yang terdapat pada sistem ini, yaitu \textit{public key} yang dapat dipublikasikan kepada siapapun dan \textit{private key} yang hanya dimiliki oleh pemilik kunci tersebut. \textit{Public key} digunakan untuk mengenkripsi data, sementara \textit{private key} digunakan oleh pemilik kunci untuk mendekripsi data tersebut.
 
-    Salah satu kebutuhan utama yang terdapat pada kriptografi kunci publik adalah sebuah algoritma yang mudah untuk diproses dalam satu arah, namun sulit untuk dilakukan sebaliknya. Algoritma yang banyak digunakan umumnya berdasar pada masalah matematis seperti faktorisasi bilangan bulat, logaritma diskrit, atau hubungan kurva eliptik. Sebagai contoh, jika kita memiliki dua bilangan bulat maka dapat dengan mudah mengkalikan dua bilangan tesebut dan mendapat satu bilangan bulat baru; namun kita tidak bisa dengan mudah menentukan dua bilangan bulat yang merupakan faktor dari sebuah bilangan bulat.
+    Salah satu kebutuhan utama yang terdapat pada kriptografi kunci publik adalah sebuah algoritma yang mudah untuk dikomputasi dalam satu arah, namun sulit untuk dilakukan sebaliknya. Algoritma yang digunakan umumnya berdasar pada masalah matematis seperti faktorisasi bilangan bulat, logaritma diskrit, atau hubungan kurva eliptik. Sebagai contoh, jika kita memiliki dua bilangan bulat maka dapat dengan mudah mengkalikan dua bilangan tesebut dan mendapat satu bilangan bulat baru; namun kita tidak bisa dengan mudah menentukan dua bilangan bulat yang merupakan faktor dari sebuah bilangan bulat.
 
-    Namun, saat ini komputasi kriptografi kunci publik masih memerlukan proses komputasi yang lebih tinggi dibandingkan dengan kriptografi kunci simetris. Maka dari itu, kriptografi kunci publik biasanya hanya dilakukan untuk mengenkripsikan kunci yang akan digunakan dalam kriptografi kunci simetris.
+    Saat ini komputasi kriptografi kunci publik masih memerlukan proses komputasi yang lebih tinggi dibandingkan dengan kriptografi kunci simetris. Maka dari itu, kriptografi kunci publik biasanya hanya dilakukan untuk mengenkripsikan kunci yang akan digunakan dalam kriptografi kunci simetris.
 
     \subsubsection{Rivest–Shamir–Adleman (RSA)}
 
@@ -58,5 +58,5 @@
       \item Ubah \textit{D} menjadi satu atau beberapa bilangan bulat \textit{m}, dengan \textit{m} berada dalam interval [1..n-1]
       \item Hitung ciphertext \textit{c} untuk masing-masing \textit{m}, dengan $c = m^e \bmod n $
     \end{enumerate}
-\subsection{Algoritma Pertukaran Kunci}
-\subsubsection{Diffie Hellman}
+% \subsection{Algoritma Pertukaran Kunci}
+% \subsubsection{Diffie Hellman}

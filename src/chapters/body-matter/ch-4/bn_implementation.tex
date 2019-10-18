@@ -11,7 +11,8 @@ Sesuai dengan pertimbangan pada subbab \ref{sec:parallel_env}, implementasi algo
 \end{figure}
 
 % Cek lagi jumlahnya
-Secara default, jumlah maksimal thread maksimum yang akan digunakan oleh OpenSSL untuk menjalankan komputasi big integer secara paralel akan bergantung pada jumlah core yang terdapat pada lingkungan instalasi. Dalam aplikasi yang membutuhkan komputasi yang tinggi setiap thread akan berjalan secara terus menerus. Dengan demikian jumlah thread maksimum akan sama dengan jumlah aplikasi \todo{cite disini}. Namun, aplikasi juga memiliki pilihan konfigurasi untuk menentukan jumlah thread maksimum yang dapat digunakan.
+Secara default, jumlah maksimal thread maksimum yang akan digunakan oleh OpenSSL untuk menjalankan komputasi big integer secara paralel akan bergantung pada jumlah core yang terdapat pada lingkungan instalasi. Dalam aplikasi yang membutuhkan komputasi yang tinggi setiap thread akan berjalan secara terus menerus. Dengan demikian jumlah thread maksimum akan sama dengan jumlah aplikasi. Namun, aplikasi juga memiliki pilihan konfigurasi untuk menentukan jumlah thread maksimum yang dapat digunakan.
+% \todo{cite disini}
 
 \subsection{Batasan Implementasi}
 Implementasi dilakukan pada sistem operasi Ubuntu 64 bit. Karena itu, implementasi library big number hanya berfokus pada openssl dengan yang memiliki konfigurasi makro sebagai berikut:
@@ -46,44 +47,44 @@ struct bignum_st {
 
 |dmax| adalah panjang maksimum array yang telah dibuat. |neg| bernilai satu jika BIGNUM bernilai negatif.
 
-BIGNUM telah memiliki beberapa fungsi primitif yang dapat digunakan untuk membuat, memanipulasi, dan menghancurkan \textit{struct} tersebut. Primitif yang ada adalah seperti berikut.
-
-\begin{lstlisting}[style = code]
- BIGNUM *BN_new(void);
- void BN_init(BIGNUM *);
- void BN_clear(BIGNUM *a);
- void BN_free(BIGNUM *a);
- void BN_clear_free(BIGNUM *a);
-\end{lstlisting}
-
-|BN_new()| akan mengalokasi dan menginisialisasi sebuah struktur BIGNUM.
-
-|BN_init()| menginisialisasi BIGNUM yang sudah ada.
-
-|BN_clear()| mengubah nilai seluruh komponen BIGNUM a (d, top, dmax) menjadi 0. |BN_clear()| dapat digunakan untuk menghapus data sensitif yang sudah tidak digunakan lagi seperti nilai kunci RSA atau AES.
-
-|BN_free()| mengembalikan memori komponen BIGNUM pada sistem.
-operand
-|BN_clear_free()| mengubah nilai seluruh komponen BIGNUM a menjadi 0 kemudian mengembalikan memori BIGNUM pada sistem.
+% BIGNUM telah memiliki beberapa fungsi primitif yang dapat digunakan untuk membuat, memanipulasi, dan menghancurkan \textit{struct} tersebut. Primitif yang ada adalah seperti berikut.
+%
+% \begin{lstlisting}[style = code]
+%  BIGNUM *BN_new(void);
+%  void BN_init(BIGNUM *);
+%  void BN_clear(BIGNUM *a);
+%  void BN_free(BIGNUM *a);
+%  void BN_clear_free(BIGNUM *a);
+% \end{lstlisting}
+%
+% |BN_new()| akan mengalokasi dan menginisialisasi sebuah struktur BIGNUM.
+%
+% |BN_init()| menginisialisasi BIGNUM yang sudah ada.
+%
+% |BN_clear()| mengubah nilai seluruh komponen BIGNUM a (d, top, dmax) menjadi 0. |BN_clear()| dapat digunakan untuk menghapus data sensitif yang sudah tidak digunakan lagi seperti nilai kunci RSA atau AES.
+%
+% |BN_free()| mengembalikan memori komponen BIGNUM pada sistem.
+% operand
+% |BN_clear_free()| mengubah nilai seluruh komponen BIGNUM a menjadi 0 kemudian mengembalikan memori BIGNUM pada sistem.
 
 % Sebutin fungsi yang dipake?
 \subsection{Modul Operasi Aritmatika}
 \subsubsection{Modul Penjumlahan}
-Modul penjumlahan dan pengurangan terdapat pada file |BN_add.c|. Fungsi |BN_add(result, a, b)| pada modul ini melakukan pengolahan data pada a dan b seperti mengecek negatif dan mengecek panjang masing-masing array. Hasil pengecekan tersebut akan digunakan untuk melakukan operasi lebih lanjut. Jika a dan b memiliki tanda yang berbeda, akan dipanggil fungsi |BN_usub()| selain itu akan dipanggil fungsi |BN_uadd()|. |BN_uadd()| dan |BN_usub()| melakukan pengolahan data pada a dan b sehingga terdapat representasi array yang dapat diolah oleh |BN_add_words()| dan |BN_sub_words()|.
+Modul penjumlahan dan pengurangan terdapat pada file BN\_add.c. Fungsi BN\_add(result, a, b) pada modul ini melakukan pengolahan data pada a dan b seperti mengecek negatif dan mengecek panjang masing-masing array. Hasil pengecekan tersebut akan digunakan untuk melakukan operasi lebih lanjut. Jika a dan b memiliki tanda yang berbeda, akan dipanggil fungsi BN\_usub() selain itu akan dipanggil fungsi BN\_uadd(). BN\_uadd() dan BN\_usub() melakukan pengolahan data pada a dan b sehingga terdapat representasi array yang dapat diolah oleh BN\_add\_words() dan BN\_sub\_words().
 
-|BN_add_words| merupakan fungsi yang menerima masukan dua array dengan ukuran yang sama dan menjumlahkannya secara sekuensial. Penerapan algoritma \ref{alg:add} pada OpenSSL terdapat pada fungsi ini.
+BN\_add\_words merupakan fungsi yang menerima masukan dua array dengan ukuran yang sama dan menjumlahkannya secara sekuensial. Penerapan algoritma \ref{alg:add} pada OpenSSL terdapat pada fungsi ini.
 
-Paralelisasi dilakukan pada pemanggilan fungsi |BN_add_word()| oleh |BN_uadd()|. \todo{ini masukin kode? banyak banget? Kalo snippet ga ada context}
-
-\begin{lstlisting}
-    //rp -> result array, ap & bp original array, n length of ap & bp
-
-    a_split = split_array(ap, n);
-    b_split = split_array(bp, n);
-
-    ...
-
-\end{lstlisting}
+% Paralelisasi dilakukan pada pemanggilan fungsi BN_add_word() oleh BN_uadd(). \todo{ini masukin kode? banyak banget? Kalo snippet ga ada context}
+%
+% \begin{lstlisting}
+%     //rp -> result array, ap & bp original array, n length of ap & bp
+%
+%     a_split = split_array(ap, n);
+%     b_split = split_array(bp, n);
+%
+%     ...
+%
+% \end{lstlisting}
 
 
 

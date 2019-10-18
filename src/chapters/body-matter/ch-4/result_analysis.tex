@@ -33,36 +33,37 @@ SSD Disk  & 25GB  & 25GB  & 200GB & 400 \\ [1ex] % [1ex] adds vertical space
 \end{table}
 
 \subsection{Skenario Pengujian}
-Pengujian dilakukan dengan menjalankan ApacheBench pada node lab dengan tujuan web yang dicek test01, test16, dan test32. ApacheBench menghasilkan beberapa data, namun kita hanya peduli pada data berikut. \todo{cite website apachebench}
+Pengujian dilakukan dengan menjalankan ApacheBench pada node lab dengan tujuan web yang dicek test01, test16, dan test32. ApacheBench menghasilkan beberapa data, namun kita hanya peduli pada data berikut.
+% \todo{cite website apachebench}
 \begin{itemize}
-  \item Time taken for tests, yaitu waktu dari koneksi pertama dibuat sampai response terakhir diterima.
-  \item Requests per second, yaitu jumlah request yang ditangani dalam satu detik
-  \item Time per request, yaitu waktu rata-rata untuk sebuah request.
-  \item Min \& max connection times, yaitu waktu maksimum dan minimum yang digunakan oleh sebuah request.
+  \item \textit{Time taken for tests}, yaitu waktu dari koneksi pertama dibuat sampai response terakhir diterima.
+  \item \textit{Requests per second}, yaitu jumlah request yang ditangani dalam satu detik
+  \item \textit{Time per request}, yaitu waktu rata-rata untuk sebuah request.
+  \item \textit{Min \& max connection times}, yaitu waktu maksimum dan minimum yang digunakan oleh sebuah request.
 \end{itemize}
 
 Pengujian dengan ApacheBench dilakukan terhadap beberapa versi perangkat OpenSSL. Versi pertama adalah OpenSSL vanilla yang belum dimodifikasi, versi kedua adalah OpenSSL dengan paralelisasi modul penjumlahan dan pengurangan, versi ketiga adalah OpenSSL dengan paralelisasi modul perkalian, versi keempat adalah OpenSSL dengan paralelisasi modul pembagian, dan versi kelima adalah OpenSSL dengan semua paralelisasi semua modul operasi aritmatika.
 
 \subsection{Hasil dan Analisis}
 \subsubsection{Hasil Pengujian}
-  Langsung data speedup aja, data raw simpen di lampiran
-
-  \begin{table}[ht]
-  \caption{Test table} % title of Table
-  \centering % used for centering table
-  \begin{tabular}{c c c c} % centered columns (4 columns)
-  \hline\hline %inserts double horizontal lines
-  Case & Method\#1 & Method\#2 & Method\#3 \\ [0.5ex] % inserts table
-  %heading
-  \hline % inserts single horizontal line
-  1 & 50 & 837 & 970 \\ % inserting body of the table
-  2 & 47 & 877 & 230 \\
-  3 & 31 & 25 & 415 \\
-  4 & 35 & 144 & 2356 \\
-  5 & 45 & 300 & 556 \\ [1ex] % [1ex] adds vertical space
-  \hline %inserts single line
-  \end{tabular}
-  \label{table:nonlin} % is used to refer this table in the text
-  \end{table}
+  % Langsung data speedup aja, data raw simpen di lampiran
+  %
+  % \begin{table}[ht]
+  % \caption{Test table} % title of Table
+  % \centering % used for centering table
+  % \begin{tabular}{c c c c} % centered columns (4 columns)
+  % \hline\hline %inserts double horizontal lines
+  % Case & Method\#1 & Method\#2 & Method\#3 \\ [0.5ex] % inserts table
+  % %heading
+  % \hline % inserts single horizontal line
+  % 1 & 50 & 837 & 970 \\ % inserting body of the table
+  % 2 & 47 & 877 & 230 \\
+  % 3 & 31 & 25 & 415 \\
+  % 4 & 35 & 144 & 2356 \\
+  % 5 & 45 & 300 & 556 \\ [1ex] % [1ex] adds vertical space
+  % \hline %inserts single line
+  % \end{tabular}
+  % \label{table:nonlin} % is used to refer this table in the text
+  % \end{table}
 
 \subsubsection{Analisis Pengujian}

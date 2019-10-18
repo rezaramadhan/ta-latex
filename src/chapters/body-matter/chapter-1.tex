@@ -3,54 +3,54 @@
 
 \section{Latar Belakang}
 % basically overview TLS, apa itu TLS
-\textit{Transport Layer Security} (TLS) merupakan sebuah protokol yang berguna untuk menjamin keamanan dan kerahasiaan dari sebuah pesan yang dikirim melalui jaringan. Saat ini, TLS umum digunakan sebagai sebuah \textit{security layer} dari berbagai protokol yang saat ini umum digunakan di Internet seperti \textit{Hyper-Text Transfer Protocol}, (HTTP) \textit{File Transfer Protocol} (FTP), ataupun \textit{Simple Mail Transfer Protocol} (SMTP). Penggunaan TLS sebagai \textit{layer} tambahan membuat TLS dapat digunakan untuk berbagai protokol dimana keamanan informasi merupakan hal yang penting.
+  \textit{Transport Layer Security} (TLS) merupakan sebuah protokol yang berguna untuk menjamin keamanan dan kerahasiaan dari sebuah pesan yang dikirim melalui jaringan. Saat ini, TLS umum digunakan sebagai sebuah \textit{security layer} dari berbagai protokol yang saat ini umum digunakan di Internet seperti \textit{Hyper-Text Transfer Protocol}, (HTTP) \textit{File Transfer Protocol} (FTP), ataupun \textit{Simple Mail Transfer Protocol} (SMTP). Penggunaan TLS sebagai \textit{layer} tambahan membuat TLS dapat digunakan untuk berbagai protokol dimana keamanan informasi merupakan hal yang penting.
 
-% Apa itu TLS Handshake, masalah TLS handshake sekarang
-Sebuah koneksi TLS akan didahului dengan adanya TLS \textit{handshake} untuk menentukan \textit{symmetric key} dan \textit{cipher} yang akan digunakan oleh \textit{client} dan \textit{server} untuk berkomunikasi setelahnya. Sayangnya, waktu yang digunakan untuk TLS \textit{handshake} masih cukup signifikan; penggunaan TLS pada HTTP dapat meningkatkan waktu \textit{load} pada sebuah \textit{website} menjadi 1,2 hingga 3 kali lebih lambat dibandingkan dengan \textit{website} yang tidak menggunakan TLS \citep{cost_of_s}. Hal ini merupakan salah satu alasan kenapa saat ini TLS belum digunakan oleh seluruh layanan yang ada di internet.
+  % Apa itu TLS Handshake, masalah TLS handshake sekarang
+  Sebuah koneksi TLS akan didahului dengan adanya TLS \textit{handshake} untuk menentukan \textit{symmetric key} dan \textit{cipher} yang akan digunakan oleh \textit{client} dan \textit{server} untuk berkomunikasi setelahnya. Sayangnya, waktu yang digunakan untuk TLS \textit{handshake} masih cukup signifikan; penggunaan TLS pada HTTP dapat meningkatkan waktu \textit{load} pada sebuah \textit{website} menjadi 1,2 hingga 3 kali lebih lambat dibandingkan dengan \textit{website} yang tidak menggunakan TLS \citep{cost_of_s}. Hal ini merupakan salah satu alasan kenapa saat ini TLS belum digunakan oleh seluruh layanan yang ada di internet.
 
-% Show bagian mana dari TLS yang bikin lambat, kenalin ke big integer
-Penggunaan alogritma kriptografi kunci publik pada dalam TLS Handshake membutuhkan waktu komputasi yang relatif lebih besar dibandingkan dengan proses lain. Waktu yang digunakan oleh komputasi kriptografi kunci publik sendiri adalah 13-59\% dari seluruh proses komputasi pada TLS \citep{perf_tls}. Komputasi kriptografi kunci publik perlu menggunakan bilangan bulat yang besar untuk memastikan kunci yang digunakan dalam kriptografi aman. Komputasi bilangan bulat besar (\textit{big integer}) tersebutlah yang menyebabkan komputasi kriptografi kunci publik  memerlukan waktu yang lama.
+  % Show bagian mana dari TLS yang bikin lambat, kenalin ke big integer
+  Penggunaan alogritma kriptografi kunci publik pada dalam TLS Handshake membutuhkan waktu komputasi yang relatif lebih besar dibandingkan dengan proses lain. Waktu yang digunakan oleh komputasi kriptografi kunci publik sendiri adalah 13-59\% dari seluruh proses komputasi pada TLS \citep{perf_tls}. Komputasi kriptografi kunci publik perlu menggunakan bilangan bulat yang besar untuk memastikan kunci yang digunakan dalam kriptografi aman. Komputasi bilangan bulat besar (\textit{big integer}) tersebutlah yang menyebabkan komputasi kriptografi kunci publik  memerlukan waktu yang lama.
 
-% Metode yang disarankan untuk meningkatkan TLS handshake
-% Ini perlu nyantumin paper engga?
-Terdapat beberapa metode yang telah disarankan untuk meningkatkan kinerja TLS \textit{handshake} seperti melakukan optimisasi pada algoritma Rivest–Shamir–Adleman (RSA) dengan pemrograman paralel, melakukan \textit{batching} pada proses RSA di server, ataupun melakukan \textit{rebalancing} sehingga komputasi pada client lebih sulit daripada server. Solusi lain yang dapat digunakan adalah memparalelkan komputasi \textit{big integer} sehingga komputasi tersebut dapat dilakukan dalam waktu lebih pendek.
+  % Metode yang disarankan untuk meningkatkan TLS handshake
+  % Ini perlu nyantumin paper engga?
+  Terdapat beberapa metode yang telah disarankan untuk meningkatkan kinerja TLS \textit{handshake} seperti melakukan optimisasi pada algoritma Rivest–Shamir–Adleman (RSA) dengan pemrograman paralel, melakukan \textit{batching} pada proses RSA di server, ataupun melakukan \textit{rebalancing} sehingga komputasi pada client lebih sulit daripada server. Solusi lain yang dapat digunakan adalah memparalelkan komputasi \textit{big integer} sehingga komputasi tersebut dapat dilakukan dalam waktu lebih pendek.
 
-% Solusi big integer, berbagai algoritma yang ada dan kemungkinannya untuk diparalelkan
-% Montgomery italic ga? nama orang
-Komputasi big integer bukanlah hal yang baru dalam dunia ilmu komputer. \citet{modern_comp_math} memberikan tujuh algoritma yang dapat digunakan dalam perkalian, delapan algoritma pembagian, serta berbagai alternatif algoritma  yang dapat digunakan dalam setiap operasi dalam komputasi big integer. Terdapat beberapa juga beberapa algoritma yang dapat dijalankan secara paralel, seperti metode representasi \textit{Residue Number Systems} dan algoritma Montgomery pada komputasi perkalian modular.
+  % Solusi big integer, berbagai algoritma yang ada dan kemungkinannya untuk diparalelkan
+  % Montgomery italic ga? nama orang
+  Komputasi big integer bukanlah hal yang baru dalam dunia ilmu komputer. \citet{modern_comp_math} memberikan tujuh algoritma yang dapat digunakan dalam perkalian, delapan algoritma pembagian, serta berbagai alternatif algoritma  yang dapat digunakan dalam setiap operasi dalam komputasi big integer. Terdapat beberapa juga beberapa algoritma yang dapat dijalankan secara paralel, seperti metode representasi \textit{Residue Number Systems} dan algoritma Montgomery pada komputasi perkalian modular.
 
-Terdapat dua pilihan yang dapat digunakan untuk menjalakan komputasi \textit{big integer} secara paralel, yaitu menjalakan komputasi pada CPU atau GPU. Penggunaan GPU dalam memparalelkan komputasi kriptografi kunci publik dapat menghasilkan jumlah \textit{transaction per second} hingga 45 kali lebih besar dibandingkan dengan penggunaannya pada CPU \citep{gpu_vs_cpu}. Namun, GPU tidak umum digunakan pada data center sehingga penggunaan GPU dalam komputasi kriptografi kunci publik pada kehidupan sehari-hari tidak realistis. Dengan umumnya \textit{multicore} CPU yang digunakan server, penggunaan CPU dalam paralelisasi lebih realistis.
+  Terdapat dua pilihan yang dapat digunakan untuk menjalakan komputasi \textit{big integer} secara paralel, yaitu menjalakan komputasi pada CPU atau GPU. Penggunaan GPU dalam memparalelkan komputasi kriptografi kunci publik dapat menghasilkan jumlah \textit{transaction per second} hingga 45 kali lebih besar dibandingkan dengan penggunaannya pada CPU \citep{gpu_vs_cpu}. Namun, GPU tidak umum digunakan pada data center sehingga penggunaan GPU dalam komputasi kriptografi kunci publik pada kehidupan sehari-hari tidak realistis. Dengan umumnya \textit{multicore} CPU yang digunakan server, penggunaan CPU dalam paralelisasi lebih realistis.
 
 
 \section{Rumusan Masalah}
 
-Sesuai dengan pembahasan yang ada pada latar belakang, diketahui bahwa penggunaan pemrograman paralel dalam komputasi \textit{big integer} merupakan salah satu metode yang dapat digunakan untuk meningkatkan kinerja TLS \textit{Handshake}. Maka dari itu, tugas akhir ini akan fokus pada pengembangan algoritma paralel yang digunakan dalam komputasi \textit{big integer} dan implementasinya pada TLS \textit{handshake}. Dalam pengembangannya, terdapat berapa masalah yang akan menjadi perhatian utama dalam tugas akhir ini, yaitu:
+  Sesuai dengan pembahasan yang ada pada latar belakang, diketahui bahwa penggunaan pemrograman paralel dalam komputasi \textit{big integer} merupakan salah satu metode yang dapat digunakan untuk meningkatkan kinerja TLS \textit{Handshake}. Maka dari itu, tugas akhir ini akan fokus pada pengembangan algoritma paralel yang digunakan dalam komputasi \textit{big integer} dan implementasinya pada TLS \textit{handshake}. Dalam pengembangannya, terdapat berapa masalah yang akan menjadi perhatian utama dalam tugas akhir ini, yaitu:
 
-\begin{enumerate}
-  \item Algoritma paralel seperti apa yang akan diimplementasikan dalam komputasi \textit{big integer}?
-  \item Bagaimana cara mengintegrasikan algoritma paralel tersebut ke dalam library \textit{big integer}?
-  \item Apakah penggunaan algoritma paralel dalam komputasi \textit{big integer} dapat meningkatkan kinerja dari TLS \textit{handshake}?
-\end{enumerate}
+  \begin{enumerate}
+    \item Algoritma paralel seperti apa yang akan diimplementasikan dalam komputasi \textit{big integer}?
+    \item Bagaimana cara mengintegrasikan algoritma paralel tersebut ke dalam library \textit{big integer}?
+    \item Apakah penggunaan algoritma paralel dalam komputasi \textit{big integer} dapat meningkatkan kinerja dari TLS \textit{handshake}?
+  \end{enumerate}
 
 \section{Tujuan}
 
-Dalam penyelesaian tugas akhir ini terdapat beberapa tujuan yang akan dicapai, yaitu:
-\begin{enumerate}
-  \item Menemukan algoritma paralel yang dapat digunakan dalam komputasi \textit{big integer}.
-  \item Mengintegrasikan algoritma tersebut dalam sebuah implementasi library \textit{big integer}.
-  \item Mengukur peningkatan kinerja dari TLS \textit{handshake} setelah mengimplementasikan algoritma paralel RSA.
-\end{enumerate}
+  Dalam penyelesaian tugas akhir ini terdapat beberapa tujuan yang akan dicapai, yaitu:
+  \begin{enumerate}
+    \item Menemukan algoritma paralel yang dapat digunakan dalam komputasi \textit{big integer}.
+    \item Mengintegrasikan algoritma tersebut dalam sebuah implementasi library \textit{big integer}.
+    \item Mengukur peningkatan kinerja dari TLS \textit{handshake} setelah mengimplementasikan algoritma paralel RSA.
+  \end{enumerate}
 
 \section{Batasan Masalah}\label{sec:batasan_masalah}
 
-Tugas akhir ini akan membahas mengenai optimisasi algoritma RSA pada sebuah implementasi TLS \textit{handshake}. Adapun batasan masalah yang terdapat pada tugas akhir ini adalah:
+  Tugas akhir ini akan membahas mengenai optimisasi algoritma RSA pada sebuah implementasi TLS \textit{handshake}. Adapun batasan masalah yang terdapat pada tugas akhir ini adalah:
 
-\begin{enumerate}
-  \item Paralelisasi library big integer tidak memperhatikan masalah keamanan pada sistem yang menggunakannya.
-  \item Implementasi TLS memanfaatkan perangkat lunak opensource OpenSSL versi 1.1.1.
-  \item Ciphersuite yang digunakan dalam penelitian ini adalah TLS\_DH\_RSA\_WITH\_AES\_ 256\_CBC\_SHA256.
-  \item CPU yang digunakan pada implementasi ini adalah Intel 64-bit yang minimal memiliki enam belas \textit{core}.
-\end{enumerate}
+  \begin{enumerate}
+    \item Paralelisasi library big integer tidak memperhatikan masalah keamanan pada sistem yang menggunakannya.
+    \item Implementasi TLS memanfaatkan perangkat lunak opensource OpenSSL versi 1.1.1.
+    \item Ciphersuite yang digunakan dalam penelitian ini adalah TLS\_DH\_RSA\_WITH\_AES\_ 256\_CBC\_SHA256.
+    \item CPU yang digunakan pada implementasi ini adalah Intel 64-bit yang minimal memiliki enam belas \textit{core}.
+  \end{enumerate}
 
 \section{Metodologi}
 
@@ -58,13 +58,11 @@ Pengerjaan tugas akhir ini akan melalui beberapa tahap, yaitu:
 \begin{enumerate}
   \item Analisis Masalah
 
-  % Tugas akhir akan dimulai dengan dilakukannya analisis mengenai implementasi TLS \textit{handshake} yang ada pada saat ini. Pada tahap ini akan dipelajari juga mengenai solusi-solusi untuk meningkatkan kinerja dari TLS \textit{handshake} yang sudah tersedia pada saat ini. Dari solusi yang sudah ada tersebut, penulis akan mencari penyebab solusi itu belum diimplementasikan pada TLS \textit{handshake} dan mencari solusi baru yang mungkin untuk diimplementasikan.
-
-  Tugas akhir akan dimulai dengan dilakukannya analisis mengenai implementasi TLS yang ada pada saat ini. Pada tahap ini akan dipelajari lebih lanjut mengenai penggunaan \textit{library} big integer yang digunakan dalam implementasi TLS. Analisis akan dilakukan pada struktur dan algoritma operasi aritmatika yang digunakan dalam \textit{library} big integer tersebut. Penulis akan mencari struktur dan algoritma lain yang dapat dijalankan secara paralel untuk  digunakan sebagai pengganti algoritma yang awal digunakan.
+  Tugas akhir akan dimulai dengan dilakukannya analisis mengenai implementasi TLS yang ada pada saat ini. Pada tahap ini akan dipelajari lebih lanjut mengenai penggunaan \textit{library} big integer yang digunakan dalam implementasi TLS. Analisis akan dilakukan pada struktur dan algoritma operasi aritmatika yang digunakan dalam \textit{library} big integer tersebut. Penulis akan mencari struktur dan algoritma lain yang dapat dijalankan secara paralel untuk digunakan sebagai pengganti algoritma yang awal digunakan.
 
   \item Perancangan Solusi dan Pengujian
 
-  Perancangan solusi dibuat sebagai kerangka dasar atas solusi dari masalah yang telah ditemukan pada langkah sebelumnya. Pada tahap ini akan dirancang arsitektur solusi beserta cara untuk menerapkannya pada TLS handshake yang sudah ada. Selain itu, akan dibuat juga rencana pengujian terhadap implementasi solusi. Rencana pengujian akan dibuat sehingga percobaan dilakukan dalam batas masalah yang ada dan dapat dilakukan sesuai metode sains.
+  Perancangan solusi dibuat sebagai kerangka dasar atas solusi dari masalah yang telah ditemukan pada langkah sebelumnya. Pada tahap ini akan dirancang arsitektur solusi beserta cara untuk menerapkannya pada TLS handshake yang sudah ada. Selain itu, akan dibuat juga rencana pengujian terhadap implementasi solusi. Rencana pengujian akan dibuat sehingga percobaan dilakukan dalam batas masalah yang ada dan dapat dilakukan sesuai metode saintifik.
 
   \item Implementasi Solusi
 
@@ -79,14 +77,14 @@ Pengerjaan tugas akhir ini akan melalui beberapa tahap, yaitu:
 
 \section{Sistematika Laporan}
 % \blindtext
-Penulisan tugas akhir ini akan terdiri dari lima bab yaitu: BAB I Pendahuluan, BAB II Studi Literatur, BAB III Analisis Solusi, BAB IV Rancangan, Implementasi dan Pengujian, BAB V Penutup.
+  Penulisan tugas akhir ini akan terdiri dari lima bab yaitu: BAB I Pendahuluan, BAB II Studi Literatur, BAB III Analisis Solusi, BAB IV Rancangan, Implementasi dan Pengujian, BAB V Penutup.
 
-Bab pertama memaparkan mengenai latar belakang pembuatan tugas akhir ini, masalah utama yang dibahas, tujuan pembuatan tugas akhir, serta metodologi yang akan dilakukan selama pembuatan tugas akhir. Bab ini dibuat sebagai pendahuluan dan akan mencakup ringkasan dari sebagian besar hal yang dibahas pada tugas akhir.
+  Bab pertama memaparkan mengenai latar belakang pembuatan tugas akhir ini, masalah utama yang dibahas, tujuan pembuatan tugas akhir, serta metodologi yang akan dilakukan selama pembuatan tugas akhir. Bab ini dibuat sebagai pendahuluan dan akan mencakup ringkasan dari sebagian besar hal yang dibahas pada tugas akhir.
 
-Bab kedua membahas mengenai teori dasar yang sudah ada mengenai teori dasar kriptografi, algoritma RSA, TLS, teori dasar perhitungan aritmatika dalam big integer, serta penelitian yang terkait dengan proses paralelisasi operasi aritmatika dalam big integer. Teori yang diambil akan bersumber dari literatur terpercaya, dokumentasi dari protokol TLS, serta dokumentasi kakas yang digunakan. Bab ini akan digunakan sebagai referensi dari analisis yang akan dilakukan pada bab ketiga.
+  Bab kedua membahas mengenai teori dasar yang sudah ada mengenai teori dasar kriptografi, algoritma RSA, TLS, teori dasar perhitungan aritmatika dalam big integer, serta penelitian yang terkait dengan proses paralelisasi operasi aritmatika dalam big integer. Teori yang diambil akan bersumber dari literatur terpercaya, dokumentasi dari protokol TLS, serta dokumentasi kakas yang digunakan. Bab ini akan digunakan sebagai referensi dari analisis yang akan dilakukan pada bab ketiga.
 
-Bab ketiga terdiri dari analisis terhadap kinerja dan implementasi TLS, analisis terhadap implementasi big number pada OpenSSL. Dari hasil analisis implementasi big integer pada OpenSSL, akan dibuat analisis mengenai paralelisasi yang mungkin dilakukan pada implementasi tersebut.
+  Bab ketiga terdiri dari analisis terhadap kinerja dan implementasi TLS, analisis terhadap implementasi big number pada OpenSSL. Dari hasil analisis implementasi big integer pada OpenSSL, akan dibuat analisis mengenai paralelisasi yang mungkin dilakukan pada implementasi tersebut.
 
-Bab keempat memperlihatkan implementasi dari solusi, serta evaluasi yang berisi hasil dan analisis dari implementasi yang telah dibuat. Evaluasi akan memperlihatkan apakah solusi yang telah dirancang berhasil untuk meningkatkan kinerja TLS. Selain itu, analisis evaluasi akan memperlihatkan bagian mana dari solusi yang masih mungkin diperbaiki lebih lanjut.
+  Bab keempat memperlihatkan implementasi dari solusi, serta evaluasi yang berisi hasil dan analisis dari implementasi yang telah dibuat. Evaluasi akan memperlihatkan apakah solusi yang telah dirancang berhasil untuk meningkatkan kinerja TLS. Selain itu, analisis evaluasi akan memperlihatkan bagian mana dari solusi yang masih mungkin diperbaiki lebih lanjut.
 
-Bab kelima mendeskripsikan hasil kesimpulan dari solusi yang dibuat untuk menyelesaikan masalah. Terdapat juga saran yang dapat dilakukan untuk pengembangan dan perbaikan agar implementasi ini dapat menghasilkan hasil yang lebih baik.
+  Bab kelima mendeskripsikan hasil kesimpulan dari solusi yang dibuat untuk menyelesaikan masalah. Terdapat juga saran yang dapat dilakukan untuk pengembangan dan perbaikan agar implementasi ini dapat menghasilkan hasil yang lebih baik.

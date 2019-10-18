@@ -1,234 +1,221 @@
 \section{Big Integer}
-% Arithmetic di komputer
-Komputasi matematis di dalam sebuah komputer dilakukan oleh Arithmetic Logic Unit (ALU) yang terdapat di dalam CPU. Karena ALU adalah komponen yang sangat sederhana, ALU memiliki banyak batasan, salah satunya adalah ALU hanya dapat beroperasi pada bilangan bulat dalam \textit{range} tertentu \citep{comp_org_arch}. Pada umumnya, sebuah CPU memiliki 32-bit atau 64-bit ALU, nilai maksimum bilangan bulat yang dapat diproses oleh ALU tersebut hanya sebesar $2^{64}$. Kemampuan ALU untuk menangani bilangan pada \textit{range} tertentu berdasarkan jumlah bit yang dimilikinya biasa dikenal sebagai \textit{fixed-precision integer arithmetic}.
+  % Arithmetic di komputer
+  Komputasi matematis di dalam sebuah komputer dilakukan oleh Arithmetic Logic Unit (ALU) yang terdapat di dalam CPU. ALU merupakan sebuah komponen yang sangat sederhana, karena itu ALU memiliki banyak batasan. Salah satunya adalah ALU hanya dapat beroperasi pada bilangan bulat dalam \textit{range} tertentu \citep{comp_org_arch}. Pada umumnya, sebuah CPU memiliki 32-bit atau 64-bit ALU, nilai maksimum bilangan bulat yang dapat diproses oleh ALU tersebut hanya sebesar $2^{64}$. Kemampuan ALU untuk menangani bilangan bulat pada \textit{range} tertentu berdasarkan jumlah bit yang dimilikinya biasa dikenal sebagai \textit{fixed-precision integer arithmetic}.
 
-% Big number, Apa itu, kenapa dibutuhkan, dikenal juga sebagai Arbitrary/multi precision
-Untuk menangani operasi matematis yang menggunakan bilangan yang lebih besar dari \textit{range} yang dimiliki ALU, diperlukan sebuah struktur data yang dapat menangani bilangan bulat tersebut. Kemampuan komputer untuk menghitung bilangan yang tidak memiliki batas sering dikenal sebagai \textit{arbitrary-precision integer arithmetic}. Sementara itu, bilangan yang digunakan dalam perhitungan tersebut sering disebut \textit{big number} atau \textit{big integer} jika bilangan yang digunakan adalah bilangan bulat.
+  % Big number, Apa itu, kenapa dibutuhkan, dikenal juga sebagai Arbitrary/multi precision
+  Untuk menangani operasi matematis yang menggunakan bilangan yang lebih besar dari \textit{range} yang dimiliki ALU, diperlukan sebuah struktur data yang dapat menangani bilangan bulat tersebut. Kemampuan komputer untuk menghitung bilangan yang tidak memiliki batas sering dikenal sebagai \textit{arbitrary-precision integer arithmetic}. Sementara itu, bilangan yang digunakan dalam perhitungan tersebut sering disebut \textit{big number} atau \textit{big integer} jika bilangan yang digunakan adalah bilangan bulat.
 
-% dipake dimana aja
-\textit{Big integer} sering digunakan pada perhitungan kriptografi, mengingat bahwa perhitungan kriptografi membutuhkan bilangan yang besar agar kunci yang digunakan aman. Untuk implementasi kriptografi yang aman, disarankan untuk menggunakan kunci sebesar 256bit untuk AES dan kunci sebesar 1024 bit untuk RSA \citep{key_suggestion}, lebih besar dari jumlah bit yang dimiliki oleh ALU. Selain perhitungan kriptografi, big number juga umum digunakan untuk menghitung nilai konstanta matematis seperti $\pi$ \citep{bn_pi}, .
-% \blindtext
-\subsection{Struktur Big Integer}
-
-Big integer memiliki dua representasi yang umum digunakan, yaitu Fixed Radix Number Systems (FRNS) dan Residue Number Systems (RNS). FRNS merupakan representasi bilangan dimana bilangan dituliskan sebagai penjumlahan dari komponen-komponennya \citep{modern_comp_math}. Sebuah RNS memiliki himpunan $H$ yang memiliki elemen bilangan bulat $\{m_1,m_2,...,m_p\}$, representasi integer $X$ adalah sebuah himpunan $H_x$ dimana elemennya adalah $X \mod m_i$ \citep{rns_survey}. Subbab \ref{sec:frns} menjelaskan lebih lanjut mengenai FRNS, sementara RNS dijelaskan lebih jauh pada subbab \ref{sec:rns}.
-
-Penggunaan RNS maupun FRNS masing-masing memiliki kekurangan dan kelebihan yang berbeda. Pendekatan berbasis komponen pada RNS menyebabkan operasi aritmatika pada RNS dapat dijalankan secara paralel, dengan tidak adanya ketergantungan untuk masing-masing elemen himpunan. Namun, beberapa operasi aritmatika dasar seperti pembagian dan perbandingan antar dua bilangan akan menjadi lebih lambat \citep{gpu_bignum}.
-
-\subsubsection{Fixed Radix Number Systems} \label{sec:frns}
-
-\citet{modern_comp_math} menyatakan bahwa sebuah bilangan bulat dapat direpresentasikan sebagai penjumlahan dari komponen-komponennya. Jika kita memilih sebuah bilangan bulat positif $\beta$ sebagai basis dengan $\beta > 1 $ semua bilangan bulat positif $A$ berbasis $\beta$ yang memiliki panjang $n$ dapat dituliskan sebagai:
-\begin{equation} \label{eq:frns_rep}
-  A = \alpha_{n-1}\beta^{n-1}+...+\alpha_{1}\beta+\alpha_{0}
-\end{equation}
-dengan $0 \leq \alpha \leq \beta -1$.
-
-Representasi integer positif di komputer 64 bit menggunakan $\beta = 2$ dan $n = 32$ sehingga nilai maksimum yang dapat direpresentasikan adalah $2^{64}$. Untuk representasi big integer nilai $n$ tidak memiliki batas, sementara nilai $\beta$ yang digunakan sesuai dengan jumlah maksimum bilangan dapat diproses pada komputer tersebut. Pada representasi big integer di komputer 64 bit, digunakan $\beta = 2^{64}$.
-
-% Physical yang umum, array
-% masuk bab 3?
-Representasi ideal big integer pada komputer adalah menggunakan list of integer atau array of integer. Penggunaan list menyebabkan big integer tidak memiliki nilai maksimum, sementara itu penggunaan array membuat akses nilai yang tersimpan lebih cepat. Dengan demikian, penggunaan array of integer lebih umum digunakan untuk merepresentasikan big integer. Ilustrasi array of integer yang merepresentasikan big integer dapat dilihat pada Gambar \ref{fig:frns_ref}.
-
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=0.5\textwidth]{resources/ch-2/frns-ref.png}
-  \caption{Representasi FRNS dalam bentuk Array of Integer}
-  \label{fig:frns_ref}
-\end{figure}
-
-% \blindtext
-\subsubsection{Residue Number Systems} \label{sec:rns}
-\citet{rns_survey} menyatakan bahwa RNS memiliki sebuah himpunan bilangan bulat relatif prima $\{m_1,m_2,...,m_p\}$. Nilai terbesar yang dapat direpresentasikan oleh RNS adalah sebesar $M$, dimana
-
-\begin{equation}
-  M = m_1 * m_2 * ... * m_p
-\end{equation}
-
-Sebuah bilangan bulat $X$ memiliki sebuah representasi RNS ${x_1,x_2,...,x_p}$ dengan $X_i$ adalah
-
-\begin{equation}
-  X_i = X \mod m_i
-\end{equation}
-
-\todo[inline]{Tambahin penjelasan lebih jauh tentang Chinese Remainder Theorem disini}
-
-Representasi RNS dalam komputer dapat menggunakan set dibandingkan dengana array ataupun list. Setiap elemen dalam representasi RNS relatif independen satu sama lainnya. Dengan demikian, urutan penyimpanan setiap elemen tersebut serta urutan operasi setiap elemen tidak berpengaruh pada nilai big integer yang direpresentasikan dalam RNS. Penggunaan RNS membuat beberapa operasi aritmatika terhadap big integer dapat dilakukan secara paralel dengan mudah.
-
-\subsection{Operasi Aritmatika}
-% \blindtext
-Proses operasi aritmatika yang dilakukan dalam representasi FRNS dan RNS berbeda. Karena itu, subbab \ref{sec:add_sub_theory} sampai subbab \ref{sec:mod_mul_theory} akan membahas bagaimana setiap operasi aritmatika dilakukan pada masing-masing operasi.
-
-\subsubsection{Penjumlahan dan Penguragan} \label{sec:add_sub_theory}
-\paragraph{Representasi FRNS}
-
-Operasi penjumlahan dan pengurangan pada FRNS dilakukan dengan cara penjumlahan dan pengurangan manual oleh tangan. Merujuk pada persamaan \ref{eq:frns_rep}, proses penjumlahan dan pengurangan dilakukan dari $\alpha_0$ hingga $\alpha_{n-1}$ dengan menggunakan bilangan \textit{carry over} dan \textit{borrow} jika dibutuhkan.
-
-Untuk penjumlahan dan pengurangan dua bilangan $A = a_{n-1}\beta^{n-1}+...+a_{1}\beta+a_{0}$ dan $B = b_{n-1}\beta^{n-1}+...+b_{1}\beta+b_{0}$, akan dihasilkan bilangan $C = c_{n-1}\beta^{n-1}+...+c_{1}\beta+c_{0}$. Algoritma yang dapat digunakan untuk menghitung C
-
-\begin{algorithm}
-  \caption{Algoritma Penjumlahan}
-    \label{alg:add}
-  \begin{algorithmic}[1]
-    \Require{$x$ dan $y$ adalah array [1..n] yang merepresentasikan Big Integer, $\beta$ adalah basis yang digunakan}
-    \Statex
-    \Function{Add}{$x$, $y$, $num$}
-      \Let{$z$}{\Call{NewArray}{$n$}}
-      \Let{$carry$}{0}
-      \For{$i \gets 1$, $i \gets i + 1$ to $n$}
-        \Let{$n$}{$carry$ + $x[i]$ + $y[i]$}
-        \Let{$carry$}{$n \div \beta$}
-        \Let{$z[i]$}{$n \mod \beta$}
-      \EndFor
-      \Let{$z[n+1]$}{$carry$}
-      \State \Return{$z$}
-    \EndFunction
-  \end{algorithmic}
-\end{algorithm}
-
-\paragraph{Representasi RNS}
-
-\citet{rns_sharoun} menyatakan bahwa dalam sistem RNS dengan elemen $\{m_1,m_2,...,m_p\}$, penjumlahan dan pengurangan dua bilangan $A$ dan $B$ yang memiliki representasi RNS $\{b_1,b_2,...,b_p\}$ dan $\{b_1,b_2,...,b_p\}$,  menghasilkan $C$ yang memiliki representasi $\{c_1,c_2,...,c_p\}$ dengan nilai $c_i$ sebagai berikut
-\begin{equation}
-    c_i = (a_i \pm b_i) \mod m_i
-\end{equation}
+  % dipake dimana aja
+  \textit{Big integer} sering digunakan pada perhitungan kriptografi, mengingat bahwa perhitungan kriptografi membutuhkan bilangan yang besar agar kunci yang digunakan aman. Sebagai contoh, disarankan untuk menggunakan kunci sebesar 256bit untuk AES dan kunci sebesar 1024 bit untuk RSA \citep{key_suggestion} agar enkripsi yang digunakan aman. Jumlah bit yang digunakan tersebut lebih besar dari jumlah bit yang dapat ditangani oleh ALU. Selain perhitungan kriptografi, big number juga umum digunakan untuk menghitung nilai konstanta matematis seperti $\pi$ \citep{bn_pi}, .
 
 
-\subsubsection{Perkalian} \label{sec:mul_theory}
+  \subsection{Struktur Big Integer}
 
-\paragraph{Representasi FRNS}
-Terdapat beberapa algoritma yang dapat dilakukan dalam perkalian dua bilangan besar. Pada subbab ini akan dibahas tiga algoritma perkalian, yaitu algoritma perkalian panjang, algoritma comba, dan algoritma perkalian Karatsuba. Ketiga algoritma tersebut merupakan algoritma yang digunakan oleh OpenSSL.
+    Big integer memiliki dua representasi yang umum digunakan, yaitu Fixed Radix Number Systems (FRNS) dan Residue Number Systems (RNS). FRNS merupakan representasi bilangan dimana bilangan dituliskan sebagai penjumlahan dari komponen-komponennya \citep{modern_comp_math}. Sebuah RNS memiliki himpunan $H$ yang memiliki elemen bilangan bulat $\{m_1,m_2,...,m_p\}$, representasi integer $X$ adalah sebuah himpunan $H_x$ dimana elemennya adalah $X \mod m_i$ \citep{rns_survey}. Subbab \ref{sec:frns} menjelaskan lebih lanjut mengenai FRNS, sementara RNS dijelaskan lebih jauh pada subbab \ref{sec:rns}.
 
-Algoritma perkalian panjang adalah algoritma perkalian yang biasa diajarkan dalam sekolah dasar. Algoritma perkalian panjang $A*B$ berdasarkan pada proses mengkalikan satu digit A pada B, geser hasilnya sesuai posisi digit A yang digunakan, lalu jumlahkan seluruh hasil perkalian tersebut. Algoritma ini memiliki kompeksitas $O(n^2)$ terhadap perkalian. Berikut adalah algoritma perkalian panjang pada pseudocode.
+    Penggunaan RNS maupun FRNS masing-masing memiliki kekurangan dan kelebihan yang berbeda. Pendekatan berbasis komponen pada RNS menyebabkan operasi aritmatika pada RNS dapat dijalankan secara paralel, dengan tidak adanya ketergantungan untuk masing-masing elemen himpunan. Namun, beberapa operasi aritmatika dasar seperti pembagian dan perbandingan antar dua bilangan akan menjadi lebih lambat \citep{gpu_bignum}.
 
-\begin{algorithm}
-  \caption{Algoritma Perkalian Panjang}
-    \label{alg:mul}
-  \begin{algorithmic}[1]
-    \Require{$A$ = [1..p], $B$ = [1..q] yang merepresentasikan Big Integer, $\beta$ adalah basis yang digunakan representasi Big Integer}
-    \Statex
-    \Function{Mul}{$A$, $B$, $\beta$}
-      \Let{C}{\Call{NewArray}{p+q}}
-      \For{$i \gets 1$, $i \gets i + 1$ to $q$}
-        \Let{$carry$}{0}
-        \For{$j \gets 1$, $j \gets j + 1$ to $q$}
-          \Let{$C[i+j-1]$}{$C[i+j-1] + carry + A[i] * A[j]$}
-          \Let{$carry$}{$C[i+j-1] \div \beta$}
-          \Let{$C[i+j-1]$}{$C[i+j-1] \mod \beta$}
-        \EndFor
-        \Let{$C[j+p]$}{$carry$}
-      \EndFor
-      \State \Return{$C$}
-    \EndFunction
-  \end{algorithmic}
-\end{algorithm}
+    \subsubsection{Fixed Radix Number Systems} \label{sec:frns}
 
-Algoritma Comba merupakan modifikasi dari algoritma perkalian panjang. Berbeda dengan algoritma perkalian panjang, algoritma comba melakukan proses iterasi perkalian berbasis kolom, sementara algoritma perkalian panjang berbasis baris. Penggunaan kolom dibandingkan baris membuat carry pada setiap iterasi perkalian lebih sedikit. Dengan demikian, algoritma comba mengurangi kompleksitas ruang serta mengurangi jumlah penulisan terhadap memori.
+    \citet{modern_comp_math} menyatakan bahwa sebuah bilangan bulat dapat direpresentasikan sebagai penjumlahan dari komponen-komponennya. Jika kita memilih sebuah bilangan bulat positif $\beta$ sebagai basis dengan $\beta > 1 $ semua bilangan bulat positif $A$ yang memiliki basis $\beta$ dengan memiliki panjang $n$ dapat dituliskan sebagai:
+    \begin{equation} \label{eq:frns_rep}
+      A = \alpha_{n-1}\beta^{n-1}+...+\alpha_{1}\beta+\alpha_{0}
+    \end{equation}
+    dengan $0 \leq \alpha \leq \beta -1$.
 
-Algoritma karatsuba berdasarkan bahwa perkalian dua bilangan A dan B dapat direpresentasikan dalam tiga perkalian bilangan bulat yang lebih kecil. Algoritma ini memiliki kompeksitas $O(n^{\log_2 3})$ terhadap operasi perkalian. Penggunaan algoritma karatsuba dalam komputer dapat dilakukan dengan pemanggilan fungsi secara rekursif. Algoritma karatsuba dalam pseudocode dapat dilihat pada Pseudocode \ref{alg:karatsuba_mul}
+    Representasi integer positif di komputer 64 bit menggunakan $\beta = 2$ dan $n = 32$ sehingga nilai maksimum yang dapat direpresentasikan adalah $2^{64}$. Untuk representasi big integer nilai $n$ tidak memiliki batas, sementara nilai $\beta$ yang digunakan sesuai dengan jumlah maksimum bilangan dapat diproses pada komputer tersebut. Pada representasi big integer di komputer 64 bit, digunakan $\beta = 2^{64}$.
 
-\begin{algorithm}
-  \caption{Algoritma Perkalian Karatsuba}
-  \label{alg:karatsuba_mul}
-  \begin{algorithmic}[1]
-    \Require{$A$ = [1..p], $B$ = [1..q] yang merepresentasikan Big Integer, $\beta$ adalah basis yang digunakan}
-    \Statex
-    \Function{MulKaratsuba}{$A$, $B$, $\beta$}
-      \If{($p = 1$) or ($q = 1$)}
-        \State \Return $A * B$
-      \EndIf
-      \Let{$mid$}{\Call{Floor}{\Call{Min}{$p, q$}/2}}
-      \Let{$A_{low}, A_{high}$}{\Call{SplitIn}{$A, mid$}}
-      \Comment{Split $A$ into two subarray at $mid$}
-      \Let{$B_{low}, B_{high}$}{\Call{SplitIn}{$B, mid$}}
-      \Let{$C_0$}{\Call{MulKaratsuba}{$A_{low}, B_{low}$}}
-      \Let{$C_1$}{\Call{MulKaratsuba}{($A_{low} + A_{high}$), ($B_{low} + B_{high}$)}
-      }
-      \Let{$C_2$}{\Call{MulKaratsuba}{$A_{high}, B_{high}$}}
-      \State
-      \Let{$x$}{$C_2 * \beta ^ {mid * 2}$}
-      \Let{$y$}{$(C_1 - C_2 - C_0) * \beta ^ {mid}$}
+    % Physical yang umum, array
+    % masuk bab 3?
+    Representasi ideal big integer pada komputer adalah menggunakan list of integer atau array of integer. Penggunaan list menyebabkan big integer tidak memiliki nilai maksimum, sementara itu penggunaan array membuat akses nilai yang tersimpan lebih cepat. Dengan demikian, penggunaan array of integer lebih umum digunakan untuk merepresentasikan big integer. Ilustrasi array of integer yang merepresentasikan big integer dapat dilihat pada Gambar \ref{fig:frns_ref}.
 
-      \State \Return{$x + y + C_1$}
-    \EndFunction
-  \end{algorithmic}
-\end{algorithm}
+    \begin{figure}[h]
+      \centering
+      \includegraphics[width=0.5\textwidth]{resources/ch-2/frns-ref.png}
+      \caption{Representasi FRNS dalam bentuk Array of Integer}
+      \label{fig:frns_ref}
+    \end{figure}
+    
+    Gambar \ref{fig:frns_ref} memberikan gambaran bahwa untuk merepresentasikan big integer $A = \alpha_{n-1}\beta^{n-1}+...+\alpha_{1}\beta+\alpha_{0}$, dapat digunakan array $A = [0..n-1]$, dengan nilai $\beta$ dapat disimpan pada sebuah variabel terpisah. Sebagai contoh, array $N = [2^29, 3^31, 2^54, 3^27]$ merupakan representasi dari big integer $N = 3^27*2^192 + 2^54*2^128 + 3^31*2^64 + 2^29$.
+
+    \subsubsection{Residue Number Systems} \label{sec:rns}
+    \citet{rns_survey} menyatakan bahwa RNS memiliki sebuah himpunan bilangan bulat relatif prima $\{m_1,m_2,...,m_p\}$. Nilai terbesar yang dapat direpresentasikan oleh RNS adalah sebesar $M$, dimana
+
+    \begin{equation}
+      M = m_1 * m_2 * ... * m_p
+    \end{equation}
+
+    Sebuah bilangan bulat $X$ memiliki sebuah representasi RNS ${x_1,x_2,...,x_p}$ dengan $X_i$ adalah
+
+    \begin{equation}
+      X_i = X \mod m_i
+    \end{equation}
+
+    % \todo[inline]{Tambahin penjelasan lebih jauh tentang Chinese Remainder Theorem disini}
+
+    Representasi RNS dalam komputer dapat menggunakan set dibandingkan dengana array ataupun list. Setiap elemen dalam representasi RNS relatif independen satu sama lainnya. Dengan demikian, urutan penyimpanan setiap elemen tersebut serta urutan operasi setiap elemen tidak berpengaruh pada nilai big integer yang direpresentasikan dalam RNS. Penggunaan RNS membuat beberapa operasi aritmatika terhadap big integer dapat dilakukan secara paralel dengan mudah.
 
 
-\paragraph{Representasi RNS}
-Sifat penjumlahan dan pengurangan yang dibahas pada subbab \ref{sec:add_sub_theory} juga berlaku pada perkalian di representasi RNS. Perkalian dua bilangan $A$ dan $B$ dalam representasi RNS, akan menghasilkan $C$ yang memiliki representasi $\{c_1,c_2,...,c_p\}$ dengan nilai $c_i$ sebagai berikut
-\begin{equation}
-    c_i = (a_i * b_i) \mod m_i
-\end{equation}
+  \subsection{Operasi Aritmatika}
 
-\subsubsection{Pembagian dan Modulo}
+    Proses operasi aritmatika yang dilakukan dalam representasi FRNS dan RNS berbeda. Karena itu, subbab \ref{sec:add_sub_theory} sampai subbab \ref{sec:div_theory} akan membahas bagaimana setiap operasi aritmatika dilakukan pada masing-masing operasi.
 
-\paragraph{Representasi FRNS}
-Seperti perkalian, terdapat beberapa algoritma yang dapat digunakan dalam pembagian. Algoritma yang paling mudah dilakukan adalah dengan melakukan pengurangan berkali-kali seperti yang dijelaskan oleh Euclid. \todo{tambahin citation}. Berikut adalah algoritma pembagian dengan pengurangan berkali-kali dalam pseudocode.
 
-\begin{algorithm}
-  \caption{Algoritma Pembagian dengan Pengurangan berulang}
-  \label{alg:div_repeated_sub}
-  \begin{algorithmic}[1]
-    \Require{$N$ dan $D$ adalah bilangan bulat}
-    \Statex
-    \Function{DivRepeatedSub}{$N$, $D$}
-      \Let{$Q$}{0}
-      \Let{$R$}{$N$}
-      \While{$R \geq D$}
-        \Let{$Q$}{$Q + 1$}
-        \Let{$R$}{$R - D$}
-      \EndWhile
-      \State \Return{$Q, R$}
-    \EndFunction
-  \end{algorithmic}
-\end{algorithm}
+    \subsubsection{Penjumlahan dan Penguragan} \label{sec:add_sub_theory}
+    \paragraph{Representasi FRNS}
 
-Selain itu, terdapat algoritma pembagian panjang. Algoritma ini merupakan algoritma yang biasa dilakukan pada melakukan pembagian dengan tangan. Algoritma ini memiliki prekondisi divisor yang telah dinormalisasi. Divisor yang dinormalisasi adalah untuk divisor $D = [0..n-1]$ yang menggunakan basis $\beta$, berlaku $D[n-1] > \beta/2$. Pseudocode \ref{alg:long_div} menjelaskan algor ini dalam bentuk pseudocode.
+    Operasi penjumlahan dan pengurangan pada FRNS memiliki cara yang sama penjumlahan dan pengurangan manual oleh tangan. Merujuk pada persamaan \ref{eq:frns_rep}, proses penjumlahan dan pengurangan dilakukan dari $\alpha_0$ hingga $\alpha_{n-1}$ dengan menggunakan bilangan \textit{carry over} dan \textit{borrow} jika dibutuhkan.
 
-\begin{algorithm}
-  \caption{Algoritma Pembagian Panjang}
-  \label{alg:long_div}
-  \begin{algorithmic}[1]
-    \Require{$N = [0..n+m-1], D = [0..n-1]$ bilangan bulat dalam representasi array.}
-    \Statex
-    \Function{LongDiv}{$D, N, \beta$}
-      \Let{$Q$}{\Call{NewArray}{m}}
-      \Let{$is_bigger$}{\Call{BigIntCompare}{$N$, \Call{Mul}{$D, \beta^m$}}}
-      \If{$is_bigger$}
-        \Let{$Q[m]$}{1}
-      \Else
-        \Let{$Q[m]$}{0}
-      \EndIf
-      \For{$i \gets m$, $i \gets i - 1$ downto $n$}
-        \Let{$Q[i]$}{$\lfloor\frac{N[n+i]\beta + N[n+j-1]}{D[n-1]}\rfloor$}
-        \Let{$Q[i]$}{\Call{Min}{$Q[i],\beta$}}
-        \Let{$N$}{$N$-\Call{Mul}{$Q[i], D}*\beta^i$}
-        \While{$A$ < 0}
-          \Let{$Q[i]$}{$Q[i] - 1$}
-          \Let{$N$}{$N+N\beta^i$}
-        \EndWhile
-        \Let{$R$}{$A$}
-        \State \Return{$Q, R$}
-      \EndFor
-    \EndFunction
-  \end{algorithmic}
+    Untuk penjumlahan dan pengurangan dua bilangan $A = a_{n-1}\beta^{n-1}+...+a_{1}\beta+a_{0}$ dan $B = b_{n-1}\beta^{n-1}+...+b_{1}\beta+b_{0}$, akan dihasilkan bilangan $C = c_{n-1}\beta^{n-1}+...+c_{1}\beta+c_{0}$. Pseudocode \ref{alg:add} adalah algoritma yang dapat digunakan untuk menghitung $C$ dari Penjumlahan $A$ dan $B$.
 
-\end{algorithm}
+    \begin{algorithm}
+      \caption{Algoritma Penjumlahan}
+        \label{alg:add}
+      \begin{algorithmic}[1]
+        \Require{$x$ dan $y$ adalah array [1..n] yang merepresentasikan Big Integer, $\beta$ adalah basis yang digunakan}
+        \Statex
+        \Function{Add}{$x$, $y$, $num$}
+          \Let{$z$}{\Call{NewArray}{$n$}}
+          \Let{$carry$}{0}
+          \For{$i \gets 1$, $i \gets i + 1$ to $n$}
+            \Let{$n$}{$carry$ + $x[i]$ + $y[i]$}
+            \Let{$carry$}{$n \div \beta$}
+            \Let{$z[i]$}{$n \mod \beta$}
+          \EndFor
+          \Let{$z[n+1]$}{$carry$}
+          \State \Return{$z$}
+        \EndFunction
+      \end{algorithmic}
+    \end{algorithm}
 
-\citet{div_burnikel_ziegler} memperkenalkan algoritma pembagian cepat yang berjalan pada kompleksitas $2K(n)+O(n \log n)$ dengan $K(n)$ adalah waktu berjalannya algoritma perkalian karatsuba.
-\todo[inline]{jelasin dasarnya apa, div\&conquer, recursive}
+    Algoritma yang digunakan dalam pengurangan hampir sama dengan penggunaan algoritma \ref{alg:add}. Hal yang berbeda hanyalah pada baris ke-5 dengan $n = x[i] - y[i] - carry $
 
-\begin{algorithm}
-  \caption{Algoritma Pembagian Burnikel-Ziegler}
-  \label{alg:div_burnikel_ziegler}
-  \begin{algorithmic}
-    \Require{$N$ dan $D$ adalah bilangan bulat}
-    \Statex
-    \Function{DivRepeatedSub}{$N$, $D$}
+    \paragraph{Representasi RNS}
 
-    \EndFunction
-  \end{algorithmic}
-\end{algorithm}
+    \citet{rns_sharoun} menyatakan bahwa dalam sistem RNS dengan elemen $\{m_1,m_2,...,m_p\}$, penjumlahan dan pengurangan dua bilangan $A$ dan $B$ yang memiliki representasi RNS $\{b_1,b_2,...,b_p\}$ dan $\{b_1,b_2,...,b_p\}$,  menghasilkan $C$ yang memiliki representasi $\{c_1,c_2,...,c_p\}$ dengan nilai $c_i$ sebagai berikut
+    \begin{equation}
+        c_i = (a_i \pm b_i) \mod m_i
+    \end{equation}
 
-\paragraph{Representasi RNS}
 
-Pembagian dalam RNS cukup kompleks. Mengingat bahwa kinerja pembagian pada RNS pasti lebih buruk dibandingkan dengan pembagian pada FRNS, maka algoritma pembagian pada RNS tidak dibahas lebih lanjut.
+
+    \subsubsection{Perkalian} \label{sec:mul_theory}
+
+    \paragraph{Representasi FRNS}
+    Terdapat beberapa algoritma yang dapat dilakukan dalam perkalian dua bilangan besar. Pada subbab ini akan dibahas tiga algoritma perkalian, yaitu algoritma perkalian panjang, algoritma comba, dan algoritma perkalian Karatsuba. Ketiga algoritma tersebut merupakan algoritma yang digunakan oleh OpenSSL.
+
+    Algoritma perkalian panjang adalah algoritma perkalian yang biasa diajarkan dalam sekolah dasar. Algoritma perkalian panjang $A*B$ berdasarkan pada proses mengkalikan satu digit A pada B, geser hasilnya sesuai posisi digit A yang digunakan, lalu jumlahkan seluruh hasil perkalian tersebut. Algoritma ini memiliki kompeksitas $O(n^2)$ terhadap perkalian. Pseudocode \ref{alg:mul} merupakan gambaran dari algoritma perkalian panjang.
+
+    \begin{algorithm}
+      \caption{Algoritma Perkalian Panjang}
+        \label{alg:mul}
+      \begin{algorithmic}[1]
+        \Require{$A$ = [1..p], $B$ = [1..q] yang merepresentasikan Big Integer, $\beta$ adalah basis yang digunakan representasi Big Integer}
+        \Statex
+        \Function{Mul}{$A$, $B$, $\beta$}
+          \Let{C}{\Call{NewArray}{p+q}}
+          \For{$i \gets 1$, $i \gets i + 1$ to $q$}
+            \Let{$carry$}{0}
+            \For{$j \gets 1$, $j \gets j + 1$ to $q$}
+              \Let{$C[i+j-1]$}{$C[i+j-1] + carry + A[i] * A[j]$}
+              \Let{$carry$}{$C[i+j-1] \div \beta$}
+              \Let{$C[i+j-1]$}{$C[i+j-1] \mod \beta$}
+            \EndFor
+            \Let{$C[j+p]$}{$carry$}
+          \EndFor
+          \State \Return{$C$}
+        \EndFunction
+      \end{algorithmic}
+    \end{algorithm}
+
+    Algoritma Comba merupakan modifikasi dari algoritma perkalian panjang. Berbeda dengan algoritma perkalian panjang, algoritma comba melakukan proses iterasi perkalian berbasis kolom, sementara algoritma perkalian panjang berbasis baris. Penggunaan kolom dibandingkan baris membuat carry pada setiap iterasi perkalian lebih sedikit. Dengan demikian, algoritma comba mengurangi kompleksitas ruang serta mengurangi jumlah penulisan terhadap memori.
+
+    Algoritma karatsuba berdasarkan bahwa perkalian dua bilangan A dan B dapat direpresentasikan dalam tiga perkalian bilangan bulat yang lebih kecil. Algoritma ini memiliki kompeksitas $O(n^{\log_2 3})$ terhadap operasi perkalian. Penggunaan algoritma karatsuba dalam komputer dapat dilakukan dengan pemanggilan fungsi secara rekursif. Algoritma karatsuba dalam pseudocode dapat dilihat pada Pseudocode \ref{alg:karatsuba_mul}
+
+    \begin{algorithm}
+      \caption{Algoritma Perkalian Karatsuba}
+      \label{alg:karatsuba_mul}
+      \begin{algorithmic}[1]
+        \Require{$A$ = [1..p], $B$ = [1..q] yang merepresentasikan Big Integer, $\beta$ adalah basis yang digunakan}
+        \Statex
+        \Function{MulKaratsuba}{$A$, $B$, $\beta$}
+          \If{($p = 1$) or ($q = 1$)}
+            \State \Return $A * B$
+          \EndIf
+          \Let{$mid$}{\Call{Floor}{\Call{Min}{$p, q$}/2}}
+          \Let{$A_{low}, A_{high}$}{\Call{SplitIn}{$A, mid$}}
+          \Comment{Split $A$ into two subarray at $mid$}
+          \Let{$B_{low}, B_{high}$}{\Call{SplitIn}{$B, mid$}}
+          \Let{$C_0$}{\Call{MulKaratsuba}{$A_{low}, B_{low}$}}
+          \Let{$C_1$}{\Call{MulKaratsuba}{($A_{low} + A_{high}$), ($B_{low} + B_{high}$)}
+          }
+          \Let{$C_2$}{\Call{MulKaratsuba}{$A_{high}, B_{high}$}}
+          \State
+          \Let{$x$}{$C_2 * \beta ^ {mid * 2}$}
+          \Let{$y$}{$(C_1 - C_2 - C_0) * \beta ^ {mid}$}
+
+          \State \Return{$x + y + C_1$}
+        \EndFunction
+      \end{algorithmic}
+    \end{algorithm}
+
+
+    \paragraph{Representasi RNS}
+    Sifat penjumlahan dan pengurangan yang dibahas pada subbab \ref{sec:add_sub_theory} juga berlaku pada perkalian di representasi RNS. Perkalian dua bilangan $A$ dan $B$ dalam representasi RNS, akan menghasilkan $C$ yang memiliki representasi $\{c_1,c_2,...,c_p\}$ dengan nilai $c_i$ sebagai berikut
+    \begin{equation}
+        c_i = (a_i * b_i) \mod m_i
+    \end{equation}
+
+    \subsubsection{Pembagian dan Modulo}\label{sec:div_theory}
+
+    \paragraph{Representasi FRNS}
+    Seperti perkalian, terdapat beberapa algoritma yang dapat digunakan dalam pembagian. Seperti operasi aritmatika sebelumnya, algoritma pembagian yang banyak digunakan adalah algoritma pembagian panjang yang diajarkan pada sekolah dasar. Pada implementasinya di komputer, algoritma ini memiliki prekondisi divisor yang telah dinormalisasi. Divisor yang dinormalisasi adalah divisor $D = [0..n-1]$ yang menggunakan basis $\beta$, berlaku $D[n-1] > \beta/2$. Pseudocode \ref{alg:long_div} menjelaskan algoritma ini dalam bentuk pseudocode.
+
+    \begin{algorithm}
+      \caption{Algoritma Pembagian Panjang}
+      \label{alg:long_div}
+      \begin{algorithmic}[1]
+        \Require{$N = [0..n+m-1], D = [0..n-1]$ bilangan bulat dalam representasi array.}
+        \Statex
+        \Function{LongDiv}{$D, N, \beta$}
+          \Let{$Q$}{\Call{NewArray}{m}}
+          \Let{$is_bigger$}{\Call{BigIntCompare}{$N$, \Call{Mul}{$D, \beta^m$}}}
+          \If{$is_bigger$}
+            \Let{$Q[m]$}{1}
+          \Else
+            \Let{$Q[m]$}{0}
+          \EndIf
+          \For{$i \gets m$, $i \gets i - 1$ downto $n$}
+            \Let{$Q[i]$}{$\lfloor\frac{N[n+i]\beta + N[n+j-1]}{D[n-1]}\rfloor$}
+            \Let{$Q[i]$}{\Call{Min}{$Q[i],\beta$}}
+            \Let{$N$}{$N$-\Call{Mul}{$Q[i], D}*\beta^i$}
+            \While{$A$ < 0}
+              \Let{$Q[i]$}{$Q[i] - 1$}
+              \Let{$N$}{$N+N\beta^i$}
+            \EndWhile
+            \Let{$R$}{$A$}
+            \State \Return{$Q, R$}
+          \EndFor
+        \EndFunction
+      \end{algorithmic}
+
+    \end{algorithm}
+
+    \citet{div_burnikel_ziegler} memperkenalkan algoritma pembagian cepat yang berjalan pada kompleksitas $2K(n)+O(n \log n)$ dengan $K(n)$ adalah waktu berjalannya algoritma perkalian karatsuba.
+    % \todo[inline]{jelasin dasarnya apa, div\&conquer, recursive}
+    %
+    % \begin{algorithm}
+    %   \caption{Algoritma Pembagian Burnikel-Ziegler}
+    %   \label{alg:div_burnikel_ziegler}
+    %   \begin{algorithmic}
+    %     \Require{$N$ dan $D$ adalah bilangan bulat}
+    %     \Statex
+    %     \Function{DivRepeatedSub}{$N$, $D$}
+    %
+    %     \EndFunction
+    %   \end{algorithmic}
+    % \end{algorithm}
+
+    \paragraph{Representasi RNS}
+
+    Pembagian dalam RNS cukup kompleks. Mengingat bahwa kinerja pembagian pada RNS pasti lebih buruk dibandingkan dengan pembagian pada FRNS, maka algoritma pembagian pada RNS tidak dibahas lebih lanjut.
