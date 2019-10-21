@@ -34,8 +34,8 @@
 
     Saat ini komputasi kriptografi kunci publik masih memerlukan proses komputasi yang lebih tinggi dibandingkan dengan kriptografi kunci simetris. Maka dari itu, kriptografi kunci publik biasanya hanya dilakukan untuk mengenkripsikan kunci yang akan digunakan dalam kriptografi kunci simetris.
 
-    \subsubsection{Rivest–Shamir–Adleman (RSA)}
-
+    \subsubsection{Rivest–Shamir–Adleman (RSA)} \label{sec:rsa_theory}
+    \todo{edit lagi, bahasanya ngaco}
     RSA merupakan salah satu algoritma kriptografi kunci publik yang hingga saat ini banyak digunakan. Algoritma RSA pertama kali dicetuskan oleh Ron Rivest, Adi Shamir, dan Leonard Adleman pada tahun 1978. RSA berdasar pada sifat matematis bahwa dalam sebuah pemangkatan modular dengan persamaan:
     \begin{equation}
       (m^e)^d  \equiv  m \pmod{n}
@@ -52,12 +52,14 @@
       \item Hitung bilangan bulat $d$, dengan $ e*d  \equiv  1 \pmod{\phi} $
     \end{enumerate}
 
-    Dari perhitungan diatas, didapat \textit{public key} $(e, n)$ dan private key $d$.
+    Dari perhitungan diatas, didapat \textit{public key} $(e, n)$ dan private key $(d, n)$.
     Proses enkripsi pada sebuah data \textit{D} dapat dilakukan melalui beberapa langkah sebagai berikut:
     \begin{enumerate}
       \item Ubah \textit{D} menjadi satu atau beberapa bilangan bulat \textit{m}, dengan \textit{m} berada dalam interval [1..n-1]
-      \item Hitung ciphertext \textit{c} untuk masing-masing \textit{m}, dengan $c = m^e \bmod n $
+      \item Hitung ciphertext \textit{c} untuk masing-masing \textit{m}, dengan $c = m^e \mod n $
     \end{enumerate}
+
+    Sementara itu, proses dekripsi dapat dilakukan dengan menghitung plaintext $m$ dari ciphertext $c$ yang didapatkan dengan $m = c^d \mod n$.
 
 
   \subsection{Algoritma Pertukaran Kunci}
@@ -76,5 +78,3 @@
     \end{figure}
 
     Meskipun nilai $p, g, $ serta $pk$ merupakan nilai publik yang dapat diketahui semua orang, pihak ketiga tidak dapat menghitung nilai akhir $key$ yang didapatkan dari perhitungan pada masing-masing server. Untuk mendapatkan $key$ yang digunakan oleh dua pihak, dibutuhkan nilai random $x$ yang dipilih oleh masing-masing pihak tersebut. Perhitungan nilai $x$ dari nilai $g^x mod p$ merupakan masalah logartima diskrit, yaitu masalah yang sama dengan pencarian kunci privat dari RSA.
-
-    

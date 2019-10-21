@@ -6,7 +6,7 @@
   Untuk menangani operasi matematis yang menggunakan bilangan yang lebih besar dari \textit{range} yang dimiliki ALU, diperlukan sebuah struktur data yang dapat menangani bilangan bulat tersebut. Kemampuan komputer untuk menghitung bilangan yang tidak memiliki batas sering dikenal sebagai \textit{arbitrary-precision integer arithmetic}. Sementara itu, bilangan yang digunakan dalam perhitungan tersebut sering disebut \textit{big number} atau \textit{big integer} jika bilangan yang digunakan adalah bilangan bulat.
 
   % dipake dimana aja
-  \textit{Big integer} sering digunakan pada perhitungan kriptografi, mengingat bahwa perhitungan kriptografi membutuhkan bilangan yang besar agar kunci yang digunakan aman. Sebagai contoh, disarankan untuk menggunakan kunci sebesar 256bit untuk AES dan kunci sebesar 1024 bit untuk RSA \citep{key_suggestion} agar enkripsi yang digunakan aman. Jumlah bit yang digunakan tersebut lebih besar dari jumlah bit yang dapat ditangani oleh ALU. Selain perhitungan kriptografi, big number juga umum digunakan untuk menghitung nilai konstanta matematis seperti $\pi$ \citep{bn_pi}, .
+  \textit{Big integer} sering digunakan pada perhitungan kriptografi, mengingat bahwa perhitungan kriptografi membutuhkan bilangan yang besar agar kunci yang digunakan aman. Sebagai contoh, disarankan untuk menggunakan kunci sebesar 256bit untuk AES dan kunci sebesar 2048 bit untuk RSA \citep{key_suggestion} agar enkripsi yang digunakan aman. Jumlah bit yang digunakan tersebut lebih besar dari jumlah bit yang dapat ditangani oleh ALU. Selain perhitungan kriptografi, big number juga umum digunakan untuk menghitung nilai konstanta matematis seperti $\pi$ \citep{bn_pi}, .
 
 
   \subsection{Struktur Big Integer}
@@ -35,7 +35,7 @@
       \caption{Representasi FRNS dalam bentuk Array of Integer}
       \label{fig:frns_ref}
     \end{figure}
-    
+
     Gambar \ref{fig:frns_ref} memberikan gambaran bahwa untuk merepresentasikan big integer $A = \alpha_{n-1}\beta^{n-1}+...+\alpha_{1}\beta+\alpha_{0}$, dapat digunakan array $A = [0..n-1]$, dengan nilai $\beta$ dapat disimpan pada sebuah variabel terpisah. Sebagai contoh, array $N = [2^29, 3^31, 2^54, 3^27]$ merupakan representasi dari big integer $N = 3^27*2^192 + 2^54*2^128 + 3^31*2^64 + 2^29$.
 
     \subsubsection{Residue Number Systems} \label{sec:rns}

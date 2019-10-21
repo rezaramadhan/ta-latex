@@ -14,3 +14,16 @@ Terdapat banyak \textit{library} yang mengimplementasikan TLS, diantaranya adala
 
 % Kenapa pilih OpenSSL sebagai implementasi yang diteliti
 Penulis memilih untuk menggunakan OpenSSL sebagai implementasi TLS yang akan dibahas lebih jauh. Selain karena banyak digunakan, OpenSSL memiliki dokumentasi yang lebih baik dibandingkan dengan implementasi yang lain, dengan demikian proses untuk melakukan modifikasi pada \textit{source code} OpenSSL akan lebih mudah. Modul big integer yang dimiliki oleh OpenSSL terpisah dari modul komputasi kriptografi yang lain. Dengan demikian akan memudahkan proses penelitian karena penulis hanya perlu berfokus pada source code di modul itu saja. Selain itu, OpenSSL sudah umum digunakan dalam implementasi HTTPS pada webserver Apache2 ataupun nginx. Hal ini menyebabkan penulis dapat menggunakan tools yang umum digunakan dalam melakukan testing benchmark dalam sebuah aplikasi web seperti Apache Bench.
+
+\subsection{Penggunaan Big Integer pada TLS}
+Big integer digunakan pada tahap \textit{handshake}, dimana penggunaan bilangan bulat yang besar diperlukan agar proses autentikasi dan pertukaran kunci dapat dilakukan secara aman. Pada penelitian ini, hanya akan dibahas algoritma RSA dan DH sebagai algoritma autentikasi dan pertukaran kunci sesuai dengan batasan masalah pada subbab \ref{sec:batasan_masalah}.
+
+\subsubsection{RSA} \label{sec:rsa_bn_usage}
+Berdasarkan \citet{key_suggestion}, penggunaan kunci yang digunakan oleh RSA adalah sebesar 2048-bit agar sistem kriptografi yang digunakan aman. Penggunaan jumlah bit yang tinggi dalam kunci mengakibatkan implementasi RSA perlu menggunakan library big integer. Subbab \ref{sec:rsa_theory} menjelaskan bahwa dalam proses pembangkitan kunci RSA dilakukan operasi perkalian untuk mencari nilai $n$ dan $\phi$. Sementara itu, proses enkripsi dan dekripsi yang dijelaskan pada subbab yang sama menunjukkan bahwa RSA menggunakan operasi perpangkatan modular untuk mendapatkan ciphertext dari plaintext dan juga sebaliknya.
+
+Sesuai dengan pseudocode \ref{alg:mul} dan \ref{alg:karatsuba_mul}, operasi perkalian menggunakan operasi penjumlahan didalamnya. Operasi perpangkatan modulo pada dasarnya merupakan operasi perkalian dan pembagian. Operasi pembagian sendiri menggunakan operasi perkalian, penjumlahan, dan pengurangan, seperti yang dapat dilihat pada pseudocode \ref{alg:long_div}.
+
+\subsubsection{Diffie-Hellman}
+Untuk memastikan proses pertukaran kunci Diffie-Hellman dilakukan secara aman, perlu digunakan nilai $p, g$ serta nilai random $x$ yang besar. Operasi aritmatika big integer yang banyak digunakan dalam Diffie-Hellman adalah perpangkatan modular. Dapat dilihat pada Gambar \ref{fig:dh_exchange} bahwa perhitungan $pk$ dan $key$ langkah nomor 2 dan 4 membutuhkan operasi perpangkatan modular.
+
+Seperti yang telah dijelaskan pada subbab \ref{sec:rsa_bn_usage}, operasi perpangkatan modular terdiri dari operasi penjumlahan, perkalian, pengurangan, serta pembagian.
