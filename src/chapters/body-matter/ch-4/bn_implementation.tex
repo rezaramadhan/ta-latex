@@ -16,13 +16,13 @@ Secara default, jumlah maksimal thread maksimum yang akan digunakan oleh OpenSSL
 
 \subsection{Batasan Implementasi}
 Implementasi dilakukan pada sistem operasi Ubuntu 64 bit. Karena itu, implementasi library big number hanya berfokus pada openssl dengan yang memiliki konfigurasi makro sebagai berikut:
-\begin{itemize}
+\begin{enumerate}[label=\roman*.]
   \item BN\_ULONG = unsigned long long
   \item OPENSSL\_SMALL\_FOOTPRINT = false
   \item BN\_MUL\_COMBA = true
   \item BN\_RECURSION = true
 
-\end{itemize}
+\end{enumerate}
 
 Konfigurasi makro tersebut digunakan dalam pemilihan dan manajemen struktur data yang digunakan serta pemilihan algoritma pada bagian tertentu. Sebagai contoh, algoritma yang digunakan dalam perkalian adalah algoritma karatsuba dan algoritma comba pada basis rekursif.
 

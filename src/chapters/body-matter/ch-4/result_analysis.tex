@@ -35,12 +35,12 @@ SSD Disk  & 25GB  & 25GB  & 200GB & 400 \\ [1ex] % [1ex] adds vertical space
 \subsection{Skenario Pengujian}
 Pengujian dilakukan dengan menjalankan ApacheBench pada node lab dengan tujuan web yang dicek test01, test16, dan test32. ApacheBench menghasilkan beberapa data, namun kita hanya peduli pada data berikut.
 % \todo{cite website apachebench}
-\begin{itemize}
+\begin{enumerate}[label=\roman*.]
   \item \textit{Time taken for tests}, yaitu waktu dari koneksi pertama dibuat sampai response terakhir diterima.
   \item \textit{Requests per second}, yaitu jumlah request yang ditangani dalam satu detik
   \item \textit{Time per request}, yaitu waktu rata-rata untuk sebuah request.
   \item \textit{Min \& max connection times}, yaitu waktu maksimum dan minimum yang digunakan oleh sebuah request.
-\end{itemize}
+\end{enumerate}
 
 Pengujian dengan ApacheBench dilakukan terhadap beberapa versi perangkat OpenSSL. Versi pertama adalah OpenSSL vanilla yang belum dimodifikasi, versi kedua adalah OpenSSL dengan paralelisasi modul penjumlahan dan pengurangan, versi ketiga adalah OpenSSL dengan paralelisasi modul perkalian, versi keempat adalah OpenSSL dengan paralelisasi modul pembagian, dan versi kelima adalah OpenSSL dengan semua paralelisasi semua modul operasi aritmatika.
 
