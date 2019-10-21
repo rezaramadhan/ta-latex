@@ -58,5 +58,23 @@
       \item Ubah \textit{D} menjadi satu atau beberapa bilangan bulat \textit{m}, dengan \textit{m} berada dalam interval [1..n-1]
       \item Hitung ciphertext \textit{c} untuk masing-masing \textit{m}, dengan $c = m^e \bmod n $
     \end{enumerate}
-% \subsection{Algoritma Pertukaran Kunci}
-% \subsubsection{Diffie Hellman}
+
+
+  \subsection{Algoritma Pertukaran Kunci}
+  Algoritma pertukaran kunci adalah algoritma yang digunakan untuk menghasilkan sebuah kunci rahasia antara dua atau lebih pihak tanpa diketahui oleh pihak lain \citep{applied_crypto}. Kunci yang dihasilkan dari algortima ini akan digunakan sebagai kunci pada sistem kriptografi simetris.
+
+    \subsubsection{Diffie-Hellman}
+    Algoritma Diffie-Hellman (DH) merupakan salah satu algoritma paling awal yang memperkenalkan konsep pertukaran kunci. Walaupun DH merupakan algoritma awal yang ada, DH masih umum digunakan pada sistem kriptografi modern. Kriptografi modern hanya menggunakan modifikasi dari algoritma DH, misalnya dengan menggunakan kurva eliptik sebagai basis perhitungannnya.
+
+    Seperti RSA, DH memiliki basis perpangkatan modulo bilangan bulat. Pada awal algortima DH, dipilih dua nilai publik $p$ dan $g$, dengan $p$ merupakan bilangan prima besar dan $g$ adalah akar primitif modulo dari $p$. Setelah itu, masing-masing pihak akan memilih nilai random $x$ dengan $1 \leq x \leq p-1 $. Setelah nilai random dipilih akan dihitung nilai $pk = g^x \mod p$ pada masing-masing pihak, kemudian nilai $pk$ akan dikirim melalui jaringan pada pihak yang lain. Setelah nilai dari pihak lain diterima, akan dihitung nilai $key = prekey^x \mod p$. Ilustrasi pertukaran kunci dapat dilihat pada Gambar \ref{fig:dh_exchange}.
+
+    \begin{figure}[h]
+      \centering
+      \includegraphics[width=0.9\textwidth]{resources/ch-2/dh-exchange}
+      \caption{Proses pertukaran kunci Diffie-Hellman}
+      \label{fig:dh_exchange}
+    \end{figure}
+
+    Meskipun nilai $p, g, $ serta $pk$ merupakan nilai publik yang dapat diketahui semua orang, pihak ketiga tidak dapat menghitung nilai akhir $key$ yang didapatkan dari perhitungan pada masing-masing server. Untuk mendapatkan $key$ yang digunakan oleh dua pihak, dibutuhkan nilai random $x$ yang dipilih oleh masing-masing pihak tersebut. Perhitungan nilai $x$ dari nilai $g^x mod p$ merupakan masalah logartima diskrit, yaitu masalah yang sama dengan pencarian kunci privat dari RSA.
+
+    
