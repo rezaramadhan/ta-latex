@@ -1,0 +1,31 @@
+# Mul tests.
+#
+# These test vectors satisfy A * B = Product.
+
+Product = 5befab3320f8f90542f3120235abd926aac3805a19e343f690
+A = b057af553afb120db6b7764f8
+B = 857734c4c27a1d17f7cf59dee
+
+Product = -ab1ce167f4b2945c55ae3f87df50ad07d4be87cf9f8aa07b0c
+A = ae7a6a87ea8981a567d0b3ecc
+B = -fb0fed5f8c737bcacef4d6cb1
+
+Product = -c2606cd48e6b075c8da79eb4668e7157f1f175c2860fd4c475
+A = -c28dc31984d4583e9d45424c3
+B = ffc4581a5c3f885cf42767e67
+
+Product = aa6805b5408aff7f914472756da07830dcad902834dbdd6944
+A = -ffa07ff9f503511954e5dd3f9
+B = -aaa7af472ad8957763f5a7c64
+
+Product = a57da276998c548101f514e9f
+A = -a57da276998c548101f514e9f
+B = -1
+
+Product = 14afb44ed3318a90203ea29d3e
+A = a57da276998c548101f514e9f
+B = 2
+
+Product = -5175239488dad05a58414251496d2a06c
+A = a57da276998c548101f514e9f
+B = -7e020414
