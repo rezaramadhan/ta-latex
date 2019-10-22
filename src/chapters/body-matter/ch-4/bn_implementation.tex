@@ -1,6 +1,6 @@
-
+%!TEX root = ../../../tugas-akhir.tex
 \section{Implementasi Algoritma Paralel pada Library big integer}
-\subsection{Lingkungan Implementasi}
+\subsection{Lingkungan Implementasi} \label{sec:impl_env}
 Sesuai dengan pertimbangan pada subbab \ref{sec:parallel_env}, implementasi algoritma paralel akan dilakukan dengan menggunakan pthread. Implementasi akan dilakukan menggunakan \textit{compiler} GCC versi 5.4.0 dan dijalankan pada sistem operasi Ubuntu 18.04 64-bit. Penggunaan TLS akan diuji pada penggunaan HTTPS pada web server yang diinstall pada sistem operasi. Web server yang digunakan adalah Apache2 dengan menggunakan modul tambahan mod\_ssl. Arsitektur sistem yang digunakan dapat dilihat pada Gambar \ref{fig:openssl_arch}
 
 \begin{figure}[h]
@@ -68,6 +68,31 @@ struct bignum_st {
 % |BN_clear_free()| mengubah nilai seluruh komponen BIGNUM a menjadi 0 kemudian mengembalikan memori BIGNUM pada sistem.
 
 % Sebutin fungsi yang dipake?
+
+\subsection{Struktur Direktori \textit{Source Code}}
+
+\begin{lstlisting}[style=code]
+.
+|-- apps
+| ...
+|-- Configurations
+|-- crypto
+|   | ...
+|   |-- bn
+|   | ...
+|   |-- dh
+|   | ...
+|   |-- rsa
+|   | ...
+|-- test
+|   | ...
+|   |-- recipes
+|   |   | ...
+|   |   |-- 10-test_bn_data
+| ...
+
+\end{lstlisting}
+
 \subsection{Modul Operasi Aritmatika}
 \subsubsection{Modul Penjumlahan}
 Modul penjumlahan dan pengurangan terdapat pada file BN\_add.c. Fungsi BN\_add(result, a, b) pada modul ini melakukan pengolahan data pada a dan b seperti mengecek negatif dan mengecek panjang masing-masing array. Hasil pengecekan tersebut akan digunakan untuk melakukan operasi lebih lanjut. Jika a dan b memiliki tanda yang berbeda, akan dipanggil fungsi BN\_usub() selain itu akan dipanggil fungsi BN\_uadd(). BN\_uadd() dan BN\_usub() melakukan pengolahan data pada a dan b sehingga terdapat representasi array yang dapat diolah oleh BN\_add\_words() dan BN\_sub\_words().

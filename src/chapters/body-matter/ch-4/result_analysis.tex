@@ -1,6 +1,24 @@
-
+%!TEX root = ../../../tugas-akhir.tex
 \section{Evaluasi}
-\subsection{Lingkungan Pengujian}
+\subsection{Tujuan Pengujian}
+Pengujian dilakukan untuk menguji
+
+\subsection{Pengujian Fungsional}
+
+\subsubsection{Lingkungan Pengujian}
+Lingkungan pengujian yang digunakan dalam pengujian fungsional sama dengan lingkungan implementasi yang telah dijelaskan dalam \ref{sec:impl_env} namun tanpa penggunaan Apache sebagai web server. Pengujian fungsional hanya membutuhkan \textit{source code} OpenSSL serta testcase yang digunakan.
+
+\subsubsection{Skenario Pengujian}
+Jelasin pake perl \& script di C
+
+Kasus uji yang digunakan pada pengujian fungsional dapat dilihat pada Lampiran \ref{sec:functional_testcase}.
+
+\subsubsection{Hasil Pengujian}
+Pengujian fungsional berhasil dilakukan??
+
+\subsection{Pengujian Kinerja}
+
+\subsubsection{Lingkungan Pengujian}
 
 Kakas yang digunakan untuk testing adalah ApacheBench. Sesuai dengan namanya, ApacheBench dapat melakukan benchmarking pada web server. ApacheBench (ab) akan mengirim sejumlah request dan menghasilkan data kinerja web server yang dipilih. Data yang dihasilkan pleh ab diantaranya adalah jumlah byte yang dikirim antar web server dan ab, jumlah request per detik yang dapat ditangani server, waktu rata-rata yang digunakan untuk menangani sebuah request, serta waktu maksimum dan minimum yang digunakan dalam sebuah request.
 
@@ -32,7 +50,7 @@ SSD Disk  & 25GB  & 25GB  & 200GB & 400 \\ [1ex] % [1ex] adds vertical space
 \label{table:nonlin} % is used to refer this table in the text
 \end{table}
 
-\subsection{Skenario Pengujian}
+\subsubsection{Skenario Pengujian}
 Pengujian dilakukan dengan menjalankan ApacheBench pada node lab dengan tujuan web yang dicek test01, test16, dan test32. ApacheBench menghasilkan beberapa data, namun kita hanya peduli pada data berikut.
 % \todo{cite website apachebench}
 \begin{enumerate}[label=\roman*.]
@@ -44,7 +62,6 @@ Pengujian dilakukan dengan menjalankan ApacheBench pada node lab dengan tujuan w
 
 Pengujian dengan ApacheBench dilakukan terhadap beberapa versi perangkat OpenSSL. Versi pertama adalah OpenSSL vanilla yang belum dimodifikasi, versi kedua adalah OpenSSL dengan paralelisasi modul penjumlahan dan pengurangan, versi ketiga adalah OpenSSL dengan paralelisasi modul perkalian, versi keempat adalah OpenSSL dengan paralelisasi modul pembagian, dan versi kelima adalah OpenSSL dengan semua paralelisasi semua modul operasi aritmatika.
 
-\subsection{Hasil dan Analisis}
 \subsubsection{Hasil Pengujian}
   % Langsung data speedup aja, data raw simpen di lampiran
   %
