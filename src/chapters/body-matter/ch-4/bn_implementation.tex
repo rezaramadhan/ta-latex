@@ -29,7 +29,7 @@ Konfigurasi makro tersebut digunakan dalam pemilihan dan manajemen struktur data
 \subsection{Struktur Data Big Integer} \label{sec:bignum_struct}
 Pada OpenSSL, sebuah big integer direpresentasikan dalam struktur data BIGNUM. BIGNUM terdiri dari sebuah array dengan ukuran dinamis dan beberapa integer yang menyimpan informasi tambahan. Dengan demikian secara teori BIGNUM tidak memiliki nilai maksimum. Untuk keperluan paralelisasi, BIGNUM dapat digunakan tanpa mengubah strukturnya sedikitpun. BIGNUM sendiri merupakan sebuah \textit{struct} yang memiliki deklarasi sebagai berikut.
 
-\begin{lstlisting}[style = code]
+\begin{lstlisting}[caption=Struktur Data bignum]
 struct bignum_st {
        BN_ULONG *d;
        int top;
@@ -47,51 +47,9 @@ struct bignum_st {
 
 |dmax| adalah panjang maksimum array yang telah dibuat. |neg| bernilai satu jika BIGNUM bernilai negatif.
 
-% BIGNUM telah memiliki beberapa fungsi primitif yang dapat digunakan untuk membuat, memanipulasi, dan menghancurkan \textit{struct} tersebut. Primitif yang ada adalah seperti berikut.
-%
-% \begin{lstlisting}[style = code]
-%  BIGNUM *BN_new(void);
-%  void BN_init(BIGNUM *);
-%  void BN_clear(BIGNUM *a);
-%  void BN_free(BIGNUM *a);
-%  void BN_clear_free(BIGNUM *a);
-% \end{lstlisting}
-%
-% |BN_new()| akan mengalokasi dan menginisialisasi sebuah struktur BIGNUM.
-%
-% |BN_init()| menginisialisasi BIGNUM yang sudah ada.
-%
-% |BN_clear()| mengubah nilai seluruh komponen BIGNUM a (d, top, dmax) menjadi 0. |BN_clear()| dapat digunakan untuk menghapus data sensitif yang sudah tidak digunakan lagi seperti nilai kunci RSA atau AES.
-%
-% |BN_free()| mengembalikan memori komponen BIGNUM pada sistem.
-% operand
-% |BN_clear_free()| mengubah nilai seluruh komponen BIGNUM a menjadi 0 kemudian mengembalikan memori BIGNUM pada sistem.
-
-% Sebutin fungsi yang dipake?
+\todo[inline]{jelasin BN\_CTX}
 
 \subsection{Struktur File \textit{Source Code}}
-
-% /* \begin{lstlisting}[style=code]
-% .
-% |-- apps
-% | ...
-% |-- Configurations
-% |-- crypto
-% |   | ...
-% |   |-- bn
-% |   | ...
-% |   |-- dh
-% |   | ...
-% |   |-- rsa
-% |   | ...
-% |-- test
-% |   | ...
-% |   |-- recipes
-% |   |   | ...
-% |   |   |-- 10-test_bn_data
-% | ...
-%
-% \end{lstlisting} */
 
 \missingfigure{Struktur file}
 
@@ -107,35 +65,34 @@ Modul penjumlahan dan pengurangan terdapat pada file BN\_add.c. Fungsi BN\_add(r
 
 BN\_add\_words merupakan fungsi yang menerima masukan dua array dengan ukuran yang sama dan menjumlahkannya secara sekuensial. Penerapan algoritma \ref{alg:add} pada OpenSSL terdapat pada fungsi ini.
 
-\begin{table}[]
+\begin{table}[!h]
   \caption{Fungsi dalam submodul bn\_add}
-\begin{tabular}{||l||r|l||}
-\hline \hline
-\textbf{Header Fungsi}            & \multicolumn{2}{l||}{int BN\_add(BIGNUM *r, const BIGNUM *a, const BIGNUM *b);} \\ \hline
-\textbf{Penjelasan}               & \multicolumn{2}{l||}{Menjumlahkan a dan b dan menyimpan hasilnya pada r $(a+b=r)$}    \\ \hline
-\multirow{3}{*}{\textbf{Argumen}} & r                              & BIGNUM hasil                                  \\
-                                  & a                              & BIGNUM operand a                              \\
-                                  & b                              & BIGNUM operand b                              \\ \hline \hline
-\textbf{Header Fungsi}            & \multicolumn{2}{l||}{int BN\_add(BIGNUM *r, const BIGNUM *a, const BIGNUM *b);} \\ \hline
-\textbf{Penjelasan}               & \multicolumn{2}{l||}{Menjumlahkan a dan b dan menyimpan hasilnya pada r $(a+b=r)$}    \\ \hline
-\multirow{3}{*}{\textbf{Argumen}} & r                              & BIGNUM hasil                                  \\
-                                  & a                              & BIGNUM operand a                              \\
-                                  & b                              & BIGNUM operand b                              \\ \hline \hline
+
+  \begin{tabular}{R{2.5cm}L{10.5cm}}
+\toprule
+\textbf{Header Fungsi} & |int BN_add(BIGNUM *r, const BIGNUM *a, const BIGNUM *b)|    \\ \midrule
+\textit{Deskripsi}    & Menjumlahkan a dan b dan menyimpan hasilnya pada r $(a+b=r)$ \\
+\textit{Prekondisi}    & - \\
+\textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
+ \\ \bottomrule
+\textbf{Header Fungsi} & |int BN_sub(BIGNUM *r, const BIGNUM *a, const BIGNUM *b)|    \\ \midrule
+\textit{Deskripsi}    & Mengurangi b dari a dan menyimpan hasilnya pada r $(a-b=r)$ \\
+\textit{Prekondisi}    & - \\
+\textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
+ \\ \bottomrule
+\textbf{Header Fungsi} & |int BN_uadd(BIGNUM *r, const BIGNUM *a, const BIGNUM *b)|    \\ \midrule
+\textit{Deskripsi}    & Menjumlahkan a dan b dan menyimpan hasilnya pada r $(a+b=r)$ \\
+\textit{Prekondisi}    & $a \geq 0$,$ b \geq 0$ \\
+\textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
+ \\ \bottomrule
+\textbf{Header Fungsi} & |int BN_usub(BIGNUM *r, const BIGNUM *a, const BIGNUM *b)|    \\ \midrule
+\textit{Deskripsi}    & Mengurangi b dari a dan menyimpan hasilnya pada r $(a-b=r)$ \\
+\textit{Prekondisi}    & $a \geq 0$, $b \geq 0$, $a \geq b$ \\
+\textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
+ \\ \bottomrule
 \end{tabular}
+
 \end{table}
-
-% Paralelisasi dilakukan pada pemanggilan fungsi BN_add_word() oleh BN_uadd(). \todo{ini masukin kode? banyak banget? Kalo snippet ga ada context}
-%
-% \begin{lstlisting}
-%     //rp -> result array, ap & bp original array, n length of ap & bp
-%
-%     a_split = split_array(ap, n);
-%     b_split = split_array(bp, n);
-%
-%     ...
-%
-% \end{lstlisting}
-
 
 
 \subsubsection{Modul Pengurangan}

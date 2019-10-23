@@ -114,41 +114,53 @@
 \renewcommand{\BOthers}{dkk}
 
 
-\lstdefinestyle{code}{
-    belowcaptionskip=\baselineskip,
+\usepackage{array}
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+
+\makeatletter
+\def\lst@numbersymbol{}
+\lst@Key{numbersymbol}{}{\def\lst@numbersymbol{#1}}
+\lst@Key{numbers}{none}{%
+    \let\lst@PlaceNumber\@empty
+    \lstKV@SwitchCases{#1}%
+    {none&\\%
+     left&\def\lst@PlaceNumber{\llap{\normalfont
+                \lst@numberstyle{\thelstnumber\lst@numbersymbol}\kern\lst@numbersep}}\\%
+     right&\def\lst@PlaceNumber{\rlap{\normalfont
+                \kern\linewidth \kern\lst@numbersep
+                \lst@numberstyle{\lst@numbersymbol\thelstnumber}}}%
+    }{\PackageError{Listings}{Numbers #1 unknown}\@ehc}}
+\makeatother
+
+\renewcommand{\lstlistingname}{\textit{Source Code}}% Listing -> Algorithm
+\renewcommand{\lstlistlistingname}{Daftar of \lstlistingname s}
+
+\lstset{
+    float=tp,
+    floatplacement=tbp,
+    abovecaptionskip=-5pt,
     breaklines=true,
-    frame=L,
-    xleftmargin=40pt,
-    framexleftmargin=10pt,
-    numbersep=20pt,
+    breakatwhitespace=false,
+    frame=single,
+    xleftmargin=2em,
+    framexleftmargin=1.5em,
+    numbersep=1.5em,
     numbers=left,
+    numbersymbol=:,
+    numberstyle=\tiny\color{gray!75!black},
     stepnumber=1,
     language=C,
-    basicstyle=\linespread{1.25}\footnotesize\ttfamily,
+    basicstyle=\linespread{1.15}\small\ttfamily\color{black},
     keywordstyle=\bfseries\color{green!40!black},
     commentstyle=\itshape\color{purple!40!black},
     stringstyle=\color{orange},
 }
 \lstMakeShortInline[columns=fixed]|
 
-\lstdefinestyle{algorithm}{
-    belowcaptionskip=\baselineskip,
-    breaklines=true,
-    frame=tblr,
-    xleftmargin=25pt,
-    framexleftmargin=5pt,
-    numbersep=15pt,
-    numbers=left,
-    stepnumber=1,
-    language=pascal,
-    basicstyle=\linespread{1.15}\footnotesize\rmfamily,
-    keywordstyle=\bfseries\color{green!40!black},
-    commentstyle=\itshape\color{purple!40!black},
-    stringstyle=\color{orange},
-    mathescape=true,
-    literate={:=}{$\leftarrow{}$}{1}{beta}{$\beta$}{1},
-}
-
+% ===============================================
 \usepackage[chapter]{algorithm}
 \usepackage{algorithmicx}
 \usepackage[noend]{algpseudocode}
@@ -213,3 +225,7 @@
 % Line satu setengah spasi
 %
 \renewcommand{\baselinestretch}{1.5}
+
+\renewcommand{\arraystretch}{1.2}
+\renewcommand{\lightrulewidth}{0.02em}
+\renewcommand{\heavyrulewidth}{0.1em}
