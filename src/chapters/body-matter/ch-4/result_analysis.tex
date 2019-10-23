@@ -1,7 +1,11 @@
 %!TEX root = ../../../tugas-akhir.tex
 \section{Evaluasi}
 \subsection{Tujuan Pengujian}
-Pengujian dilakukan untuk menguji
+Pada penelitian ini pengujian dilakukan untuk melakukan evaluasi apakah modifikasi terhadap perangkat OpenSSL merupakan modifikasi yang baik. Pengujian dilakukan terhadap dua bagian dari OpenSSL, yaitu pengujian terhadap fungsionalitas OpenSSL serta pengujian terhadap kinerja OpenSSL.
+
+Pengujian fungsional dilakukan untuk memastikan bahwa fungsionalitas dari OpenSSL tetap berjalan dengan baik setelah dilakukan modifikasi terhadap \textit{source code}. Pengujian fungsional dilakukan terhadap operasi artimatika big integer yang telah diubah untuk memastikan hasil dari operasi aritmatika tersebut masih merupakan hasil yang benar.
+
+Pengujian kinerja dilakukan untuk menjawab rumusan masalah poin pertama dan ketiga pada subbab \ref{sec:rumusan_masalah}. Pengujian kinerja akan menjawab apakah kinerja TLS dapat meningkat setelah menggunakan algoritma paralel dalam operasi aritmatika big integer. Selain itu, pengujian kinerja akan menunjukkan apakah algoritma paralel yang digunakan dalam operasi aritmatika merupakan algoritma yang tepat atau tidak.
 
 \subsection{Pengujian Fungsional}
 
@@ -9,12 +13,17 @@ Pengujian dilakukan untuk menguji
 Lingkungan pengujian yang digunakan dalam pengujian fungsional sama dengan lingkungan implementasi yang telah dijelaskan dalam \ref{sec:impl_env} namun tanpa penggunaan Apache sebagai web server. Pengujian fungsional hanya membutuhkan \textit{source code} OpenSSL serta testcase yang digunakan.
 
 \subsubsection{Skenario Pengujian}
-Jelasin pake perl \& script di C
+% OpenSSL udah punya tc
+OpenSSL telah memiliki kakas yang dapat dilakukan untuk melakukan unit test. Kakas yang digunakan merupakan gabungan dari \textit{perl script} dan kode dalam bahasa C. \textit{Perl script} akan menjalankan kode dalam bahasa C dan memberikan kasus uji yang sesuai untuk pengujian yang dilakukan. Kode dalam bahasa C akan melakukan \textit{parsing} terhadap kasus uji yang ada, menjalakan fungsi tertentu, kemudian mencocokkan hasil dari fungsi tersebut terhadap kasus uji yang diberika.
 
-Kasus uji yang digunakan pada pengujian fungsional dapat dilihat pada Lampiran \ref{sec:functional_testcase}.
+% jelasin gimana cara run -> makefile
+Pengujian fungsional dilakukan melalui makefile dengan command |make test|. Pengujian dilakukan setelah build aplikasi selesai dilakukan, namun sebelum dilakukannya instalasi aplikasi pada sistem. Command |make test| melakukan pengujian terhadap seluruh fungsionalitas OpenSSL, mulai dari library big integer, komputasi kriptografi, sistem sertifikat, serta pembuatan koneksi TLS.
+
+% testcase yang dipilih kayak gimana, kenapa
+Kasus uji untuk setiap operasi aritmatika disimpan pada |openssl/test/recipes/10-test_bn_data|. Kasus uji untuk setiap operasi aritmatika memiliki file terpisah dengan operasi artimatika yang lain. Sebagai contoh, kasus uji untuk operasi perkalian disimpan pada file |bnmul.txt| pada direktori pengujian. Contoh kasus uji yang digunakan untuk pengujian fungsional dapat dilihat pada Lampiran \ref{sec:functional_testcase}.
 
 \subsubsection{Hasil Pengujian}
-Pengujian fungsional berhasil dilakukan??
+Pengujian fungsionalitas pada OpenSSL berhasil dilakukan. Tidak ada fungsionalitas dari OpenSSL yang rusak setelah dilakukan modifikasi pada \textit{source code} OpenSSL. \textit{Output} dari pengujian fungsional yang dilakukan dapat dilihat pada Lampiran XXX. \todo{tambahin}
 
 \subsection{Pengujian Kinerja}
 
@@ -62,7 +71,43 @@ Pengujian dilakukan dengan menjalankan ApacheBench pada node lab dengan tujuan w
 
 Pengujian dengan ApacheBench dilakukan terhadap beberapa versi perangkat OpenSSL. Versi pertama adalah OpenSSL vanilla yang belum dimodifikasi, versi kedua adalah OpenSSL dengan paralelisasi modul penjumlahan dan pengurangan, versi ketiga adalah OpenSSL dengan paralelisasi modul perkalian, versi keempat adalah OpenSSL dengan paralelisasi modul pembagian, dan versi kelima adalah OpenSSL dengan semua paralelisasi semua modul operasi aritmatika.
 
-\subsubsection{Hasil Pengujian}
+\subsubsection{Hasil dan Analisis Pengujian}
+
+\paragraph{Operasi Penjumlahan}
+\begin{figure}
+  \centering
+  \begin{tikzpicture}
+  	\begin{axis}[
+  		xlabel=Panjang Data $(bit)$,
+  		ylabel={Waktu $(ms)$}
+  	]
+    \addplot table [x=size, y=c1, col sep=comma] {resources/csv/example.csv};
+    \addplot table [x=size, y=c16, col sep=comma] {resources/csv/example.csv};
+    \addplot table [x=size, y=c32, col sep=comma] {resources/csv/example.csv};
+  	\end{axis}
+  \end{tikzpicture}
+  \caption{Data Penjumlahan}
+  \label{fig:add_data}
+\end{figure}
+%
+% \begin{tikzpicture}
+% \begin{loglogaxis}[
+% title=Convergence Plot,
+% xlabel={Degrees of freedom},
+% ylabel={$L_2$ Error},
+% grid=major,
+% legend entries={$d=2$,$d=3$,$d=4$},
+% ]
+% \addplot table {data_d2.dat};
+% \addplot table {data_d3.dat};
+% \addplot table {data_d4.dat};
+% \end{loglogaxis}
+% \end{tikzpicture}
+
+\paragraph{Operasi Pengurangan}
+\paragraph{Operasi Perkalian}
+\paragraph{Operasi }
+
   % Langsung data speedup aja, data raw simpen di lampiran
   %
   % \begin{table}[ht]
@@ -82,5 +127,3 @@ Pengujian dengan ApacheBench dilakukan terhadap beberapa versi perangkat OpenSSL
   % \end{tabular}
   % \label{table:nonlin} % is used to refer this table in the text
   % \end{table}
-
-\subsubsection{Analisis Pengujian}

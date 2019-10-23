@@ -69,35 +69,60 @@ struct bignum_st {
 
 % Sebutin fungsi yang dipake?
 
-\subsection{Struktur Direktori \textit{Source Code}}
+\subsection{Struktur File \textit{Source Code}}
 
-\begin{lstlisting}[style=code]
-.
-|-- apps
-| ...
-|-- Configurations
-|-- crypto
-|   | ...
-|   |-- bn
-|   | ...
-|   |-- dh
-|   | ...
-|   |-- rsa
-|   | ...
-|-- test
-|   | ...
-|   |-- recipes
-|   |   | ...
-|   |   |-- 10-test_bn_data
-| ...
+% /* \begin{lstlisting}[style=code]
+% .
+% |-- apps
+% | ...
+% |-- Configurations
+% |-- crypto
+% |   | ...
+% |   |-- bn
+% |   | ...
+% |   |-- dh
+% |   | ...
+% |   |-- rsa
+% |   | ...
+% |-- test
+% |   | ...
+% |   |-- recipes
+% |   |   | ...
+% |   |   |-- 10-test_bn_data
+% | ...
+%
+% \end{lstlisting} */
 
-\end{lstlisting}
+\missingfigure{Struktur file}
+
+Struktur \textit{source code} dapat dilihat pada Gambar XXX. Direktori utama berisi pembagian dari fungsi aplikasi yang ada dalam OpenSSL. Beberapa fungsi tersebut adalah direktori |doc| yang berisi dokumentasi OpenSSL, |crypto| yang berisi library kriptografi, |ssl| yang berisi dari library komunikasi ssl, serta |test| yang berisi unit test yang dimiliki OpenSSL.
+
+Direktori |crypto| berisi modul-modul yang membentuk libcrypto, dengan setiap modul terbentuk dalam sebuah direktori yang berbeda. Modul |bn| merupakan modul yang mengatasi perhitungan operasi aritmatika big integer. Selain itu, modul |dh| dan |rsa| merupakan modul yang menangani komputasi Diffie-Hellman dan RSA pada OpenSSL.
+
+Modul |bn| memiliki beberapa submodul masing-masing merupakan file yang berbeda. Setiap submodul sendiri mengatasi fungsi yang terkait dengan submodul tersebut, ataupun operasi yang komputasinya mirip dengan submodul. Sebagai contoh, submodul |bn_add| merupakan submodul yang mengatasi operasi penjumlahan dan pengurangan pada big integer. Selain itu, submodul |bn_mul| merupakan submodul yang mengatasi operasi perkalian serta pemilihan algoritma perkalian yang digunakan dalam OpenSSL.
 
 \subsection{Modul Operasi Aritmatika}
-\subsubsection{Modul Penjumlahan}
+\subsubsection{Submodul Penjumlahan}
 Modul penjumlahan dan pengurangan terdapat pada file BN\_add.c. Fungsi BN\_add(result, a, b) pada modul ini melakukan pengolahan data pada a dan b seperti mengecek negatif dan mengecek panjang masing-masing array. Hasil pengecekan tersebut akan digunakan untuk melakukan operasi lebih lanjut. Jika a dan b memiliki tanda yang berbeda, akan dipanggil fungsi BN\_usub() selain itu akan dipanggil fungsi BN\_uadd(). BN\_uadd() dan BN\_usub() melakukan pengolahan data pada a dan b sehingga terdapat representasi array yang dapat diolah oleh BN\_add\_words() dan BN\_sub\_words().
 
 BN\_add\_words merupakan fungsi yang menerima masukan dua array dengan ukuran yang sama dan menjumlahkannya secara sekuensial. Penerapan algoritma \ref{alg:add} pada OpenSSL terdapat pada fungsi ini.
+
+\begin{table}[]
+  \caption{Fungsi dalam submodul bn\_add}
+\begin{tabular}{||l||r|l||}
+\hline \hline
+\textbf{Header Fungsi}            & \multicolumn{2}{l||}{int BN\_add(BIGNUM *r, const BIGNUM *a, const BIGNUM *b);} \\ \hline
+\textbf{Penjelasan}               & \multicolumn{2}{l||}{Menjumlahkan a dan b dan menyimpan hasilnya pada r $(a+b=r)$}    \\ \hline
+\multirow{3}{*}{\textbf{Argumen}} & r                              & BIGNUM hasil                                  \\
+                                  & a                              & BIGNUM operand a                              \\
+                                  & b                              & BIGNUM operand b                              \\ \hline \hline
+\textbf{Header Fungsi}            & \multicolumn{2}{l||}{int BN\_add(BIGNUM *r, const BIGNUM *a, const BIGNUM *b);} \\ \hline
+\textbf{Penjelasan}               & \multicolumn{2}{l||}{Menjumlahkan a dan b dan menyimpan hasilnya pada r $(a+b=r)$}    \\ \hline
+\multirow{3}{*}{\textbf{Argumen}} & r                              & BIGNUM hasil                                  \\
+                                  & a                              & BIGNUM operand a                              \\
+                                  & b                              & BIGNUM operand b                              \\ \hline \hline
+\end{tabular}
+\end{table}
 
 % Paralelisasi dilakukan pada pemanggilan fungsi BN_add_word() oleh BN_uadd(). \todo{ini masukin kode? banyak banget? Kalo snippet ga ada context}
 %

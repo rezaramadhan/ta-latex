@@ -23,7 +23,7 @@
   Terdapat dua pilihan yang dapat digunakan untuk menjalakan komputasi \textit{big integer} secara paralel, yaitu menjalakan komputasi pada CPU atau GPU. Penggunaan GPU dalam memparalelkan komputasi kriptografi kunci publik dapat menghasilkan jumlah \textit{transaction per second} hingga 45 kali lebih besar dibandingkan dengan penggunaannya pada CPU \citep{gpu_vs_cpu}. Namun, GPU tidak umum digunakan pada data center sehingga penggunaan GPU dalam komputasi kriptografi kunci publik pada kehidupan sehari-hari tidak realistis. Dengan umumnya \textit{multicore} CPU yang digunakan server, penggunaan CPU dalam paralelisasi lebih realistis.
 
 
-\section{Rumusan Masalah}
+\section{Rumusan Masalah} \label{sec:rumusan_masalah}
 
   Sesuai dengan pembahasan yang ada pada latar belakang, diketahui bahwa penggunaan pemrograman paralel dalam komputasi \textit{big integer} merupakan salah satu metode yang dapat digunakan untuk meningkatkan kinerja TLS \textit{Handshake}. Maka dari itu, tugas akhir ini akan fokus pada pengembangan algoritma paralel yang digunakan dalam komputasi \textit{big integer} dan implementasinya pada TLS \textit{handshake}. Dalam pengembangannya, terdapat berapa masalah yang akan menjadi perhatian utama dalam tugas akhir ini, yaitu:
 
