@@ -46,12 +46,10 @@
     % \input{chapters/front-matter/abstract-en}
     \input{chapters/front-matter/forewords}
 
-    \titleformat*{\section}{\centering\bfseries\large\MakeUpperCase}
-
     %-------------------------------------------------------------------------%
     % Daftar Isi, Tabel & Gambar
     %-------------------------------------------------------------------------%
-    \clearpage
+    % \clearpage
     \addcontentsline{toc}{chapter}{DAFTAR ISI}
     {\tableofcontents}
 
@@ -63,9 +61,9 @@
     %     \renewcommand{\numberline}{\figurename~\oldnumberline}
     %     \listofappendix
     % }
-    % \addcontentsline{toc}{chapter}{DAFTAR LAMPIRAN}
+    \addcontentsline{toc}{chapter}{DAFTAR LAMPIRAN}
 
-    \clearpage
+    % \clearpage
     {
         \let\oldnumberline\numberline
         \renewcommand{\numberline}{\figurename~\oldnumberline}
@@ -74,7 +72,7 @@
 
     \addcontentsline{toc}{chapter}{DAFTAR GAMBAR}
 
-    \clearpage
+    % \clearpage
     {
         \let\oldnumberline\numberline
         \renewcommand{\numberline}{\tablename~\oldnumberline}
@@ -89,7 +87,6 @@
     \renewcommand{\chaptername}{BAB}
     \renewcommand{\thechapter}{\Roman{chapter}}
 
-    \titleformat*{\section}{\bfseries\large}
     \mainmatter
 
 
@@ -115,22 +112,21 @@
     %-------------------------------------------------------------------------%
     % Lampiran
     %-------------------------------------------------------------------------%
-    \chapterfont{\large}
     \titleformat{\chapter}[block]
-      {\large\bfseries}
+      {\normalsize\bfseries}
       {\chaptertitlename\ \thechapter}{0pt}
-        {\large\bfseries}
+        {\normalsize\bfseries}
     \titlespacing*{\chapter}{0pt}{-25pt}{20pt}
 
-    % \setcounter{chapter}{0}
+    \setcounter{chapter}{0}
 
-    \addtocontents{toc}{\protect\setcounter{tocdepth}{-2}}
+    % \addtocontents{toc}{\protect\setcounter{tocdepth}{-2}}
 
-    \setcounter{secnumdepth}{-2}
+    % \setcounter{secnumdepth}{-2}
     % \begin{appendices}
-    % \renewcommand{\chaptername}{Lampiran}
-    % \renewcommand{\thechapter}{\Alph{chapter}. }
-
+    \renewcommand{\chaptername}{Lampiran}
+    \renewcommand{\thechapter}{\Alph{chapter}. }
+    
     \input{chapters/back-matter/bn_func_all.tex}
     \input{chapters/back-matter/bn_func_call.tex}
     \input{chapters/back-matter/bn_testcase.tex}
