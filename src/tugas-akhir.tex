@@ -10,20 +10,20 @@
 %
 %--------------------------------------------------------------------%
 
-\documentclass[11pt, a4paper, onecolumn, oneside, final]{book}
+\documentclass[12pt, a4paper, onecolumn, oneside, final]{book}
 
 \input{config/if-itb-thesis.sty}
 
 
 \begin{document}
-    
+
     %-------------------------------------------------------------------------%
     % Set Variable
     %-------------------------------------------------------------------------%
     \newcommand{\thetitle}
       {Paralelisasi Library big integer pada Transport Layer Security (TLS) Handshake}
     \newcommand{\thedatemy}
-      {Oktober 2019}
+      {OKTOBER 2019}
     \newcommand{\thedatedmy}
       {8 Oktober 2019}
     \newcommand{\theauthor}
@@ -46,7 +46,7 @@
     % \input{chapters/front-matter/abstract-en}
     \input{chapters/front-matter/forewords}
 
-    \titleformat*{\section}{\centering\bfseries\Large\MakeUpperCase}
+    \titleformat*{\section}{\centering\bfseries\large\MakeUpperCase}
 
     %-------------------------------------------------------------------------%
     % Daftar Isi, Tabel & Gambar
@@ -57,13 +57,13 @@
 
 
 
-    \clearpage
-    {
-        \let\oldnumberline\numberline
-        \renewcommand{\numberline}{\figurename~\oldnumberline}
-        \listofappendix
-    }
-    \addcontentsline{toc}{chapter}{DAFTAR LAMPIRAN}
+    % \clearpage
+    % {
+    %     \let\oldnumberline\numberline
+    %     \renewcommand{\numberline}{\figurename~\oldnumberline}
+    %     \listofappendix
+    % }
+    % \addcontentsline{toc}{chapter}{DAFTAR LAMPIRAN}
 
     \clearpage
     {
@@ -115,11 +115,11 @@
     %-------------------------------------------------------------------------%
     % Lampiran
     %-------------------------------------------------------------------------%
-    \chapterfont{\Large}
+    \chapterfont{\large}
     \titleformat{\chapter}[block]
-      {\Large\bfseries}
+      {\large\bfseries}
       {\chaptertitlename\ \thechapter}{0pt}
-        {\Large\bfseries}
+        {\large\bfseries}
     \titlespacing*{\chapter}{0pt}{-25pt}{20pt}
 
     % \setcounter{chapter}{0}

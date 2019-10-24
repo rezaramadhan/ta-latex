@@ -10,66 +10,102 @@
 %
 %-------------------------------------------------------------------%
 
-%
-% Ukuran kertas
-%
-\special{papersize=210mm,297mm}
+
+%===============================================================================
+% Required Package
+%===============================================================================
+\usepackage{etoolbox}                % Latex Command modification
+\usepackage[dvipsnames]{xcolor}      % Colors
+\usepackage{graphicx}                % Fancy Graphics
+\usepackage{blindtext}               % Lorem ipsum filling
+\usepackage{chngcntr}                % Set counter
+\usepackage{hyperref}                % Link di daftar isi.
+\usepackage{hypcap}                  % Link captions
+\usepackage{parskip}                 % Space between paragraph
+\usepackage{ragged2e}                % Justify paragraph
+\usepackage{caption}                 % Caption on figures, tables, etc
+\usepackage{enumitem}                % Cuztomize enumerate & itemize
+\usepackage{textcase}                % MakeTextUppercase & lower
+\usepackage{setspace}                % Set text spacing
+\usepackage{afterpage}               % Figures on the next page
+\usepackage{amsmath,amsfonts}        % Latex math typesetting
+\usepackage{todonotes}               % Todo in document
+\usepackage{relsize}                 % Change text size
+\usepackage{pgfplots}                % Plot & graph
+
+% \usepackage{titling}               % Make title
 
 
-%
-% Used packages
-%
-\usepackage[top=3cm,bottom=4cm,left=4cm,right=3cm]{geometry} % Setting margin
-\usepackage[bahasa]{babel}      % Judul bahasa Indonesia
-\usepackage[utf8]{inputenc}     % Encoding
-\usepackage[natbibapa]{apacite} % citation: natbib dengan format apacite
-\usepackage[dvipsnames]{xcolor} % Using color
-\usepackage{mathptmx}
-\usepackage{csquotes}
-\usepackage{graphicx}
-\usepackage{titling}
-\usepackage{blindtext}          % Lorem ipsum filling
+
+%===============================================================================
+% Document Configurationa
+%===============================================================================
+\renewcommand{\baselinestretch}{1.5}                          % Line Spacing
+\special{papersize=210mm,297mm}                               % Paper Size
+\usepackage[top=3cm,bottom=4cm,left=4cm,right=3cm]{geometry}  % Margin
+\usepackage[bahasa]{babel}                                    % Bahasa
+\usepackage[utf8]{inputenc}                                   % encoding
+\usepackage{times}                                            % Font
+
+\makeatletter
+\renewcommand\Large{\@setfontsize\large{14pt}{18}}
+\makeatother
+
+
+%===============================================================================
+% titlesec (judul bab & subbab) Configuration
+%===============================================================================
+% Required Package
 \usepackage{sectsty}
-\usepackage{chngcntr}
-\usepackage{etoolbox}
-\usepackage{hyperref}           % Package untuk link di daftar isi.
-\usepackage{titlesec}           % Package Format judul
-\usepackage{parskip}
-\usepackage{ragged2e}
-\usepackage{times}              % Font yang dipake
-\usepackage{booktabs}
-\usepackage{longtable}
-\usepackage{array}
-\usepackage{caption}
-\usepackage{enumitem}
-\usepackage{listings}
-\usepackage{textcase}
-\usepackage{setspace}
-\usepackage{afterpage}
-\usepackage{amsmath,amsfonts}
-\usepackage{hyperref}
-\usepackage{hypcap}
-\usepackage{todonotes}
-\usepackage{fancyvrb}
-\usepackage{relsize}
-\usepackage{tocloft}
-\usepackage{pgfplots}
-\usepackage{multirow}
+\usepackage{titlesec}
 
-%
-% Setting ToC
-%
+
+\chapterfont{\centering \large}
+\titleformat{\chapter}[display]
+  {\large\centering\bfseries}
+  {\chaptertitlename\ \thechapter}{0pt}
+    {\large\bfseries\uppercase}
+\titlespacing*{\chapter}{0pt}{-25pt}{40pt}
+
+\titleformat{\paragraph}
+{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+
+\titlespacing*{\paragraph}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+\titlespacing*{\section} {0pt}{2.5ex plus 1ex minus .2ex}{1.3ex plus .2ex}
+\titlespacing*{\subsection} {0pt}{2.25ex plus 1ex minus .2ex}{0.5ex plus .2ex}
+
+
+
+%===============================================================================
+% Table of Content & sections Configuration
+%===============================================================================
+\setcounter{secnumdepth}{3}   % Set maximum depth of numbering on sections
+\setcounter{tocdepth}{3}      % Set maximum depth of sections on ToC
+
+% Counter untuk figure dan table.
+\counterwithin{figure}{chapter}
+\counterwithin{table}{chapter}
+
+
+
+%===============================================================================
+% tocloft Configuration
+%===============================================================================
+\usepackage{tocloft}
+
 % \titleformat{\section}{\large\MakeUppercase}{\thesection}{1em}{}
 \renewcommand{\cftbeforetoctitleskip}{0em}
-\renewcommand{\cfttoctitlefont}{\hfill\Large\bfseries\MakeUppercase}
+\renewcommand{\cfttoctitlefont}{\hfill\large\bfseries\MakeUppercase}
 \renewcommand{\cftaftertoctitle}{\hfill\hfill}
 
 \renewcommand{\cftbeforeloftitleskip}{0em}
-\renewcommand{\cftloftitlefont}{\hfill\Large\bfseries\MakeUppercase}
+\renewcommand{\cftloftitlefont}{\hfill\large\bfseries\MakeUppercase}
 \renewcommand{\cftafterloftitle}{\hfill}
 
 \renewcommand{\cftbeforelottitleskip}{0em}
-\renewcommand{\cftlottitlefont}{\hfill\Large\bfseries\MakeUppercase}
+\renewcommand{\cftlottitlefont}{\hfill\large\bfseries\MakeUppercase}
 \renewcommand{\cftafterlottitle}{\hfill}
 
 \renewcommand{\cftchappresnum}{BAB\space}
@@ -77,7 +113,6 @@
 
 
 % /////////////////////////////////////////////////////////
-% \usepackage{appendix}
 \newcommand{\listappendixname}{Daftar Lampiran}
 \newlistof{appendix}{app}{\listappendixname}
 \setcounter{appdepth}{2}
@@ -87,7 +122,7 @@
 \renewcommand{\cftappendixnumwidth}{1in}
 
 \renewcommand{\cftbeforeapptitleskip}{0em}
-\renewcommand{\cftapptitlefont}{\hfill\Large\bfseries\MakeUppercase}
+\renewcommand{\cftapptitlefont}{\hfill\large\bfseries\MakeUppercase}
 \renewcommand{\cftafterapptitle}{\hfill\hfill}
 
 \renewcommand{\appendix}[1]{%
@@ -98,28 +133,55 @@
 }
 
 
-% Hyphenation
-\righthyphenmin=62
-\lefthyphenmin=62
-% \hyphenpenalty=10000
-% \exhyphenpenalty=10000
+%===============================================================================
+% Disable Hyphenation
+%===============================================================================
+\hyphenpenalty=10000
+\tolerance=1
+\lefthyphenmin=99
+\righthyphenmin=99
+\sloppy
 
-%
-% Ubah Citation menjadi bahasa Indonesia.
-%
+
+%===============================================================================
+% Bibliography Configuration
+%===============================================================================
+\usepackage[natbibapa]{apacite}       % citation: natbib dengan format apacite
 \bibliographystyle{apacite}
+
+% Ubah 'and' -> 'dan', 'et. al' -> 'dkk'
 \renewcommand{\BBAA}{dan}  % between authors in parenthetical cites and ref. list
 \renewcommand{\BBAB}{dan}  % between authors in in-text citation
 \renewcommand{\BAnd}{dan}  % for ``Ed. \& Trans.'' in ref. list
 \renewcommand{\BOthers}{dkk}
 
 
+%===============================================================================
+% Table Configuration
+%===============================================================================
+% Required package
+\usepackage{booktabs}
+\usepackage{longtable}
 \usepackage{array}
+\usepackage{multirow}
+
+% New column type -> fixed column width with certain column alignment
 \newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 \newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 \newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 
+\renewcommand{\arraystretch}{1.2}         % space between table border & content
+\renewcommand{\lightrulewidth}{0.02em}    % width of light (middle) table border
+\renewcommand{\heavyrulewidth}{0.1em}     % width of heavy (top & bottom) table border
 
+
+%===============================================================================
+% listing (code) Configuration
+%===============================================================================
+% Required package
+\usepackage{listings}
+
+% Create config for line number format
 \makeatletter
 \def\lst@numbersymbol{}
 \lst@Key{numbersymbol}{}{\def\lst@numbersymbol{#1}}
@@ -135,9 +197,12 @@
     }{\PackageError{Listings}{Numbers #1 unknown}\@ehc}}
 \makeatother
 
-\renewcommand{\lstlistingname}{\textit{Source Code}}% Listing -> Algorithm
-\renewcommand{\lstlistlistingname}{Daftar of \lstlistingname s}
+% Change 'Listing' -> 'Source Code'
+\renewcommand{\lstlistingname}{\textit{Source Code}}
+% 'List of Listing' -> 'Daftar Source Code'
+\renewcommand{\lstlistlistingname}{Daftar of \lstlistingname}
 
+% listing Style
 \lstset{
     float=tp,
     floatplacement=tbp,
@@ -158,74 +223,41 @@
     commentstyle=\itshape\color{purple!40!black},
     stringstyle=\color{orange},
 }
-\lstMakeShortInline[columns=fixed]|
+\lstMakeShortInline[columns=fixed]|                 % Inline listing
 
-% ===============================================
+
+
+%===============================================================================
+% algorithmicx (pseudocode) Configuration
+%===============================================================================
+% Required package
 \usepackage[chapter]{algorithm}
 \usepackage{algorithmicx}
 \usepackage[noend]{algpseudocode}
 
+% Change 'Algorithm' -> Pseudocode
 \makeatletter
- \renewcommand{\ALG@name}{Pseudocode}
+  \renewcommand{\ALG@name}{Pseudocode}
 \makeatother
 
-% \renewcommand{\thealgorithm}{\arabic{chapter}.\arabic{algorithm}}
-% \renewcommand{\algorithmicxname}{Pseudocode}%
 \newcommand*\Let[2]{\State #1 $\gets$ #2}
 \MakeRobust{\Call}
 \algrenewcommand\algorithmicrequire{\textbf{Prekondisi:}}
 \algrenewcommand\algorithmicensure{\textbf{Postcondition:}}
 
 
-%
-% Setting include file code/data untuk lampiran
-%
-% redefine \VerbatimInput
+
+%===============================================================================
+% fancyvrb (code) Configuration
+%===============================================================================
+% Required Package
+\usepackage{fancyvrb}
+
+% fancyvrb style
 \RecustomVerbatimCommand{\VerbatimInput}{VerbatimInput}{
   fontsize=\relsize{-2},
   baselinestretch=0.75,
-  frame=lines,  % top and bottom rule only
-  framesep=1.5em, % separation between frame and text
+  frame=lines,                            % top and bottom rule only
+  framesep=1.5em,                         % separation between frame and text
   labelposition=topline,
 }
-
-%
-% Setting format judul
-%
-\chapterfont{\centering \Large}
-\titleformat{\chapter}[display]
-  {\Large\centering\bfseries}
-  {\chaptertitlename\ \thechapter}{0pt}
-    {\Large\bfseries\uppercase}
-\titlespacing*{\chapter}{0pt}{-25pt}{40pt}
-
-\titleformat{\paragraph}
-{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
-
-\titlespacing*{\paragraph}
-{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
-
-\titlespacing*{\section} {0pt}{2.5ex plus 1ex minus .2ex}{1.3ex plus .2ex}
-\titlespacing*{\subsection} {0pt}{2.25ex plus 1ex minus .2ex}{0.5ex plus .2ex}
-
-
-%
-% Setting nomor pada subbsubbab di body document dan ToC
-%
-\setcounter{secnumdepth}{3}
-\setcounter{tocdepth}{3}
-
-%
-% Counter untuk figure dan table.
-%
-\counterwithin{figure}{chapter}
-\counterwithin{table}{chapter}
-
-%
-% Line satu setengah spasi
-%
-\renewcommand{\baselinestretch}{1.5}
-
-\renewcommand{\arraystretch}{1.2}
-\renewcommand{\lightrulewidth}{0.02em}
-\renewcommand{\heavyrulewidth}{0.1em}
