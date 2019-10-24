@@ -11,6 +11,8 @@
 %-------------------------------------------------------------------%
 
 
+
+
 %===============================================================================
 % Required Package
 %===============================================================================
@@ -50,29 +52,83 @@
 
 
 %===============================================================================
+% appendix Configuration
+%===============================================================================
+% \usepackage[toc,title,titletoc]{appendix}
+% \renewcommand{\appendixname}{Lampiran}
+% \renewcommand{\appendixtocname}{Daftar Lampiran}
+% \noappendicestocpagenum
+% \renewcommand{\setthechapter}{\Alph{chapter}. }
+
+%===============================================================================
 % titlesec (judul bab & subbab) Configuration
 %===============================================================================
 % Required Package
-\usepackage{sectsty}
 \usepackage{titlesec}
 
-
-\chapterfont{\centering \large}
+% Chapter style
+% \chapterfont{\centering \large}
 \titleformat{\chapter}[display]
   {\large\centering\bfseries}
   {\chaptertitlename\ \thechapter}{0pt}
     {\large\bfseries\uppercase}
 \titlespacing*{\chapter}{0pt}{-25pt}{40pt}
 
-\titleformat{\paragraph}
-{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
-
-\titlespacing*{\paragraph}
-{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
-
+% section
+\titleformat*{\section}{\bfseries\normalsize}
+\titleformat*{\subsection}{\bfseries\normalsize}
 \titlespacing*{\section} {0pt}{2.5ex plus 1ex minus .2ex}{1.3ex plus .2ex}
 \titlespacing*{\subsection} {0pt}{2.25ex plus 1ex minus .2ex}{0.5ex plus .2ex}
 
+% paragraph
+\titleformat{\paragraph}
+{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+
+
+%===============================================================================
+% titletoc Configuration
+%===============================================================================
+\usepackage{titletoc}
+
+% \titlecontents{hsectioni}
+%               [hlefti]
+%               {habove-codei}
+%               {hnumbered-entry-formati}
+%               {hnumberless-entry-formati}
+%               {hfiller-page-formati} -> ..............1
+%               [hbelow-codei]
+
+\titlecontents{chapter}[0pt]
+              {\bfseries}
+              {BAB \hspace*{1.8em} \contentslabel{2em}}{}
+              {\titlerule*[0.35pc]{.}\contentspage}
+
+\titlecontents{section}[3em] % ie, 1.5em (chapter) + 2.3em
+              {}
+              {\contentslabel{2.3em}}{}
+              {\titlerule*[0.35pc]{.}\contentspage}
+\titlecontents{subsection}[6em] % ie, 1.5em (chapter) + 2.3em
+              {}
+              {\contentslabel{2.9em}}{}
+              {\titlerule*[0.35pc]{.}\contentspage}
+\titlecontents{subsubsection}[9em] % ie, 1.5em (chapter) + 2.3em
+              {}
+              {\contentslabel{3.6em}}{}
+              {\titlerule*[0.35pc]{.}\contentspage}
+
+\contentsuse{figure}{lof}
+\titlecontents{figure}[0em] % ie, 1.5em (chapter) + 2.3em
+              {}
+              {Gambar \hspace*{2.1em} \contentslabel{2.3em}}{}
+              {\titlerule*[0.35pc]{.}\contentspage}
+\contentsuse{table}{lot}
+\titlecontents{table}[0em] % ie, 1.5em (chapter) + 2.3em
+              {}
+              {Tabel \hspace*{2.1em} \contentslabel{2.3em}}{}
+              {\titlerule*[0.35pc]{.}\contentspage}
 
 
 %===============================================================================
@@ -84,50 +140,6 @@
 % Counter untuk figure dan table.
 \counterwithin{figure}{chapter}
 \counterwithin{table}{chapter}
-
-
-
-%===============================================================================
-% tocloft Configuration
-%===============================================================================
-\usepackage{tocloft}
-
-% \titleformat{\section}{\large\MakeUppercase}{\thesection}{1em}{}
-\renewcommand{\cftbeforetoctitleskip}{0em}
-\renewcommand{\cfttoctitlefont}{\hfill\large\bfseries\MakeUppercase}
-\renewcommand{\cftaftertoctitle}{\hfill\hfill}
-
-\renewcommand{\cftbeforeloftitleskip}{0em}
-\renewcommand{\cftloftitlefont}{\hfill\large\bfseries\MakeUppercase}
-\renewcommand{\cftafterloftitle}{\hfill}
-
-\renewcommand{\cftbeforelottitleskip}{0em}
-\renewcommand{\cftlottitlefont}{\hfill\large\bfseries\MakeUppercase}
-\renewcommand{\cftafterlottitle}{\hfill}
-
-\renewcommand{\cftchappresnum}{BAB\space}
-\renewcommand{\cftchapnumwidth}{5em}
-
-
-% /////////////////////////////////////////////////////////
-\newcommand{\listappendixname}{Daftar Lampiran}
-\newlistof{appendix}{app}{\listappendixname}
-\setcounter{appdepth}{2}
-
-\renewcommand{\theappendix}{\Alph{appendix}}
-\renewcommand{\cftappendixpresnum}{Lampiran\space}
-\renewcommand{\cftappendixnumwidth}{1in}
-
-\renewcommand{\cftbeforeapptitleskip}{0em}
-\renewcommand{\cftapptitlefont}{\hfill\large\bfseries\MakeUppercase}
-\renewcommand{\cftafterapptitle}{\hfill\hfill}
-
-\renewcommand{\appendix}[1]{%
-  \refstepcounter{appendix}%
-  \chapter{Lampiran\space\theappendix\space #1}%
-  \addcontentsline{app}{appendix}{\protect\numberline{\theappendix}#1}%
-  % \par
-}
 
 
 %===============================================================================
