@@ -60,14 +60,14 @@ Direktori |crypto| berisi modul-modul yang membentuk libcrypto, dengan setiap mo
 Modul |bn| memiliki beberapa submodul masing-masing merupakan file yang berbeda. Setiap submodul sendiri mengatasi fungsi yang terkait dengan submodul tersebut, ataupun operasi yang komputasinya mirip dengan submodul. Sebagai contoh, submodul |bn_add| merupakan submodul yang mengatasi operasi penjumlahan dan pengurangan pada big integer. Selain itu, submodul |bn_mul| merupakan submodul yang mengatasi operasi perkalian serta pemilihan algoritma perkalian yang digunakan dalam OpenSSL.
 
 \subsection{Modul Operasi Aritmatika}
-\subsubsection{Submodul Penjumlahan}
-Modul penjumlahan dan pengurangan terdapat pada file BN\_add.c. Fungsi BN\_add(result, a, b) pada modul ini melakukan pengolahan data pada a dan b seperti mengecek negatif dan mengecek panjang masing-masing array. Hasil pengecekan tersebut akan digunakan untuk melakukan operasi lebih lanjut. Jika a dan b memiliki tanda yang berbeda, akan dipanggil fungsi BN\_usub() selain itu akan dipanggil fungsi BN\_uadd(). BN\_uadd() dan BN\_usub() melakukan pengolahan data pada a dan b sehingga terdapat representasi array yang dapat diolah oleh BN\_add\_words() dan BN\_sub\_words().
+\subsubsection{Submodul Penjumlahan dan Pengurangan}
+Modul penjumlahan dan pengurangan terdapat pada file BN\_add.c. Fungsi BN\_add() pada modul ini melakukan pengolahan data pada a dan b seperti mengecek negatif dan mengecek panjang masing-masing array. Hasil pengecekan tersebut akan digunakan untuk melakukan operasi lebih lanjut. Jika a dan b memiliki tanda yang berbeda, akan dipanggil fungsi BN\_usub() selain itu akan dipanggil fungsi BN\_uadd(). BN\_uadd() dan BN\_usub() melakukan pengolahan data pada a dan b sehingga terdapat representasi array yang dapat diolah oleh BN\_add\_words() dan BN\_sub\_words(). Daftar fungsi yang terdapat pada submodul penjumlahan dan pengurangan dapat dilihat pada Tabel \ref{tab:bn_add_func}.
 
 BN\_add\_words merupakan fungsi yang menerima masukan dua array dengan ukuran yang sama dan menjumlahkannya secara sekuensial. Penerapan algoritma \ref{alg:add} pada OpenSSL terdapat pada fungsi ini.
 
 \begin{table}[!h]
   \caption{Fungsi dalam submodul bn\_add}
-
+  \label{tab:bn_add_func}
   \begin{tabular}{R{2.5cm}L{10.5cm}}
 \toprule
 \textbf{Header Fungsi} & |int BN_add(BIGNUM *r, const BIGNUM *a, const BIGNUM *b)|    \\ \midrule
@@ -94,7 +94,45 @@ BN\_add\_words merupakan fungsi yang menerima masukan dua array dengan ukuran ya
 
 \end{table}
 
-
-\subsubsection{Modul Pengurangan}
 \subsubsection{Modul Perkalian}
-\subsubsection{etc.}
+\begin{table}[h]
+  \caption{Fungsi dalam submodul bn\_add}
+  \begin{tabular}{R{2.5cm}L{10.5cm}}
+\toprule
+\textbf{Header Fungsi} & |int BN_mul(BIGNUM *r, const BIGNUM *a, const BIGNUM *b, BN_CTX *ctx)|    \\ \midrule
+\textit{Deskripsi}     & Mengalikan $b$ pada $a$ dan menyimpan hasilya dalam $r, (r = a * b)$. \\
+\textit{Prekondisi}    & - \\
+\textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
+ \\ \bottomrule
+\textbf{Header Fungsi} & |void bn_mul_normal(BN_ULONG *r, BN_ULONG *a, int na, BN_ULONG *b, int nb)|    \\ \midrule
+\textit{Deskripsi}     &  Perkalian $a$ dan $b$ dengan menggunakan algoritma perkalian panjang, dengan $na$ adalah panjang $a$ dan $nb$ adalah panjang $b$.\\
+\textit{Prekondisi}    &  -\\
+\textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
+ \\ \bottomrule
+\textbf{Header Fungsi} & |void bn_mul_recursive(BN_ULONG *r, BN_ULONG *a, BN_ULONG *b, int n2 int dna, int dnb, BN_ULONG *t)|    \\ \midrule
+\textit{Deskripsi}     &  Perkalian $a$ dan $b$ dengan menggunakan algoritma perkalian karatsuba. $n2$ adalah panjang hasil perkalian, dengan $dna = length(a) - n2$ dan $dnb = length(b) - n2$\\
+\textit{Prekondisi}    & $length(r) = 2*n2$. $ length(t) = 2*n2$. $n2 = 2^k, k \in \mathbb{Z}. $\\
+\textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
+ \\ \bottomrule
+\end{tabular}
+
+\end{table}
+
+\subsubsection{Submodul Pembagian}
+\begin{table}[h]
+  \caption{Fungsi dalam submodul bn\_add}
+  \begin{tabular}{R{2.5cm}L{10.5cm}}
+\toprule
+\textbf{Header Fungsi} & |BN_div(BIGNUM *dv, BIGNUM *rm, const BIGNUM *num, const BIGNUM *divisor, BN_CTX *ctx)|    \\ \midrule
+\textit{Deskripsi}     &  Membagi num dengan divisor, hasil pembagian disimpan sebagai dv dan sisa pembagian disimpan sebagai rm. Baik div maupun rm bisa menjadi NULL jika hasil atau sisa pembagian tidak dibutuhkan. \\
+\textit{Prekondisi}    &  -\\
+\textit{Return Value}  &1 jika fungsi berhasil dilakukan dan 0 jika tidak
+ \\ \bottomrule
+\textbf{Header Fungsi} & |int bn_left_align(BIGNUM *num)|    \\ \midrule
+\textit{Deskripsi}     &  Normalisasi BIGNUM $num$ agar $num > \beta/2$\\
+\textit{Prekondisi}    & - \\
+\textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
+ \\ \bottomrule
+\end{tabular}
+
+\end{table}
