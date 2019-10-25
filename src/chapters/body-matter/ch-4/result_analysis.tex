@@ -7,7 +7,7 @@ Pengujian fungsional dilakukan untuk memastikan bahwa fungsionalitas dari OpenSS
 
 Pengujian kinerja dilakukan untuk menjawab rumusan masalah poin pertama dan ketiga pada subbab \ref{sec:rumusan_masalah}. Pengujian kinerja akan menjawab apakah kinerja TLS dapat meningkat setelah menggunakan algoritma paralel dalam operasi aritmatika big integer. Selain itu, pengujian kinerja akan menunjukkan apakah algoritma paralel yang digunakan dalam operasi aritmatika merupakan algoritma yang tepat atau tidak.
 
-\subsection{Pengujian Fungsional}
+\subsection{Pengujian Fungsional} \label{sec:func_testing}
 
 \subsubsection{Lingkungan Pengujian}
 Lingkungan pengujian yang digunakan dalam pengujian fungsional sama dengan lingkungan implementasi yang telah dijelaskan dalam \ref{sec:impl_env} namun tanpa penggunaan Apache sebagai web server. Pengujian fungsional hanya membutuhkan \textit{source code} OpenSSL serta testcase yang digunakan.
@@ -35,7 +35,7 @@ Pengujian dilakukan pada \textit{cloud provider} DigitalOcean. Cloud dipilih kar
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.8\textwidth]{resources/ch-4/testing_arch.png}
+  \includegraphics[width=15cm]{resources/img/ch-4/testing_arch.png}
   \caption{Arsitektur Lingkungan Pengujian}
   \label{fig:testing_arch}
 \end{figure}
