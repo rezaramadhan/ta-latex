@@ -32,6 +32,7 @@
       {13514107}
 
 
+    \startcontents[appendix]
     %-------------------------------------------------------------------------%
     % Front Matter
     %-------------------------------------------------------------------------%
@@ -49,17 +50,19 @@
     %-------------------------------------------------------------------------%
     % Daftar Isi, Tabel & Gambar
     %-------------------------------------------------------------------------%
-    % \clearpage
+    \clearpage
     \addcontentsline{toc}{chapter}{DAFTAR ISI}
-    {\tableofcontents}
+    {
+      \tableofcontents
+    }
 
 
 
-    % \clearpage
+    \clearpage
     % {
     %     \let\oldnumberline\numberline
     %     \renewcommand{\numberline}{\figurename~\oldnumberline}
-    %     \listofappendix
+        \printcontents[appendix]{}{4}{\chapter*{DAFTAR LAMPIRAN}\setcounter{tocdepth}{4}}
     % }
     \addcontentsline{toc}{chapter}{DAFTAR LAMPIRAN}
 
@@ -102,35 +105,37 @@
     % -------------------------------------------------------------------------%
     % Daftar Pustaka
     % -------------------------------------------------------------------------%
-    \renewcommand{\bibname}{Daftar Pustaka}
     \cleardoublepage
     \phantomsection
     \addcontentsline{toc}{chapter}{DAFTAR PUSTAKA}
     \bibliography{references}
 
 
+    % \stopcontents[mainsections]
     %-------------------------------------------------------------------------%
     % Lampiran
     %-------------------------------------------------------------------------%
+    % \startcontents[appendix]
     \titleformat{\chapter}[block]
       {\normalsize\bfseries}
       {\chaptertitlename\ \thechapter}{0pt}
         {\normalsize\bfseries}
     \titlespacing*{\chapter}{0pt}{-25pt}{20pt}
 
-    \setcounter{chapter}{0}
+    % \setcounter{chapter}{0}
 
-    % \addtocontents{toc}{\protect\setcounter{tocdepth}{-2}}
+    % \addtocontents{toc}{\protect\setcounter{tocdepth}{3}}
 
     % \setcounter{secnumdepth}{-2}
     % \begin{appendices}
-    \renewcommand{\chaptername}{Lampiran}
-    \renewcommand{\thechapter}{\Alph{chapter}. }
-    
+    % \renewcommand{\chaptername}{Lampiran}
+    % \renewcommand{\thechapter}{\Alph{chapter}. }
+
     \input{chapters/back-matter/bn_func_all.tex}
     \input{chapters/back-matter/bn_func_call.tex}
     \input{chapters/back-matter/bn_testcase.tex}
 
     % \end{appendices}
+    \stopcontents[appendix]
 
 \end{document}

@@ -63,7 +63,7 @@
 
 
     \subsubsection{Penjumlahan dan Penguragan} \label{sec:add_sub_theory}
-    \paragraph{Representasi FRNS}
+    subparagraph{Representasi FRNS}
 
     Operasi penjumlahan dan pengurangan pada FRNS memiliki cara yang sama penjumlahan dan pengurangan manual oleh tangan. Merujuk pada persamaan \ref{eq:frns_rep}, proses penjumlahan dan pengurangan dilakukan dari $\alpha_0$ hingga $\alpha_{n-1}$ dengan menggunakan bilangan \textit{carry over} dan \textit{borrow} jika dibutuhkan.
 
@@ -91,7 +91,7 @@
 
     Algoritma yang digunakan dalam pengurangan hampir sama dengan penggunaan algoritma \ref{alg:add}. Hal yang berbeda hanyalah pada baris ke-5 dengan $n = x[i] - y[i] - carry $
 
-    \paragraph{Representasi RNS}
+    subparagraph{Representasi RNS}
 
     \citet{rns_sharoun} menyatakan bahwa dalam sistem RNS dengan elemen $\{m_1,m_2,...,m_p\}$, penjumlahan dan pengurangan dua bilangan $A$ dan $B$ yang memiliki representasi RNS $\{b_1,b_2,...,b_p\}$ dan $\{b_1,b_2,...,b_p\}$,  menghasilkan $C$ yang memiliki representasi $\{c_1,c_2,...,c_p\}$ dengan nilai $c_i$ sebagai berikut
     \begin{equation}
@@ -102,7 +102,7 @@
 
     \subsubsection{Perkalian} \label{sec:mul_theory}
 
-    \paragraph{Representasi FRNS}
+    subparagraph{Representasi FRNS}
     Terdapat beberapa algoritma yang dapat dilakukan dalam perkalian dua bilangan besar. Pada subbab ini akan dibahas tiga algoritma perkalian, yaitu algoritma perkalian panjang, algoritma comba, dan algoritma perkalian Karatsuba. Ketiga algoritma tersebut merupakan algoritma yang digunakan oleh OpenSSL.
 
     Algoritma perkalian panjang adalah algoritma perkalian yang biasa diajarkan dalam sekolah dasar. Algoritma perkalian panjang $A*B$ berdasarkan pada proses mengkalikan satu digit A pada B, geser hasilnya sesuai posisi digit A yang digunakan, lalu jumlahkan seluruh hasil perkalian tersebut. Algoritma ini memiliki kompeksitas $O(n^2)$ terhadap perkalian. Pseudocode \ref{alg:mul} merupakan gambaran dari algoritma perkalian panjang.
@@ -161,7 +161,7 @@
     \end{algorithm}
 
 
-    \paragraph{Representasi RNS}
+    subparagraph{Representasi RNS}
     Sifat penjumlahan dan pengurangan yang dibahas pada subbab \ref{sec:add_sub_theory} juga berlaku pada perkalian di representasi RNS. Perkalian dua bilangan $A$ dan $B$ dalam representasi RNS, akan menghasilkan $C$ yang memiliki representasi $\{c_1,c_2,...,c_p\}$ dengan nilai $c_i$ sebagai berikut
     \begin{equation}
         c_i = (a_i * b_i) \mod m_i
@@ -169,7 +169,7 @@
 
     \subsubsection{Pembagian dan Modulo}\label{sec:div_theory}
 
-    \paragraph{Representasi FRNS}
+    subparagraph{Representasi FRNS}
     Seperti perkalian, terdapat beberapa algoritma yang dapat digunakan dalam pembagian. Seperti operasi aritmatika sebelumnya, algoritma pembagian yang banyak digunakan adalah algoritma pembagian panjang yang diajarkan pada sekolah dasar. Pada implementasinya di komputer, algoritma ini memiliki prekondisi divisor yang telah dinormalisasi. Divisor yang dinormalisasi adalah divisor $D = [0..n-1]$ yang menggunakan basis $\beta$, berlaku $D[n-1] > \beta/2$. Pseudocode \ref{alg:long_div} menjelaskan algoritma ini dalam bentuk pseudocode.
 
     \begin{algorithm}
@@ -217,6 +217,6 @@
     %   \end{algorithmic}
     % \end{algorithm}
 
-    \paragraph{Representasi RNS}
+    subparagraph{Representasi RNS}
 
     Pembagian dalam RNS cukup kompleks. Mengingat bahwa kinerja pembagian pada RNS pasti lebih buruk dibandingkan dengan pembagian pada FRNS, maka algoritma pembagian pada RNS tidak dibahas lebih lanjut.

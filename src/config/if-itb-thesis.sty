@@ -21,8 +21,6 @@
 \usepackage{graphicx}                % Fancy Graphics
 \usepackage{blindtext}               % Lorem ipsum filling
 \usepackage{chngcntr}                % Set counter
-\usepackage{hyperref}                % Link di daftar isi.
-\usepackage{hypcap}                  % Link captions
 \usepackage{parskip}                 % Space between paragraph
 \usepackage{ragged2e}                % Justify paragraph
 \usepackage{caption}                 % Caption on figures, tables, etc
@@ -45,7 +43,7 @@
 \renewcommand{\baselinestretch}{1.5}                          % Line Spacing
 \special{papersize=210mm,297mm}                               % Paper Size
 \usepackage[top=3cm,bottom=4cm,left=4cm,right=3cm]{geometry}  % Margin
-\usepackage[bahasa]{babel}                                    % Bahasa
+% \usepackage[bahasa]{babel}                                    % Bahasa
 \usepackage[utf8]{inputenc}                                   % encoding
 \usepackage{times}                                            % Font
 
@@ -53,15 +51,6 @@
 \renewcommand\Large{\@setfontsize\large{14pt}{18}}
 \makeatother
 
-
-%===============================================================================
-% appendix Configuration
-%===============================================================================
-% \usepackage[toc,title,titletoc]{appendix}
-% \renewcommand{\appendixname}{Lampiran}
-% \renewcommand{\appendixtocname}{Daftar Lampiran}
-% \noappendicestocpagenum
-% \renewcommand{\setthechapter}{\Alph{chapter}. }
 
 %===============================================================================
 % titlesec (judul bab & subbab) Configuration
@@ -83,9 +72,12 @@
 \titlespacing*{\section} {0pt}{2.5ex plus 1ex minus .2ex}{1.3ex plus .2ex}
 \titlespacing*{\subsection} {0pt}{2.25ex plus 1ex minus .2ex}{0.5ex plus .2ex}
 
-% paragraph
-\titleformat{\paragraph}
-{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+% paragraph, used in appendix
+\renewcommand{\theparagraph}{\Alph{paragraph}. }        % set counter
+\titleformat{\paragraph}[block]                         % paragraph style
+  {\normalsize\bfseries}
+  {Lampiran \theparagraph}{0pt}
+    {\normalsize\bfseries}
 \titlespacing*{\paragraph}
 {0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
 
@@ -96,13 +88,10 @@
 %===============================================================================
 \usepackage{titletoc}
 
-% \titlecontents{hsectioni}
-%               [hlefti]
-%               {habove-codei}
-%               {hnumbered-entry-formati}
-%               {hnumberless-entry-formati}
-%               {hfiller-page-formati} -> ..............1
-%               [hbelow-codei]
+
+\renewcommand{\contentsname}{DAFTAR ISI}
+\renewcommand{\listfigurename}{DAFTAR GAMBAR}
+\renewcommand{\listtablename}{DAFTAR TABEL}
 
 \titlecontents{chapter}[0pt]
               {\bfseries}
@@ -122,6 +111,13 @@
               {\contentslabel{3.6em}}{}
               {\titlerule*[0.35pc]{.}\contentspage}
 
+% Appendices
+\titlecontents{paragraph}[0em] % ie, 1.5em (chapter) + 2.3em
+              {}
+              {Lampiran \hspace*{1.6em} \contentslabel{1.6em}}{}
+              {\titlerule*[0.35pc]{.}\contentspage}
+
+% LoF & LoT
 \contentsuse{figure}{lof}
 \titlecontents{figure}[0em] % ie, 1.5em (chapter) + 2.3em
               {}
@@ -137,7 +133,7 @@
 %===============================================================================
 % Table of Content & sections Configuration
 %===============================================================================
-\setcounter{secnumdepth}{3}   % Set maximum depth of numbering on sections
+\setcounter{secnumdepth}{4}   % Set maximum depth of numbering on sections
 \setcounter{tocdepth}{3}      % Set maximum depth of sections on ToC
 
 % Counter untuk figure dan table.
@@ -167,6 +163,8 @@
 \renewcommand{\BAnd}{dan}  % for ``Ed. \& Trans.'' in ref. list
 \renewcommand{\BOthers}{dkk}
 
+% Ubah References -> DAFTAR PUSTAKA
+\renewcommand{\bibname}{DAFTAR PUSTAKA}
 
 %===============================================================================
 % Table Configuration
@@ -240,6 +238,26 @@
 
 
 %===============================================================================
+% fancyvrb (code) Configuration
+%===============================================================================
+% Required Package
+\usepackage{fancyvrb}
+
+% fancyvrb style
+\RecustomVerbatimCommand{\VerbatimInput}{VerbatimInput}{
+  fontsize=\relsize{-2},
+  baselinestretch=0.75,
+  frame=lines,                            % top and bottom rule only
+  framesep=1.5em,                         % separation between frame and text
+  labelposition=topline,
+}
+
+
+\usepackage{hyperref}                % Link di daftar isi.
+\usepackage{hypcap}                  % Link captions
+
+
+%===============================================================================
 % algorithmicx (pseudocode) Configuration
 %===============================================================================
 % Required package
@@ -256,20 +274,3 @@
 \MakeRobust{\Call}
 \algrenewcommand\algorithmicrequire{\textbf{Prekondisi:}}
 \algrenewcommand\algorithmicensure{\textbf{Postcondition:}}
-
-
-
-%===============================================================================
-% fancyvrb (code) Configuration
-%===============================================================================
-% Required Package
-\usepackage{fancyvrb}
-
-% fancyvrb style
-\RecustomVerbatimCommand{\VerbatimInput}{VerbatimInput}{
-  fontsize=\relsize{-2},
-  baselinestretch=0.75,
-  frame=lines,                            % top and bottom rule only
-  framesep=1.5em,                         % separation between frame and text
-  labelposition=topline,
-}

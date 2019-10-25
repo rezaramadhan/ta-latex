@@ -69,28 +69,28 @@ BN\_add\_words merupakan fungsi yang menerima masukan dua array dengan ukuran ya
   \caption{Fungsi dalam submodul bn\_add}
   \label{tab:bn_add_func}
   \begin{tabular}{R{2.5cm}L{10.5cm}}
-\toprule
-\textbf{Header Fungsi} & |int BN_add(BIGNUM *r, const BIGNUM *a, const BIGNUM *b)|    \\ \midrule
-\textit{Deskripsi}    & Menjumlahkan a dan b dan menyimpan hasilnya pada r $(a+b=r)$ \\
-\textit{Prekondisi}    & - \\
-\textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
- \\ \bottomrule
-\textbf{Header Fungsi} & |int BN_sub(BIGNUM *r, const BIGNUM *a, const BIGNUM *b)|    \\ \midrule
-\textit{Deskripsi}    & Mengurangi b dari a dan menyimpan hasilnya pada r $(a-b=r)$ \\
-\textit{Prekondisi}    & - \\
-\textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
- \\ \bottomrule
-\textbf{Header Fungsi} & |int BN_uadd(BIGNUM *r, const BIGNUM *a, const BIGNUM *b)|    \\ \midrule
-\textit{Deskripsi}    & Menjumlahkan a dan b dan menyimpan hasilnya pada r $(a+b=r)$ \\
-\textit{Prekondisi}    & $a \geq 0$,$ b \geq 0$ \\
-\textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
- \\ \bottomrule
-\textbf{Header Fungsi} & |int BN_usub(BIGNUM *r, const BIGNUM *a, const BIGNUM *b)|    \\ \midrule
-\textit{Deskripsi}    & Mengurangi b dari a dan menyimpan hasilnya pada r $(a-b=r)$ \\
-\textit{Prekondisi}    & $a \geq 0$, $b \geq 0$, $a \geq b$ \\
-\textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
- \\ \bottomrule
-\end{tabular}
+    \toprule
+    \textbf{Header Fungsi} & |int BN_add(BIGNUM *r, const BIGNUM *a, const BIGNUM *b)|    \\ \midrule
+    \textit{Deskripsi}     & Menjumlahkan a dan b dan menyimpan hasilnya pada r $(a+b=r)$ \\
+    \textit{Prekondisi}    & -                                                            \\
+    \textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
+    \\ \bottomrule
+    \textbf{Header Fungsi} & |int BN_sub(BIGNUM *r, const BIGNUM *a, const BIGNUM *b)|    \\ \midrule
+    \textit{Deskripsi}     & Mengurangi b dari a dan menyimpan hasilnya pada r $(a-b=r)$  \\
+    \textit{Prekondisi}    & -                                                            \\
+    \textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
+    \\ \bottomrule
+    \textbf{Header Fungsi} & |int BN_uadd(BIGNUM *r, const BIGNUM *a, const BIGNUM *b)|   \\ \midrule
+    \textit{Deskripsi}     & Menjumlahkan a dan b dan menyimpan hasilnya pada r $(a+b=r)$ \\
+    \textit{Prekondisi}    & $a \geq 0$,$ b \geq 0$                                       \\
+    \textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
+    \\ \bottomrule
+    \textbf{Header Fungsi} & |int BN_usub(BIGNUM *r, const BIGNUM *a, const BIGNUM *b)|   \\ \midrule
+    \textit{Deskripsi}     & Mengurangi b dari a dan menyimpan hasilnya pada r $(a-b=r)$  \\
+    \textit{Prekondisi}    & $a \geq 0$, $b \geq 0$, $a \geq b$                           \\
+    \textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
+    \\ \bottomrule
+  \end{tabular}
 
 \end{table}
 
@@ -98,23 +98,23 @@ BN\_add\_words merupakan fungsi yang menerima masukan dua array dengan ukuran ya
 \begin{table}[h]
   \caption{Fungsi dalam submodul bn\_add}
   \begin{tabular}{R{2.5cm}L{10.5cm}}
-\toprule
-\textbf{Header Fungsi} & |int BN_mul(BIGNUM *r, const BIGNUM *a, const BIGNUM *b, BN_CTX *ctx)|    \\ \midrule
-\textit{Deskripsi}     & Mengalikan $b$ pada $a$ dan menyimpan hasilya dalam $r, (r = a * b)$. \\
-\textit{Prekondisi}    & - \\
-\textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
- \\ \bottomrule
-\textbf{Header Fungsi} & |void bn_mul_normal(BN_ULONG *r, BN_ULONG *a, int na, BN_ULONG *b, int nb)|    \\ \midrule
-\textit{Deskripsi}     &  Perkalian $a$ dan $b$ dengan menggunakan algoritma perkalian panjang, dengan $na$ adalah panjang $a$ dan $nb$ adalah panjang $b$.\\
-\textit{Prekondisi}    &  -\\
-\textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
- \\ \bottomrule
-\textbf{Header Fungsi} & |void bn_mul_recursive(BN_ULONG *r, BN_ULONG *a, BN_ULONG *b, int n2 int dna, int dnb, BN_ULONG *t)|    \\ \midrule
-\textit{Deskripsi}     &  Perkalian $a$ dan $b$ dengan menggunakan algoritma perkalian karatsuba. $n2$ adalah panjang hasil perkalian, dengan $dna = length(a) - n2$ dan $dnb = length(b) - n2$\\
-\textit{Prekondisi}    & $length(r) = 2*n2$. $ length(t) = 2*n2$. $n2 = 2^k, k \in \mathbb{Z}. $\\
-\textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
- \\ \bottomrule
-\end{tabular}
+    \toprule
+    \textbf{Header Fungsi} & |int BN_mul(BIGNUM *r, const BIGNUM *a, const BIGNUM *b, BN_CTX *ctx)|                                                                                                \\ \midrule
+    \textit{Deskripsi}     & Mengalikan $b$ pada $a$ dan menyimpan hasilya dalam $r, (r = a * b)$.                                                                                                 \\
+    \textit{Prekondisi}    & -                                                                                                                                                                     \\
+    \textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
+    \\ \bottomrule
+    \textbf{Header Fungsi} & |void bn_mul_normal(BN_ULONG *r, BN_ULONG *a, int na, BN_ULONG *b, int nb)|                                                                                           \\ \midrule
+    \textit{Deskripsi}     & Perkalian $a$ dan $b$ dengan menggunakan algoritma perkalian panjang, dengan $na$ adalah panjang $a$ dan $nb$ adalah panjang $b$.                                     \\
+    \textit{Prekondisi}    & -                                                                                                                                                                     \\
+    \textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
+    \\ \bottomrule
+    \textbf{Header Fungsi} & |void bn_mul_recursive(BN_ULONG *r, BN_ULONG *a, BN_ULONG *b, int n2 int dna, int dnb, BN_ULONG *t)|                                                                  \\ \midrule
+    \textit{Deskripsi}     & Perkalian $a$ dan $b$ dengan menggunakan algoritma perkalian karatsuba. $n2$ adalah panjang hasil perkalian, dengan $dna = length(a) - n2$ dan $dnb = length(b) - n2$ \\
+    \textit{Prekondisi}    & $length(r) = 2*n2$. $ length(t) = 2*n2$. $n2 = 2^k, k \in \mathbb{Z}. $                                                                                               \\
+    \textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
+    \\ \bottomrule
+  \end{tabular}
 
 \end{table}
 
@@ -122,18 +122,18 @@ BN\_add\_words merupakan fungsi yang menerima masukan dua array dengan ukuran ya
 \begin{table}[h]
   \caption{Fungsi dalam submodul bn\_add}
   \begin{tabular}{R{2.5cm}L{10.5cm}}
-\toprule
-\textbf{Header Fungsi} & |BN_div(BIGNUM *dv, BIGNUM *rm, const BIGNUM *num, const BIGNUM *divisor, BN_CTX *ctx)|    \\ \midrule
-\textit{Deskripsi}     &  Membagi num dengan divisor, hasil pembagian disimpan sebagai dv dan sisa pembagian disimpan sebagai rm. Baik div maupun rm bisa menjadi NULL jika hasil atau sisa pembagian tidak dibutuhkan. \\
-\textit{Prekondisi}    &  -\\
-\textit{Return Value}  &1 jika fungsi berhasil dilakukan dan 0 jika tidak
- \\ \bottomrule
-\textbf{Header Fungsi} & |int bn_left_align(BIGNUM *num)|    \\ \midrule
-\textit{Deskripsi}     &  Normalisasi BIGNUM $num$ agar $num > \beta/2$\\
-\textit{Prekondisi}    & - \\
-\textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
- \\ \bottomrule
-\end{tabular}
+    \toprule
+    \textbf{Header Fungsi} & |BN_div(BIGNUM *dv, BIGNUM *rm, const BIGNUM *num, const BIGNUM *divisor, BN_CTX *ctx)|                                                                                                       \\ \midrule
+    \textit{Deskripsi}     & Membagi num dengan divisor, hasil pembagian disimpan sebagai dv dan sisa pembagian disimpan sebagai rm. Baik div maupun rm bisa menjadi NULL jika hasil atau sisa pembagian tidak dibutuhkan. \\
+    \textit{Prekondisi}    & -                                                                                                                                                                                             \\
+    \textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
+    \\ \bottomrule
+    \textbf{Header Fungsi} & |int bn_left_align(BIGNUM *num)|                                                                                                                                                              \\ \midrule
+    \textit{Deskripsi}     & Normalisasi BIGNUM $num$ agar $num > \beta/2$                                                                                                                                                 \\
+    \textit{Prekondisi}    & -                                                                                                                                                                                             \\
+    \textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
+    \\ \bottomrule
+  \end{tabular}
 
 \end{table}
 
@@ -141,32 +141,32 @@ BN\_add\_words merupakan fungsi yang menerima masukan dua array dengan ukuran ya
 \begin{table}[h]
   \caption{Fungsi dalam submodul bn\_add}
   \begin{tabular}{R{2.5cm}L{10.5cm}}
-\toprule
-\textbf{Header Fungsi} & |BN_ULONG bn_add_words(BN_ULONG *a, const BN_ULONG *a, const BN_ULONG *b, int n)|    \\ \midrule
-\textit{Deskripsi}     &   \\
-\textit{Prekondisi}    &  -\\
-\textit{Return Value}  &
- \\ \bottomrule
-\textbf{Header Fungsi} & |BN_ULONG bn_sub_words(BN_ULONG *r, const BN_ULONG *a, const BN_ULONG *b, int n)|    \\ \midrule
-\textit{Deskripsi}     &   \\
-\textit{Prekondisi}    &  -\\
-\textit{Return Value}  &
- \\ \bottomrule
-\textbf{Header Fungsi} & |BN_ULONG bn_mul_words(BN_ULONG *rp, const BN_ULONG *ap, int num, BN_ULONG w)|    \\ \midrule
-\textit{Deskripsi}     &   \\
-\textit{Prekondisi}    &  -\\
-\textit{Return Value}  &
- \\ \bottomrule
-\textbf{Header Fungsi} & |BN_ULONG bn_mul_add_words(BN_ULONG *rp, const BN_ULONG *ap, int num, BN_ULONG w)|    \\ \midrule
-\textit{Deskripsi}     &   \\
-\textit{Prekondisi}    &  -\\
-\textit{Return Value}  &
- \\ \bottomrule
-\textbf{Header Fungsi} & |BN_ULONG bn_div_words(BN_ULONG h, BN_ULONG l, BN_ULONG d)|    \\ \midrule
-\textit{Deskripsi}     &   \\
-\textit{Prekondisi}    &  -\\
-\textit{Return Value}  &
- \\ \bottomrule
-\end{tabular}
+    \toprule
+    \textbf{Header Fungsi} & |BN_ULONG bn_add_words(BN_ULONG *a, const BN_ULONG *a, const BN_ULONG *b, int n)|  \\ \midrule
+    \textit{Deskripsi}     &                                                                                    \\
+    \textit{Prekondisi}    & -                                                                                  \\
+    \textit{Return Value}  &
+    \\ \bottomrule
+    \textbf{Header Fungsi} & |BN_ULONG bn_sub_words(BN_ULONG *r, const BN_ULONG *a, const BN_ULONG *b, int n)|  \\ \midrule
+    \textit{Deskripsi}     &                                                                                    \\
+    \textit{Prekondisi}    & -                                                                                  \\
+    \textit{Return Value}  &
+    \\ \bottomrule
+    \textbf{Header Fungsi} & |BN_ULONG bn_mul_words(BN_ULONG *rp, const BN_ULONG *ap, int num, BN_ULONG w)|     \\ \midrule
+    \textit{Deskripsi}     &                                                                                    \\
+    \textit{Prekondisi}    & -                                                                                  \\
+    \textit{Return Value}  &
+    \\ \bottomrule
+    \textbf{Header Fungsi} & |BN_ULONG bn_mul_add_words(BN_ULONG *rp, const BN_ULONG *ap, int num, BN_ULONG w)| \\ \midrule
+    \textit{Deskripsi}     &                                                                                    \\
+    \textit{Prekondisi}    & -                                                                                  \\
+    \textit{Return Value}  &
+    \\ \bottomrule
+    \textbf{Header Fungsi} & |BN_ULONG bn_div_words(BN_ULONG h, BN_ULONG l, BN_ULONG d)|                        \\ \midrule
+    \textit{Deskripsi}     &                                                                                    \\
+    \textit{Prekondisi}    & -                                                                                  \\
+    \textit{Return Value}  &
+    \\ \bottomrule
+  \end{tabular}
 
 \end{table}
