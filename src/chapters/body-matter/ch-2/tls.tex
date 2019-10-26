@@ -17,29 +17,29 @@
 
   Protokol TLS pada dasarnya tersusun dari dua protokol utama, yaitu Protokol TLS \textit{Record} dan Protokol TLS \textit{Handshake}. Protokol TLS Record digunakan untuk mengenkapsulasi data yang diterima oleh protokol aplikasi, sementara itu Protokol TLS Handshake digunakan untuk mengotentikasi client dan server serta melakukan negosiasi mengenai pemilihan penggunaan algoritma enkripsi, kunci yang digunakan, serta pemilihan penggunaan algoritma MAC (Message Authentication Code).
 
-% Pengembang dari TLS sadar bahwa komputasi kriptografis yang digunakan dalam otentikasi server memerlukan biaya komputasi yang cukup tinggi. Karena itulah, TLS memiliki sebuah mekanisme session yang memungkinkan client yang telah menyelesaikan TLS \textit{Handshake} sebelumnya untuk melakukan TLS Handshake secara cepat dengan menggunakan ulang data session yang masih tersimpan pada client. Pada sebuah session, data yang tersimpan diantaranya:
-% \begin{description}
-%   \item[-] \textit{Session identifier}
-%   \item[-] \textit{Peer cerficate}
-%   \item[-] \textit{Compression method}
-%   \item[-] \textit{Cipher spec}, yaitu pasangan algoritma yang digunakan dalam enkripsi dan MAC.
-%   \item[-] \textit{Master secret}, yaitu key 48-byte yang digunakan dalam enkripsi dan dekripsi.
-%   \item[-] \textit{is resumable}, menandakan apakah session ini dapat digunakan untuk membuat session baru.
-% \end{description}
+  % Pengembang dari TLS sadar bahwa komputasi kriptografis yang digunakan dalam otentikasi server memerlukan biaya komputasi yang cukup tinggi. Karena itulah, TLS memiliki sebuah mekanisme session yang memungkinkan client yang telah menyelesaikan TLS \textit{Handshake} sebelumnya untuk melakukan TLS Handshake secara cepat dengan menggunakan ulang data session yang masih tersimpan pada client. Pada sebuah session, data yang tersimpan diantaranya:
+  % \begin{description}
+  %   \item[-] \textit{Session identifier}
+  %   \item[-] \textit{Peer cerficate}
+  %   \item[-] \textit{Compression method}
+  %   \item[-] \textit{Cipher spec}, yaitu pasangan algoritma yang digunakan dalam enkripsi dan MAC.
+  %   \item[-] \textit{Master secret}, yaitu key 48-byte yang digunakan dalam enkripsi dan dekripsi.
+  %   \item[-] \textit{is resumable}, menandakan apakah session ini dapat digunakan untuk membuat session baru.
+  % \end{description}
 
 
   \subsection{Protokol TLS \textit{Handshake}}
     TLS \textit{Handshake} adalah protokol yang digunakan untuk melakukan otentikasi serta negosiasi untuk menentukan parameter yang digunakan pada sebuah koneksi TLS. Sebuah TLS \textit{handshake} juga digunakan untuk membuat dan menentukan \textit{session} dari sebuah koneksi TLS. Protokol ini juga mendeskripsikan cara yang digunakan oleh TLS untuk memberikan tanda pada satu sama lain jika terjadi error pada salah satu tahap yang terjadi.
 
     Tahap yang terjadi dalam sebuah TLS \textit{Handshake} dapat dideskripsikan sebagai berikut:
-  \begin{enumerate}
-    \item Pengiriman ‘Hello’ sebagai tanda mulainya koneksi.
-    \item Pengiriman algoritma yang didukung, nilai random, serta pengecekan untuk penggunaan kembali session.
-    \item Pengiriman parameter yang digunakan untuk melakukan komputasi kunci simetris.
-    Pengiriman sertifikat oleh server dan otentikasi server oleh client.
-    \item Melakukan komputasi kunci simetris secara independen, kemudian menyimpan parameter-parameter yang dibutuhkan untuk penyimpanan data.
-    \item Melakukan verifikasi bahwa semua pihak telah menghitung kunci simetris yang sama dan memastikan proses handshake tidak diganggu oleh siapapun.
-  \end{enumerate}
+    \begin{enumerate}
+      \item Pengiriman ‘Hello’ sebagai tanda mulainya koneksi.
+      \item Pengiriman algoritma yang didukung, nilai random, serta pengecekan untuk penggunaan kembali session.
+      \item Pengiriman parameter yang digunakan untuk melakukan komputasi kunci simetris.
+        Pengiriman sertifikat oleh server dan otentikasi server oleh client.
+      \item Melakukan komputasi kunci simetris secara independen, kemudian menyimpan parameter-parameter yang dibutuhkan untuk penyimpanan data.
+      \item Melakukan verifikasi bahwa semua pihak telah menghitung kunci simetris yang sama dan memastikan proses handshake tidak diganggu oleh siapapun.
+    \end{enumerate}
 
     Apabila terdapat \textit{error} pada salah satu tahap diatas, maka akan dikirimkan tanda \textit{error} dan pembuatan koneksi dihentikan seketika. Proses pengiriman data yang terjadi pada sebuah TLS Handshake dapat dilihat pada Gambar ~\ref{fig:tls-handshake}.
 

@@ -36,46 +36,46 @@
     Saat ini komputasi kriptografi kunci publik masih memerlukan proses komputasi yang lebih tinggi dibandingkan dengan kriptografi kunci simetris. Maka dari itu, kriptografi kunci publik biasanya hanya dilakukan untuk mengenkripsikan kunci yang akan digunakan dalam kriptografi kunci simetris.
 
     \subsubsection{Rivest–Shamir–Adleman (RSA)} \label{sec:rsa_theory}
-    \todo{edit lagi, bahasanya ngaco}
-    RSA merupakan salah satu algoritma kriptografi kunci publik yang hingga saat ini banyak digunakan. Algoritma RSA pertama kali dicetuskan oleh Ron Rivest, Adi Shamir, dan Leonard Adleman pada tahun 1978. RSA berdasar pada sifat matematis bahwa dalam sebuah pemangkatan modular dengan persamaan:
-    \begin{equation}
-      (m^e)^d  \equiv  m \pmod{n}
-    \end{equation}
+      \todo{edit lagi, bahasanya ngaco}
+      RSA merupakan salah satu algoritma kriptografi kunci publik yang hingga saat ini banyak digunakan. Algoritma RSA pertama kali dicetuskan oleh Ron Rivest, Adi Shamir, dan Leonard Adleman pada tahun 1978. RSA berdasar pada sifat matematis bahwa dalam sebuah pemangkatan modular dengan persamaan:
+      \begin{equation}
+        (m^e)^d  \equiv  m \pmod{n}
+      \end{equation}
 
-    Pencarian tiga bilangan bulat n, e, dan d dapat dilakukan dengan mudah; bahkan untuk bilangan n, e, dan d yang sangat besar. Namun, pencarian bilangan d akan susah dilakukan, bahkan jika kita mengetahui bilangan-bilangan lainnya. Selain itu mengingat operasi perpangkatan dapat ditukar, maka proses enkripsi dan dekripsi dapat dilakukan dengan metode yang sama, hanya menggunakan bilangan yang berbeda.
+      Pencarian tiga bilangan bulat n, e, dan d dapat dilakukan dengan mudah; bahkan untuk bilangan n, e, dan d yang sangat besar. Namun, pencarian bilangan d akan susah dilakukan, bahkan jika kita mengetahui bilangan-bilangan lainnya. Selain itu mengingat operasi perpangkatan dapat ditukar, maka proses enkripsi dan dekripsi dapat dilakukan dengan metode yang sama, hanya menggunakan bilangan yang berbeda.
 
-    Terdapat beberapa proses yang terjadi pada algoritma RSA yaitu pembuatan \textit{public} dan \textit{private key}, distribusi \textit{public key}, enkripsi, serta dekripsi. Proses pembuatan public dan private key sendiri dilakukan dalam beberapa tahap yaitu:
+      Terdapat beberapa proses yang terjadi pada algoritma RSA yaitu pembuatan \textit{public} dan \textit{private key}, distribusi \textit{public key}, enkripsi, serta dekripsi. Proses pembuatan public dan private key sendiri dilakukan dalam beberapa tahap yaitu:
 
-    \begin{enumerate}
-      \item Pilih dua bilangan prima yang besar, $p$ dan $q$.
-      \item Hitung $n = p*q$ dan $ \phi = (p-1)*(q-1)$ .
-      \item Pilih sebuah bilangan bulat random $e$ dengan $ 1 < e < \phi$ dan .
-      \item Hitung bilangan bulat $d$, dengan $ e*d  \equiv  1 \pmod{\phi} $
-    \end{enumerate}
+      \begin{enumerate}
+        \item Pilih dua bilangan prima yang besar, $p$ dan $q$.
+        \item Hitung $n = p*q$ dan $ \phi = (p-1)*(q-1)$ .
+        \item Pilih sebuah bilangan bulat random $e$ dengan $ 1 < e < \phi$ dan .
+        \item Hitung bilangan bulat $d$, dengan $ e*d  \equiv  1 \pmod{\phi} $
+      \end{enumerate}
 
-    Dari perhitungan diatas, didapat \textit{public key} $(e, n)$ dan private key $(d, n)$.
-    Proses enkripsi pada sebuah data \textit{D} dapat dilakukan melalui beberapa langkah sebagai berikut:
-    \begin{enumerate}
-      \item Ubah \textit{D} menjadi satu atau beberapa bilangan bulat \textit{m}, dengan \textit{m} berada dalam interval [1..n-1]
-      \item Hitung ciphertext \textit{c} untuk masing-masing \textit{m}, dengan $c = m^e \mod n $
-    \end{enumerate}
+      Dari perhitungan diatas, didapat \textit{public key} $(e, n)$ dan private key $(d, n)$.
+      Proses enkripsi pada sebuah data \textit{D} dapat dilakukan melalui beberapa langkah sebagai berikut:
+      \begin{enumerate}
+        \item Ubah \textit{D} menjadi satu atau beberapa bilangan bulat \textit{m}, dengan \textit{m} berada dalam interval [1..n-1]
+        \item Hitung ciphertext \textit{c} untuk masing-masing \textit{m}, dengan $c = m^e \mod n $
+      \end{enumerate}
 
-    Sementara itu, proses dekripsi dapat dilakukan dengan menghitung plaintext $m$ dari ciphertext $c$ yang didapatkan dengan $m = c^d \mod n$.
+      Sementara itu, proses dekripsi dapat dilakukan dengan menghitung plaintext $m$ dari ciphertext $c$ yang didapatkan dengan $m = c^d \mod n$.
 
 
   \subsection{Algoritma Pertukaran Kunci}
-  Algoritma pertukaran kunci adalah algoritma yang digunakan untuk menghasilkan sebuah kunci rahasia antara dua atau lebih pihak tanpa diketahui oleh pihak lain \citep{applied_crypto}. Kunci yang dihasilkan dari algortima ini akan digunakan sebagai kunci pada sistem kriptografi simetris.
+    Algoritma pertukaran kunci adalah algoritma yang digunakan untuk menghasilkan sebuah kunci rahasia antara dua atau lebih pihak tanpa diketahui oleh pihak lain \citep{applied_crypto}. Kunci yang dihasilkan dari algortima ini akan digunakan sebagai kunci pada sistem kriptografi simetris.
 
     \subsubsection{Diffie-Hellman}
-    Algoritma Diffie-Hellman (DH) merupakan salah satu algoritma paling awal yang memperkenalkan konsep pertukaran kunci. Walaupun DH merupakan algoritma awal yang ada, DH masih umum digunakan pada sistem kriptografi modern. Kriptografi modern hanya menggunakan modifikasi dari algoritma DH, misalnya dengan menggunakan kurva eliptik sebagai basis perhitungannnya.
+      Algoritma Diffie-Hellman (DH) merupakan salah satu algoritma paling awal yang memperkenalkan konsep pertukaran kunci. Walaupun DH merupakan algoritma awal yang ada, DH masih umum digunakan pada sistem kriptografi modern. Kriptografi modern hanya menggunakan modifikasi dari algoritma DH, misalnya dengan menggunakan kurva eliptik sebagai basis perhitungannnya.
 
-    Seperti RSA, DH memiliki basis perpangkatan modulo bilangan bulat. Pada awal algortima DH, dipilih dua nilai publik $p$ dan $g$, dengan $p$ merupakan bilangan prima besar dan $g$ adalah akar primitif modulo dari $p$. Setelah itu, masing-masing pihak akan memilih nilai random $x$ dengan $1 \leq x \leq p-1 $. Setelah nilai random dipilih akan dihitung nilai $pk = g^x \mod p$ pada masing-masing pihak, kemudian nilai $pk$ akan dikirim melalui jaringan pada pihak yang lain. Setelah nilai dari pihak lain diterima, akan dihitung nilai $key = prekey^x \mod p$. Ilustrasi pertukaran kunci dapat dilihat pada Gambar \ref{fig:dh_exchange}.
+      Seperti RSA, DH memiliki basis perpangkatan modulo bilangan bulat. Pada awal algortima DH, dipilih dua nilai publik $p$ dan $g$, dengan $p$ merupakan bilangan prima besar dan $g$ adalah akar primitif modulo dari $p$. Setelah itu, masing-masing pihak akan memilih nilai random $x$ dengan $1 \leq x \leq p-1 $. Setelah nilai random dipilih akan dihitung nilai $pk = g^x \mod p$ pada masing-masing pihak, kemudian nilai $pk$ akan dikirim melalui jaringan pada pihak yang lain. Setelah nilai dari pihak lain diterima, akan dihitung nilai $key = prekey^x \mod p$. Ilustrasi pertukaran kunci dapat dilihat pada Gambar \ref{fig:dh_exchange}.
 
-    \begin{figure}[h]
-      \centering
-      \includegraphics[width=0.9\textwidth]{resources/img/ch-2/dh-exchange}
-      \caption{Proses pertukaran kunci Diffie-Hellman}
-      \label{fig:dh_exchange}
-    \end{figure}
+      \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.9\textwidth]{resources/img/ch-2/dh-exchange}
+        \caption{Proses pertukaran kunci Diffie-Hellman}
+        \label{fig:dh_exchange}
+      \end{figure}
 
-    Meskipun nilai $p, g, $ serta $pk$ merupakan nilai publik yang dapat diketahui semua orang, pihak ketiga tidak dapat menghitung nilai akhir $key$ yang didapatkan dari perhitungan pada masing-masing server. Untuk mendapatkan $key$ yang digunakan oleh dua pihak, dibutuhkan nilai random $x$ yang dipilih oleh masing-masing pihak tersebut. Perhitungan nilai $x$ dari nilai $g^x mod p$ merupakan masalah logartima diskrit, yaitu masalah yang sama dengan pencarian kunci privat dari RSA.
+      Meskipun nilai $p, g, $ serta $pk$ merupakan nilai publik yang dapat diketahui semua orang, pihak ketiga tidak dapat menghitung nilai akhir $key$ yang didapatkan dari perhitungan pada masing-masing server. Untuk mendapatkan $key$ yang digunakan oleh dua pihak, dibutuhkan nilai random $x$ yang dipilih oleh masing-masing pihak tersebut. Perhitungan nilai $x$ dari nilai $g^x mod p$ merupakan masalah logartima diskrit, yaitu masalah yang sama dengan pencarian kunci privat dari RSA.

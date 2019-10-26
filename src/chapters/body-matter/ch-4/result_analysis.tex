@@ -47,12 +47,12 @@ Pengujian menggunakan empat Droplet, yaitu lab, test01, test16, dan test32. Seti
   \label{tab:droplet_specs}
   \centering % used for centering table
   \begin{tabular}{@{}rcccc@{}}
-\toprule
-\multicolumn{1}{c}{\textbf{Spesifikasi}} & \textbf{lab} & \textbf{test01} & \textbf{test16} & \textbf{test32} \\ \midrule
-\textbf{vCPU}                            & 1            & 1               & 16              & 32              \\
-\textbf{Memori (GB)}                          & 1          & 1             & 32            & 64            \\
-\textbf{SSD Disk (GB)}                        & 25         & 25            & 200           & 400           \\ \bottomrule
-\end{tabular}
+    \toprule
+    \multicolumn{1}{c}{\textbf{Spesifikasi}} & \textbf{lab} & \textbf{test01} & \textbf{test16} & \textbf{test32} \\ \midrule
+    \textbf{vCPU}                            & 1            & 1               & 16              & 32              \\
+    \textbf{Memori (GB)}                     & 1            & 1               & 32              & 64              \\
+    \textbf{SSD Disk (GB)}                   & 25           & 25              & 200             & 400             \\ \bottomrule
+  \end{tabular}
 \end{table}
 
 \subsubsection{Skenario Pengujian}
@@ -73,14 +73,14 @@ subparagraph{Operasi Penjumlahan}
 \begin{figure}
   \centering
   \begin{tikzpicture}
-  	\begin{axis}[
-  		xlabel=Panjang Data $(bit)$,
-  		ylabel={Waktu $(ms)$}
-  	]
-    \addplot table [x=size, y=c1, col sep=comma] {resources/csv/example.csv};
-    \addplot table [x=size, y=c16, col sep=comma] {resources/csv/example.csv};
-    \addplot table [x=size, y=c32, col sep=comma] {resources/csv/example.csv};
-  	\end{axis}
+    \begin{axis}[
+      xlabel=Panjang Data $(bit)$,
+      ylabel={Waktu $(ms)$}
+      ]
+      \addplot table [x=size, y=c1, col sep=comma] {resources/csv/example.csv};
+      \addplot table [x=size, y=c16, col sep=comma] {resources/csv/example.csv};
+      \addplot table [x=size, y=c32, col sep=comma] {resources/csv/example.csv};
+    \end{axis}
   \end{tikzpicture}
   \caption{Data Penjumlahan}
   \label{fig:add_data}
@@ -90,22 +90,22 @@ subparagraph{Operasi Pengurangan}
 subparagraph{Operasi Perkalian}
 subparagraph{Operasi }
 
-  % Langsung data speedup aja, data raw simpen di lampiran
-  %
-  % \begin{table}[ht]
-  % \caption{Test table} % title of Table
-  % \centering % used for centering table
-  % \begin{tabular}{c c c c} % centered columns (4 columns)
-  % \hline\hline %inserts double horizontal lines
-  % Case & Method\#1 & Method\#2 & Method\#3 \\ [0.5ex] % inserts table
-  % %heading
-  % \hline % inserts single horizontal line
-  % 1 & 50 & 837 & 970 \\ % inserting body of the table
-  % 2 & 47 & 877 & 230 \\
-  % 3 & 31 & 25 & 415 \\
-  % 4 & 35 & 144 & 2356 \\
-  % 5 & 45 & 300 & 556 \\ [1ex] % [1ex] adds vertical space
-  % \hline %inserts single line
-  % \end{tabular}
-  % \label{table:nonlin} % is used to refer this table in the text
-  % \end{table}
+% Langsung data speedup aja, data raw simpen di lampiran
+%
+% \begin{table}[ht]
+% \caption{Test table} % title of Table
+% \centering % used for centering table
+% \begin{tabular}{c c c c} % centered columns (4 columns)
+% \hline\hline %inserts double horizontal lines
+% Case & Method\#1 & Method\#2 & Method\#3 \\ [0.5ex] % inserts table
+% %heading
+% \hline % inserts single horizontal line
+% 1 & 50 & 837 & 970 \\ % inserting body of the table
+% 2 & 47 & 877 & 230 \\
+% 3 & 31 & 25 & 415 \\
+% 4 & 35 & 144 & 2356 \\
+% 5 & 45 & 300 & 556 \\ [1ex] % [1ex] adds vertical space
+% \hline %inserts single line
+% \end{tabular}
+% \label{table:nonlin} % is used to refer this table in the text
+% \end{table}

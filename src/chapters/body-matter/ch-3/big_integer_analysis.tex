@@ -1,33 +1,33 @@
 %!TEX root = ../../../tugas-akhir.tex
 \section{Analisis Komputasi Big Integer pada OpenSSL}
-% \blindtext
+  % \blindtext
 
-% Big integer dipake dimana aja.
-% Berapa jumlahnya, refer ke lampiran, sebutin juga fungsi yang dipake
-% Fungsi apa yang banyak dipake.
+  % Big integer dipake dimana aja.
+  % Berapa jumlahnya, refer ke lampiran, sebutin juga fungsi yang dipake
+  % Fungsi apa yang banyak dipake.
 
-OpenSSL menggunakan struktur FRNS sebagai representasi dari Big Integer. Struktur big integer adalah sebuah array dengan beberapa informasi tambahan seperti panjang array, informasi \textit{flag} untuk struktur tersebut, serta \textit{sign} dari big integer tersebut. Basis yang digunakan oleh OpenSSL ditentukan sesuai dengan jumlah bit yang dapat ditangani oleh ALU pada sebuah komputer. Implementasi struktur big integer pada OpenSSL akan dijelaskan lebih detail pada subbab \ref{sec:bignum_struct}.
+  OpenSSL menggunakan struktur FRNS sebagai representasi dari Big Integer. Struktur big integer adalah sebuah array dengan beberapa informasi tambahan seperti panjang array, informasi \textit{flag} untuk struktur tersebut, serta \textit{sign} dari big integer tersebut. Basis yang digunakan oleh OpenSSL ditentukan sesuai dengan jumlah bit yang dapat ditangani oleh ALU pada sebuah komputer. Implementasi struktur big integer pada OpenSSL akan dijelaskan lebih detail pada subbab \ref{sec:bignum_struct}.
 
-Modul big integer yang dimiliki OpenSSL digunakan oleh beberapa modul lain seperti modul RSA, DSA, Diffie Hellman (DH), ASN1, serta modul elliptic curve. Sesuai dengan rumusan masalah pada subbab \ref{sec:batasan_masalah}, penelitian ini hanya membahas ciphersuite TLS\_DH\_RSA\_ WITH\_AES\_256\_CBC\_SHA256. Pada penelitian ini, modul lain yang menggunakan modul big number hanyalah modul RSA dan DH.
+  Modul big integer yang dimiliki OpenSSL digunakan oleh beberapa modul lain seperti modul RSA, DSA, Diffie Hellman (DH), ASN1, serta modul elliptic curve. Sesuai dengan rumusan masalah pada subbab \ref{sec:batasan_masalah}, penelitian ini hanya membahas ciphersuite TLS\_DH\_RSA\_ WITH\_AES\_256\_CBC\_SHA256. Pada penelitian ini, modul lain yang menggunakan modul big number hanyalah modul RSA dan DH.
 
-Terdapat beberapa fungsi yang disediakan oleh modul big integer pada OpenSSL. Dari fungsi yang disediakan tersebut, hanya sebagian yang merupakan sebuah operasi aritmatika seperti BN\_add(), BN\_mod(), serta BN\_mul(). Daftar fungsi dalam modul big integer yang berkaitan dengan operasi aritmatika dapat dilihat pada lampiran \ref{sec:bn_func_all}.
+  Terdapat beberapa fungsi yang disediakan oleh modul big integer pada OpenSSL. Dari fungsi yang disediakan tersebut, hanya sebagian yang merupakan sebuah operasi aritmatika seperti BN\_add(), BN\_mod(), serta BN\_mul(). Daftar fungsi dalam modul big integer yang berkaitan dengan operasi aritmatika dapat dilihat pada lampiran \ref{sec:bn_func_all}.
 
-Operasi big integer yang paling banyak digunakan oleh modul DH adalah BN\_mod\_exp() serta variannya BN\_mod\_exp\_mont() dengan total tiga kali pemanggilan. Modul RSA menggunakan modul big integer jauh lebih banyak dibandingkan modul DH. BN\_sub() digunakan sebanyak sembilan belas kali dalam modul RSA. Selain itu BN\_mod() digunakan sebanyak enam belas kali. Informasi detail mengenai pemanggilan modul big number oleh modul RSA dan DH dapat dilihat pada lampiran \ref{sec:bn_func_call}.
+  Operasi big integer yang paling banyak digunakan oleh modul DH adalah BN\_mod\_exp() serta variannya BN\_mod\_exp\_mont() dengan total tiga kali pemanggilan. Modul RSA menggunakan modul big integer jauh lebih banyak dibandingkan modul DH. BN\_sub() digunakan sebanyak sembilan belas kali dalam modul RSA. Selain itu BN\_mod() digunakan sebanyak enam belas kali. Informasi detail mengenai pemanggilan modul big number oleh modul RSA dan DH dapat dilihat pada lampiran \ref{sec:bn_func_call}.
 
-\subsection{Algoritma Operasi Aritmetika Big Integer pada OpenSSL}
+  \subsection{Algoritma Operasi Aritmetika Big Integer pada OpenSSL}
 
-Selain langsung melakukan operasi aritmatika terdapat juga bagian kode dalam OpenSSL yang melakukan beberapa fungsi lain. Sebagai contohnya, terdapat bagian kode yang melakukan pengecekan apakah OPENSSL\_SMALL\_FOOTPRINT terdefinisi dan melakukan fungsi yang diperlukan untuk mengkonversi tipe data yang digunakan agar cocok untuk versi OpenSSL yang terinstall. Pada subbab ini, bagian kode yang akan dianalisis hanyalah bagian kode yang relevan dengan algoritma operasi aritmatika tertentu. Bagian kode yang melakukan tugas lain seperti konfigurasi tipe data ataupun \textit{memory management} tidak akan dibahas.
+    Selain langsung melakukan operasi aritmatika terdapat juga bagian kode dalam OpenSSL yang melakukan beberapa fungsi lain. Sebagai contohnya, terdapat bagian kode yang melakukan pengecekan apakah OPENSSL\_SMALL\_FOOTPRINT terdefinisi dan melakukan fungsi yang diperlukan untuk mengkonversi tipe data yang digunakan agar cocok untuk versi OpenSSL yang terinstall. Pada subbab ini, bagian kode yang akan dianalisis hanyalah bagian kode yang relevan dengan algoritma operasi aritmatika tertentu. Bagian kode yang melakukan tugas lain seperti konfigurasi tipe data ataupun \textit{memory management} tidak akan dibahas.
 
-% Kalo refer ke code, how to cite?
-% \blindtext
-\subsubsection{Penjumlahan dan Pengurangan}
-OpenSSL menggunakan algoritma penjumlahan dan pengurangan standar dalam representasi FRNS seperti yang dibahas pada subbab \ref{sec:add_sub_theory}. OpenSSL melakukan operasi $mod$ dan $div$ dengan manipulasi bit, yaitu melakukan operasi bitwise AND terhadap sebuah konstan untuk mendapat nilai $mod$ dan melakukan penggeseran bit untuk mendapatkan nilai $div$. Dengan demikian, OpenSSL dapat memotong overhead yang terjadi dibandingkan dengan melakukan operasi $div$ ataupun $mod$ yang terdapat dalam bahasa C.
-% TODO: Cek lagi atas ^^
+    % Kalo refer ke code, how to cite?
+    % \blindtext
+    \subsubsection{Penjumlahan dan Pengurangan}
+      OpenSSL menggunakan algoritma penjumlahan dan pengurangan standar dalam representasi FRNS seperti yang dibahas pada subbab \ref{sec:add_sub_theory}. OpenSSL melakukan operasi $mod$ dan $div$ dengan manipulasi bit, yaitu melakukan operasi bitwise AND terhadap sebuah konstan untuk mendapat nilai $mod$ dan melakukan penggeseran bit untuk mendapatkan nilai $div$. Dengan demikian, OpenSSL dapat memotong overhead yang terjadi dibandingkan dengan melakukan operasi $div$ ataupun $mod$ yang terdapat dalam bahasa C.
+      % TODO: Cek lagi atas ^^
 
-\subsubsection{Perkalian}
-Terdapat tiga implementasi algoritma perkalian yang ada dalam OpenSSL yaitu algoritma perkalian panjang, algoritma perkalian karatsuba, dan algoritma perkalian comba. Tiga algoritma tersebut telah dijelaskan pada subbab \ref{sec:mul_theory}. Pemilihan algoritma yang digunakan oleh OpenSSL bergantung pada macro yang diset pada kompilasi OpenSSL. Secara default, algoritma yang digunakan adalah Algoritma Karatsuba dengan algoritma perkalian Comba untuk melakukan perkalian pada basis rekursif Karatsuba.
+    \subsubsection{Perkalian}
+      Terdapat tiga implementasi algoritma perkalian yang ada dalam OpenSSL yaitu algoritma perkalian panjang, algoritma perkalian karatsuba, dan algoritma perkalian comba. Tiga algoritma tersebut telah dijelaskan pada subbab \ref{sec:mul_theory}. Pemilihan algoritma yang digunakan oleh OpenSSL bergantung pada macro yang diset pada kompilasi OpenSSL. Secara default, algoritma yang digunakan adalah Algoritma Karatsuba dengan algoritma perkalian Comba untuk melakukan perkalian pada basis rekursif Karatsuba.
 
-\subsubsection{Pembagian dan Modulo}
-OpenSSL menggunakan algoritma pembagian panjang pada pseudocode \ref{alg:long_div}. Proses normalisasi pembagian dilakukan dengan menggeser bit pada number dan divisor hingga divisor memenuhi syarat $D[top] > \beta/2$.
+    \subsubsection{Pembagian dan Modulo}
+      OpenSSL menggunakan algoritma pembagian panjang pada pseudocode \ref{alg:long_div}. Proses normalisasi pembagian dilakukan dengan menggeser bit pada number dan divisor hingga divisor memenuhi syarat $D[top] > \beta/2$.
 
-OpenSSL tidak memiliki fungsi khusus untuk operasi modulo. Karena fungsi untuk operasi pembagian sudah mengembalikan sisa dari pembagian, operasi modulo hanya perlu memanggil fungsi pembagian dengan argumen menggunakan argumen yang telah disesuaikan.
+      OpenSSL tidak memiliki fungsi khusus untuk operasi modulo. Karena fungsi untuk operasi pembagian sudah mengembalikan sisa dari pembagian, operasi modulo hanya perlu memanggil fungsi pembagian dengan argumen menggunakan argumen yang telah disesuaikan.
