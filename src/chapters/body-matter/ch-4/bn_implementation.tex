@@ -16,14 +16,15 @@
 
   \subsection{Batasan Implementasi}
     Implementasi dilakukan pada sistem operasi Ubuntu 64 bit. Karena itu, implementasi library big number hanya berfokus pada openssl dengan yang memiliki konfigurasi makro sebagai berikut:
+
     \begin{enumerate}[label=\roman*.]
       \item BN\_ULONG = unsigned long long
       \item OPENSSL\_SMALL\_FOOTPRINT = false
       \item BN\_MUL\_COMBA = true
       \item BN\_RECURSION = true
-
+      \item BN\_CTX\_POOL\_SIZE = 16
     \end{enumerate}
-
+    \todo{masukin lampiran?}
     Konfigurasi makro tersebut digunakan dalam pemilihan dan manajemen struktur data yang digunakan serta pemilihan algoritma pada bagian tertentu. Sebagai contoh, algoritma yang digunakan dalam perkalian adalah algoritma karatsuba dan algoritma comba pada basis rekursif.
 
 
@@ -45,9 +46,9 @@
     Direktori |test| dan |util| merupakan direktori yang digunakan dalam \textit{unit test} OpenSSL. Dalam direktori ini terdapat kasus uji dan script yang digunakan dalam unit test untuk setiap modul untuk melakukan test terhadap fungsionalitas OpenSSL. Penjelasan lebih jauh terhadap pengujian fungsionalitas OpenSSL dapat dilihat pada subbab \ref{sec:func_testing}
 
   \subsection{Struktur Data Big Integer} \label{sec:bignum_struct}
-    Pada OpenSSL, sebuah big integer direpresentasikan dalam struktur data BIGNUM. BIGNUM terdiri dari sebuah array dengan ukuran dinamis dan beberapa integer yang menyimpan informasi tambahan. Dengan demikian secara teori BIGNUM tidak memiliki nilai maksimum. Untuk keperluan paralelisasi, BIGNUM dapat digunakan tanpa mengubah strukturnya sedikitpun. BIGNUM sendiri merupakan sebuah \textit{struct} yang memiliki deklarasi sebagai berikut.
+    Pada OpenSSL, sebuah big integer direpresentasikan dalam struktur data |BIGNUM|. |BIGNUM| terdiri dari sebuah array dengan ukuran dinamis dan beberapa variabel integer yang menyimpan informasi tambahan. Dengan demikian secara teori |BIGNUM| tidak memiliki nilai maksimum. Untuk keperluan paralelisasi, |BIGNUM| dapat digunakan tanpa mengubah strukturnya sedikitpun. BIGNUM sendiri merupakan sebuah \textit{struct} yang memiliki deklarasi sesuai oada Source Code \ref{code:bignum_st}.
 
-    \begin{lstlisting}[caption=Struktur Data bignum]
+    \begin{lstlisting}[caption={Struktur Data bignum}, label={code:bignum_st}]
 struct bignum_st {
        BN_ULONG *d;
        int top;
@@ -55,7 +56,7 @@ struct bignum_st {
        int neg;
        int flags;
 };
-\end{lstlisting}
+    \end{lstlisting}
 
     |BN_ULONG| sendiri adalah sebuah makro yang menggantikan |unsigned long| pada komputer 32 bit atau |unsigned long long| pada komputer 64 bit.
 
@@ -65,7 +66,40 @@ struct bignum_st {
 
     |dmax| adalah panjang maksimum array yang telah dibuat. |neg| bernilai satu jika BIGNUM bernilai negatif.
 
-    \todo[inline]{jelasin BN\_CTX}
+    Setiap kali pembuatan struktur data |BIGNUM| terjadi alokasi memori yang memiliki overhead yang cukup tinggi jika dilakukan berulang ulang \citep{doc_bnctx}. Sementara itu, operasi aritmatika kompleks seperti perkalian dengan algoritma karatsuba, pembagian, atau perpangkatan modulo membutuhkan beberapa struktur |BIGNUM| yang digunakan untuk menyimpan variabel sementara. Struktur data |BN_CTX| menyimpan sejumlah variabel |BIGNUM| yang dapat digunakan dalam operasi aritmatika, dengan demikian program tidak pelu melakukan alokasi memori setiap kali program membutuhkan sebuah struktur |BIGNUM|.
+
+    % jelasin lebih jauh
+
+    \begin{lstlisting}[caption={Struktur bignum\_ctx}, label={code:bignum_ctx}]
+struct bignum_ctx {
+    BN_POOL pool;
+    BN_STACK stack;
+    unsigned int used;
+    int err_stack;
+    int too_many;
+    int flags;
+};
+
+/* BN_POOL */
+typedef struct bignum_pool_item {
+    BIGNUM vals[BN_CTX_POOL_SIZE];
+    struct bignum_pool_item *prev, *next;
+} BN_POOL_ITEM;
+typedef struct bignum_pool {
+    BN_POOL_ITEM *head, *current, *tail;
+    unsigned used, size;
+} BN_POOL;
+
+/* BN_STACK */
+typedef struct bignum_ctx_stack {
+    unsigned int *indexes;
+    unsigned int depth, size;
+} BN_STACK;
+    \end{lstlisting}
+
+    Struktur dari |BN_CTX| dapat dilihat pada Source Code \ref{code:bignum_ctx}. |BN_CTX| terdiri dari kumpulan |BIGNUM| yang disimpan pada |BN_POOL| serta |BN_STACK| yang menyimpan jumlah |BIGNUM| yang digunakan oleh sebuah fungsi. |BN_POOL| merupakan list of array dengan panjang array sebesar |BN_CTX_POOL_SIZE|. |BN_STACK| digunakan untuk menyimpan jumlah BIGNUM yang digunakan dalam sebuah fungsi.
+
+    Fungsi yang menggunakan |BN_CTX| harus memanggil |BN_CTX_start()| sebelum penggunaan |BN_CTX| dan memanggil |BN_CTX_end()| setelah pemanggilan |BN_CTX|. Dua fungsi tersebut akan menyimpan dan menghitung jumlah BIGNUM yang didapat dari pemanggilan |BN_CTX_get()| pada fungsi tersebut.
 
   \subsection{Modul Operasi Aritmatika}
     \subsubsection{Submodul Penjumlahan dan Pengurangan}
