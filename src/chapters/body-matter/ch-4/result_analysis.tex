@@ -56,7 +56,32 @@
       \end{table}
 
     \subsubsection{Skenario Pengujian}
-      Pengujian dilakukan dengan menjalankan ApacheBench pada node lab dengan tujuan web yang dicek test01, test16, dan test32. ApacheBench menghasilkan beberapa data, namun kita hanya peduli pada data berikut.
+      Pengujian kinerja dibagi menjadi dua bagian besar. Bagian pertama adalah pengujian kinerja terhadap setiap fungsi yang ada dalam library big integer, sementara bagian kedua adalah pengujian kinerja terhadap penggunaan library dalam website yang menggunakan HTTPS.
+
+      \subparagraph{Pengujian Library}
+      Pengujian library dilakukan terhadap beberapa fungsi dalam libcrypto, yaitu beberapa fungsi dalam modul |bn| serta modul |rsa| dan |dh| yang menggunakan operasi aritmatika big integer dalam modul crypto. Setiap pengujian dilakukan terhadap variabel yang berbeda. Sebagai contoh, pengujian proses enkripsi RSA dilakukan terhadap variabel panjang pesan dan panjang kunci yang berbeda. Daftar fungsi serta variabel yang digunakan dapat dilihat pada Tabel \ref{tab:lib_testing}.
+
+      \begin{table}[]
+        \centering
+        \caption{Daftar Fungsi yang Diuji dan Variabel Pengujian}
+        \label{tab:lib_testing}
+        \begin{tabular}{l c}
+          \toprule
+          \multicolumn{1}{c}{\textbf{Fungsi/Operasi/Proses}} & \textbf{Variabel Pengujian} \\ \midrule
+Penjumlahan dan pengurangan & \multirow{6}{*}{Panjang operand (bit)}          \\
+Perkalian                   &                                                 \\
+Pembagian                   &                                                 \\
+Perpangkatan                &                                                 \\
+Perkalian modular           &                                                 \\
+Pembagian modular           &                                                 \\
+Pertukaran kunci DH          & Panjang kunci (bit)                             \\
+Pembangkitan kunci RSA       & Panjang kunci (bit), nilai e                    \\
+Perkalian RSA                & Panjang kunci (bit), panjang pesan (bit)        \\ \bottomrule
+        \end{tabular}
+      \end{table}
+
+      \subparagraph{Pengujian HTTPS}
+      Pengujian HTTPS dilakukan dengan menjalankan ApacheBench pada node lab dengan tujuan web yang dicek test01, test16, dan test32. ApacheBench menghasilkan beberapa data, namun kita hanya peduli pada data berikut.
       % \todo{cite website apachebench}
       \begin{enumerate}[label=\roman*.]
         \item \textit{Time taken for tests}, yaitu waktu dari koneksi pertama dibuat sampai response terakhir diterima.
@@ -70,6 +95,21 @@
     \subsubsection{Hasil dan Analisis Pengujian}
 
       subparagraph{Operasi Penjumlahan}
+      % \begin{figure}
+      %   \centering
+      %   \begin{tikzpicture}
+      %     \begin{axis}[
+      %         xlabel={Panjang Data $(bit)$},
+      %         ylabel={Waktu $(ms)$}
+      %       ]
+      %       \addplot table [x=size, y=c1, col sep=comma] {resources/csv/example.csv};
+      %       \addplot table [x=size, y=c16, col sep=comma] {resources/csv/example.csv};
+      %       \addplot table [x=size, y=c32, col sep=comma] {resources/csv/example.csv};
+      %     \end{axis}
+      %   \end{tikzpicture}
+      %   \caption{Data Penjumlahan}
+      %   \label{fig:data_add}
+      % \end{figure}
       \begin{figure}
         \centering
         \begin{tikzpicture}
@@ -77,18 +117,16 @@
               xlabel={Panjang Data $(bit)$},
               ylabel={Waktu $(ms)$}
             ]
-            \addplot table [x=size, y=c1, col sep=comma] {resources/csv/example.csv};
-            \addplot table [x=size, y=c16, col sep=comma] {resources/csv/example.csv};
-            \addplot table [x=size, y=c32, col sep=comma] {resources/csv/example.csv};
+            \addplot [discard if not={opr}{add}] table [x=time_avg, y=tc_num, col sep=comma] {resources/csv/bn.csv};
           \end{axis}
         \end{tikzpicture}
         \caption{Data Penjumlahan}
-        \label{fig:add_data}
+        \label{fig:data_add}
       \end{figure}
 
-      subparagraph{Operasi Pengurangan}
-      subparagraph{Operasi Perkalian}
-      subparagraph{Operasi }
+      \subparagraph{Operasi Pengurangan}
+      \subparagraph{Operasi Perkalian}
+      \subparagraph{Operasi Pembagian}
 
       % Langsung data speedup aja, data raw simpen di lampiran
       %

@@ -38,7 +38,7 @@
 
 
 %===============================================================================
-% Document Configurationa
+% Document Configurations
 %===============================================================================
 \renewcommand{\baselinestretch}{1.5}                          % Line Spacing
 \special{papersize=210mm,297mm}                               % Paper Size
@@ -69,8 +69,11 @@
 % section
 \titleformat*{\section}{\bfseries\normalsize}
 \titleformat*{\subsection}{\bfseries\normalsize}
+\titleformat{\subparagraph}
+    {\normalfont\normalsize\bfseries}{\thesubparagraph}{1em}{}
 \titlespacing*{\section} {0pt}{2.5ex plus 1ex minus .2ex}{1.3ex plus .2ex}
 \titlespacing*{\subsection} {0pt}{2.25ex plus 1ex minus .2ex}{0.5ex plus .2ex}
+\titlespacing*{\subparagraph}{\parindent}{3.25ex plus 1ex minus .2ex}{.75ex plus .1ex}
 
 % paragraph, used in appendix
 \renewcommand{\theparagraph}{\Alph{paragraph}. }        % set counter
@@ -140,6 +143,25 @@
 % Counter untuk figure dan table.
 \counterwithin{figure}{chapter}
 \counterwithin{table}{chapter}
+
+
+%===============================================================================
+% pgfplots new rule
+%===============================================================================
+\pgfplotsset{
+    discard if not/.style 2 args={
+        x filter/.code={
+            \edef\tempa{\thisrow{#1}}
+            \edef\tempb{#2}
+            \ifx\tempa\tempb
+            \else
+                \def\pgfmathresult{inf}
+            \fi
+        }
+    }
+}
+
+
 
 
 %===============================================================================

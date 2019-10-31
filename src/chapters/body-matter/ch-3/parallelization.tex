@@ -18,7 +18,6 @@
     Dari tiga kakas yang telah dijelaskan tersebut, pthread adalah kakas yang paling cocok untuk digunakan dalam implementasi komputasi paralel dalam OpenSSL. Pthread sudah terdapat dalam sistem operasi secara native, dengan demikian instalasi OpenSSL setelah implementasi komputasi paralel tidak bergantung pada ketersediaan kakas pthread atau tidak. Alasan utama pemilihan pthread adalah kecilnya overhead yang dibutuhkan dalam pemanggilan job baru. Overhead yang kecil cocok untuk program seperti OpenSSL dimana tingginya kinerja sangat dibutuhkan.
 
   \subsection{Paralelisasi Algoritma}
-    \todo[inline]{Tambahin contoh perhitngan}
     Terdapat dua strategi yang dapat digunakan untuk melakukan paralelisasi algoritma operasi aritmatika big integer. Strategi pertama adalah melakukan paralelisasi untuk algoritma dalam representasi FRNS. Sementara itu, strategi kedua adalah melakukan konversi struktur FRNS yang digunakan oleh OpenSSL menjadi struktur RNS kemudian menjalankan operasi yang dibutuhkan dalam bentuk RNS.
 
     Seperti yang dibahas pada subbab \ref{sec:rns}, RNS lebih mudah diparalelkan karena strukturnya terdiri dari komponen yang independen. Namun, konversi dari FRNS ke RNS memakan waktu yang cukup signifikan. Selain itu, OpenSSL telah membuat mengoptimasi pembuatan struktur BIGNUM dengan adanya BN\_CTX. BN\_CTX adalah sebuah struktur yang dapat menyimpan sejumlah struktur BIGNUM dalam memori. Penggunaan BN\_CTX membuat program dapat dijalankan lebih cepat karena program tidak menunggu selesainya alokasi memori dalam pembuatan struktur BIGNUM. Program dapat menggunakan struktur yang tersimpan tersebut dibandingkan dengan membuat sebuah struktur baru yang hanya digunakan sesaat.
@@ -37,23 +36,55 @@
           \Require{$x$ dan $y$ adalah array [1..n] yang merepresentasikan Big Integer, $num$ adalah jumlah task}
           \Statex
           \Function{AddParallel}{$x$, $y$, $num$}
-          \Let{$x_{chunks}$}{\Call{Split}{$x$, $num$}}
-          \Comment{Split Array $x$ into $num$ smaller array}
-          \Let{$y_{chunks}$}{\Call{Split}{$y$, $num$}}
-          \Let{$result\_arr$}{\Call{NewArray}{$n$}}
-          \ForAll{$i$, $j$ in $x_{chunks}$, $y_{chunks}$}
-          \Let{$job$}{\Call{StartJob}{\Call{Add}{$i$,$j$}}}
-          \Let{$sum$, $carry$}{\Call{GetJobResult}{$job$}}
-          \State \Call{Append}{($sum$, $carry$), $result\_arr$}
-          \EndFor
-          \State \Return{\Call{ResolveCarry}{$result\_arr$}}
+              \Let{$x_{chunks}$}{\Call{Split}{$x$, $num$}}
+              \Comment{Split Array $x$ into $num$ smaller array}
+              \Let{$y_{chunks}$}{\Call{Split}{$y$, $num$}}
+              \Let{$sum$}{\Call{NewArray}{$n$}}
+
+              \ForAll{$i$, $j$ in $x_{chunks}$, $y_{chunks}$}
+                  \Let{$job$}{\Call{StartJob}{\Call{Add}{$i$,$j$}}}
+                  \Let{$sum_arr$}{\Call{GetJobResult}{$job$}}
+              \EndFor \State
+
+              \Let{$sum_{chunks}$}{\Call{Split}{$sum$, $num$}}
+              \ForAll{$chunk$ in $sum_{chunks}$}
+                  \Let{$job$}{\Call{StartJob}{\Call{DivByBase}{$chunk$}}}
+                  \Let{$carry$}{\Call{\Call{ShiftByOneElmt}{$job$}}}
+              \EndFor \State
+              \ForAll{$i$, $j$ in $x_{chunks}$, $y_{chunks}$}
+                  \Let{$job$}{\Call{StartJob}{\Call{DivByBase}{$sum$}}}
+                  \Let{$carry$}{\Call{ShiftByOneElmt}{\Call{GetJobResult}{$job$}}}
+              \EndFor \State
+
+              \Let{$sum_{chunks}$}{\Call{Split}{$sum$, $num$}}
+              \Let{$carry_{chunks}$}{\Call{Split}{$carry$, $num$}}
+              \ForAll{$s$, $c$ in $sum_{chunks}$, $carry_{chunks}$}
+                  \Let{$job$}{\Call{StartJob}{\Call{ResolveCarry}{$s, c$}}}
+                  \Let{$sum$}{\Call{GetJobResult}{$job$}}
+              \EndFor \State
+
+              \State \Return{$sum$}
           \EndFunction
+
+          \Statex
+
+          \Comment{DivByBase($x$): $x = x$ div $\beta$} \Statex
+          \Comment{ResolveCarry($x, y$): $x = x \mod \beta + y$}
         \end{algorithmic}
       \end{algorithm}
 
       Algoritma pengurangan juga menggunakan pseudocode \ref{alg:parallel_add} untuk melakukan pemecahan data dan menjalankan job. Hal yang perlu diganti hanyalah fungsi yang dipanggil oleh StartJob menjadi fungsi sub().
 
       Jika kita mengasumsikan bahwa proses pembagian array, memulainya sebuah job, serta penghitungan carry di akhir dapat dilakukan dengan instan, fungsi penjumlahan dapat dipercepat sebanyak sebesar $num$ kali dari waktu awalnya. Pada kenyataannya, proses memulai sebuah job memiliki \textit{overhead} sendiri yang bergantung pada lingkungan komputasi yang digunakan. Selain itu, perhitungan carry akan memakan waktu yang cukup signifikan.
+
+      \begin{figure}
+          \centering
+          \includegraphics[width=0.75\textwidth]{resources/img/ch-3/add-example.png}
+          \caption{Contoh Perhitungan Penjumlahan secara Paralel}
+          \label{fig:add_par_example}
+      \end{figure}
+
+      Contoh perhitungan Pseudocode \ref{alg:parallel_add} untuk operasi $5235 + 2608$ dengan $\beta = 10$ dapat dilihat pada Gambar \ref{fig:add_par_example}. Pada contoh tersebut digunakan bilangan 4-word dengan basis 10. Sementara itu, jumlah job yang dibangkitkan adalah 2.
 
       % \todo[inline]{tambahin algoritma resolve carry juga, paralelin}
 

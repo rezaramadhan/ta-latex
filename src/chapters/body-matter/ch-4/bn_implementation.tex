@@ -102,13 +102,14 @@ typedef struct bignum_ctx_stack {
     Fungsi yang menggunakan |BN_CTX| harus memanggil |BN_CTX_start()| sebelum penggunaan |BN_CTX| dan memanggil |BN_CTX_end()| setelah pemanggilan |BN_CTX|. Dua fungsi tersebut akan menyimpan dan menghitung jumlah BIGNUM yang didapat dari pemanggilan |BN_CTX_get()| pada fungsi tersebut.
 
   \subsection{Modul Operasi Aritmatika}
-    \subsubsection{Submodul Penjumlahan dan Pengurangan}
-      Modul penjumlahan dan pengurangan terdapat pada file BN\_add.c. Fungsi BN\_add() pada modul ini melakukan pengolahan data pada a dan b seperti mengecek negatif dan mengecek panjang masing-masing array. Hasil pengecekan tersebut akan digunakan untuk melakukan operasi lebih lanjut. Jika a dan b memiliki tanda yang berbeda, akan dipanggil fungsi BN\_usub() selain itu akan dipanggil fungsi BN\_uadd(). BN\_uadd() dan BN\_usub() melakukan pengolahan data pada a dan b sehingga terdapat representasi array yang dapat diolah oleh BN\_add\_words() dan BN\_sub\_words(). Daftar fungsi yang terdapat pada submodul penjumlahan dan pengurangan dapat dilihat pada Tabel \ref{tab:bn_add_func}.
 
-      BN\_add\_words merupakan fungsi yang menerima masukan dua array dengan ukuran yang sama dan menjumlahkannya secara sekuensial. Penerapan algoritma \ref{alg:add} pada OpenSSL terdapat pada fungsi ini.
+    \subsubsection{Submodul Penjumlahan dan Pengurangan}
+      Submodul penjumlahan dan pengurangan terdapat pada file |bn/BN_add.c|. Fungsi |BN_add()| pada adalah melakukan pengolahan data pada a dan b seperti mengecek negatif dan mengecek panjang masing-masing array. Jika a dan b memiliki tanda yang berbeda, akan dipanggil fungsi |BN_usub()| selain itu akan dipanggil fungsi |BN_uadd()|.
+
+      |BN\_uadd()| dan |BN_usub()| melakukan pengolahan data pada a dan b sehingga terdapat dua representasi array yang dapat diolah oleh |BN_add_words()| dan |BN_sub_words()|. Daftar fungsi yang terdapat pada submodul penjumlahan dan pengurangan dapat dilihat pada Tabel \ref{tab:bn_add_func}.
 
       \begin{table}[!h]
-        \caption{Fungsi dalam submodul bn\_add}
+        \caption{Fungsi dalam submodul penjumlahan dan pengurangan}
         \label{tab:bn_add_func}
         \begin{tabular}{R{2.8cm}L{10.5cm}}
           \toprule
@@ -133,55 +134,72 @@ typedef struct bignum_ctx_stack {
           \textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
           \\ \bottomrule
         \end{tabular}
-
       \end{table}
 
-    \subsubsection{Modul Perkalian}
+      |BN_add_words()| dan |BN_sub_words()| bukan merupakan bagian dari submodul ini, namun dalam submodul asm. Submodul asm dijelaskan lebih lanjut pada subbab \ref{sec:bn_asm}. Dua fungsi tersebut menerima masukan dua array dengan ukuran yang sama dan menjumlahkannya secara sekuensial. Penerapan algoritma paralel \ref{alg:add} pada OpenSSL terdapat pada fungsi ini.
+
+    \subsubsection{Submodul Perkalian}
+      Submodul perkalian terdapat pada file |bn/bn_mul.c|. Fungsi |bn_mul()| merupakan fungsi yang akan dipanggil untuk melakukan operasi perkalian big integer. Terdapat dua algoritma perkalian yang diimplementasikan dalam modul ini, yaitu algoritma perkalian panjang pada |bn_mul_normal()| dan algoritma perkalian karatsuba pada |bn_mul_recursive()|. Daftar fungsi yang relevan pada submodul ini dapat dilihat pada Tabel \ref{tab:bn_mul}.
+
       \begin{table}[h]
-        \caption{Fungsi dalam submodul bn\_add}
+        \caption{Fungsi dalam submodul perkalian}
+        \label{tab:bn_mul}
         \begin{tabular}{R{2.8cm}L{10.5cm}}
+
           \toprule
-          \textbf{Header Fungsi} & |int BN_mul(BIGNUM *r, const BIGNUM *a, const BIGNUM *b, BN_CTX *ctx)|                                                                                                \\ \midrule
-          \textit{Deskripsi}     & Mengalikan $b$ pada $a$ dan menyimpan hasilya dalam $r, (r = a * b)$.                                                                                                 \\
-          \textit{Prekondisi}    & -                                                                                                                                                                     \\
+          \textbf{Header Fungsi} & |int BN_mul(BIGNUM *r, const BIGNUM *a, const BIGNUM *b, BN_CTX *ctx)| \\ \midrule
+          \textit{Deskripsi}     & Mengalikan $b$ pada $a$ dan menyimpan hasilya dalam $r, (r = a * b)$.\\
+          \textit{Prekondisi}    & -\\
           \textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
           \\ \bottomrule
-          \textbf{Header Fungsi} & |void bn_mul_normal(BN_ULONG *r, BN_ULONG *a, int na, BN_ULONG *b, int nb)|                                                                                           \\ \midrule
-          \textit{Deskripsi}     & Perkalian $a$ dan $b$ dengan menggunakan algoritma perkalian panjang, dengan $na$ adalah panjang $a$ dan $nb$ adalah panjang $b$.                                     \\
-          \textit{Prekondisi}    & -                                                                                                                                                                     \\
+
+          \textbf{Header Fungsi} & |void bn_mul_normal(BN_ULONG *r, BN_ULONG *a, int na, BN_ULONG *b, int nb)| \\ \midrule
+          \textit{Deskripsi}     & Perkalian $a$ dan $b$ dengan menggunakan algoritma perkalian panjang, $a$ dan $b$ adalah array yang merepresentasikan operand perkalian.  \\
+          \textit{Prekondisi}    & $na = length(a)$, $nb = length(b)$ \\
           \textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
           \\ \bottomrule
-          \textbf{Header Fungsi} & |void bn_mul_recursive(BN_ULONG *r, BN_ULONG *a, BN_ULONG *b, int n2 int dna, int dnb, BN_ULONG *t)|                                                                  \\ \midrule
-          \textit{Deskripsi}     & Perkalian $a$ dan $b$ dengan menggunakan algoritma perkalian karatsuba. $n2$ adalah panjang hasil perkalian, dengan $dna = length(a) - n2$ dan $dnb = length(b) - n2$ \\
-          \textit{Prekondisi}    & $length(r) = 2*n2$. $ length(t) = 2*n2$. $n2 = 2^k, k \in \mathbb{Z}. $                                                                                               \\
+
+          \textbf{Header Fungsi} & |void bn_mul_recursive(BN_ULONG *r, BN_ULONG *a, BN_ULONG *b, int n2 int dna, int dnb, BN_ULONG *t)| \\ \midrule
+          \textit{Deskripsi}     & Perkalian $a$ dan $b$ dengan menggunakan algoritma perkalian karatsuba. $n2$ adalah panjang hasil perkalian \\
+          \textit{Prekondisi}    & $length(r) = 2*n2$. $ length(t) = 2*n2$. $n2 = 2^k, k \in \mathbb{Z} $. $dna = length(a) - n2$. $dnb = length(b) - n2$ \\
           \textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
           \\ \bottomrule
         \end{tabular}
-
       \end{table}
 
+      Algoritma perkalian comba hanya digunakan untuk |BIGNUM| yang memiliki panjang 4 atau 8 word. Implementasi ini dilakukan karena untuk jumlah word yang lebih tinggi, perkalian comba tidak menghasilkan hasil yang lebih baik dibandingkan dengan perkalian biasa. Implementasi algoritma perkalian comba terdapat pada fungsi |bn_mul_comba4()| dan |bn_mul_comba8()| di submodul asm.
+
+      Basis yang dipilih dalam perkalian karatsuba adalah ketika dua operand memiliki panjang 8 word. Ketika perkalian karatsuba mencapai basis, akan dipanggil algoritma perkalian comba dalam fungsi |bn_mul_comba8()|. Implementasi algoritma paralel karatsuba dalam pseudocode XXX diimplementasikan pada fungsi |bn_mul_recursive()| ini.
+
+      Algoritma perkalian panjang pada fungsi |bn_mul()| akan memanggil fungsi |bn_mul_add_words()| dari submodul asm. Fungsi |bn_mul_add_words| inilah tempat algoritma paralel XXX diimplementasikan.
+      \todo{tambahin ref}
+
     \subsubsection{Submodul Pembagian}
+      Submodul pembagian terdapat pada file |bn/bn_div.c|. Fungsi |BN_div()| merupakan implementasi algoritma pembagian panjang pada OpenSSL. Algoritma pembagian panjang membutuhkan divisor yang telah ternormalisasi, proses normalisasi pada implementasi ini dilakukan dengan melakukan left shift pada divisor sehingga bit paling signifikan yang dimiliki divisor bernilai 1. Proses normalisasi divisor dilakukan oleh fungsi |bn_left_align()|, sementara itu left shift pada number dilakukan oleh |bn_lshift_fixed_top()| yang terdapat pada submodul |bn_shift|.
+      \todo[inline]{cek lagi istilahnya, sesuaikan sama bab 2 (divisor, number, quotient, remainder)}
+
       \begin{table}[h]
-        \caption{Fungsi dalam submodul bn\_add}
+        \caption{Fungsi dalam submodul pembagian}
         \begin{tabular}{R{2.8cm}L{10.5cm}}
           \toprule
           \textbf{Header Fungsi} & |BN_div(BIGNUM *dv, BIGNUM *rm, const BIGNUM *num, const BIGNUM *divisor, BN_CTX *ctx)|                                                                                                       \\ \midrule
           \textit{Deskripsi}     & Membagi num dengan divisor, hasil pembagian disimpan sebagai dv dan sisa pembagian disimpan sebagai rm. Baik div maupun rm bisa menjadi NULL jika hasil atau sisa pembagian tidak dibutuhkan. \\
-          \textit{Prekondisi}    & -                                                                                                                                                                                             \\
+          \textit{Prekondisi}    & - \\
           \textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
           \\ \bottomrule
           \textbf{Header Fungsi} & |int bn_left_align(BIGNUM *num)|                                                                                                                                                              \\ \midrule
-          \textit{Deskripsi}     & Normalisasi BIGNUM $num$ agar $num > \beta/2$                                                                                                                                                 \\
-          \textit{Prekondisi}    & -                                                                                                                                                                                             \\
+          \textit{Deskripsi}     & Normalisasi divisor BIGNUM $num$ agar $num > \beta/2$  \\
+          \textit{Prekondisi}    & - \\
           \textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
           \\ \bottomrule
         \end{tabular}
-
       \end{table}
 
-    \subsubsection{Submodul Asm}
+    \subsubsection{Submodul Asm} \label{sec:bn_asm}
+      Submodul asm terdapat pada file |bn/bn_asm.c|. Submodul ini terdiri dari fungsi yang melakukan operasi langsung terhadap array yang ada didalam struktur BIGNUM. Sebagai contoh, |bn_add_words()| merupakan fungsi yang menjumlahkan dua array dengan ukuran yang sama dan menyimpannya pada sebuah array yang baru. Sebagian besar fungsi yang terdapat dalam submodul ini merupakan fungsi yang dapat diimplementasikan dalam assembly dengan sederhana sehingga kinerja yang dihasilkan lebih baik.
+
       \begin{table}[h]
-        \caption{Fungsi dalam submodul bn\_add}
+        \caption{Fungsi dalam submodul asm}
         \begin{tabular}{R{2.8cm}L{10.5cm}}
           \toprule
           \textbf{Header Fungsi} & |BN_ULONG bn_add_words(BN_ULONG *a, const BN_ULONG *a, const BN_ULONG *b, int n)|  \\ \midrule
