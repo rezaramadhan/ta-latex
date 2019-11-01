@@ -18,7 +18,13 @@
 \begin{singlespacing}
 % \setstretch{1.0}
 
-\Blindtext
+Transport Layer Security (TLS) merupakan sebuah protokol yang umum digunakan sebagai layer security oleh sebuah protokol lain seperti HTTP, SMTP, dan DNS. Kekurangan utama dari TLS adalah proses TLS Handshake yang memakan waktu relatif lebih lama. TLS Handshake menggunakan algoritma pertukaran kunci serta proses autentikasi melalui kriptografi kunci publik yang membutuhkan komputasi yang tinggi.
+
+Algoritma pertukaran kunci serta kriptografi kunci publik melakukan operasi perpangkatan modulo pada bilangan bulat yang besar. Operasi aritmatika pada bilangan bulat yang besar tersebutlah yang membutuhkan proses komputasi yang tinggi. Terdapat banyak algoritma yang dapat digunakan pada operasi aritmatika tersebut, salah satu variasinya dalah menggunakan varian algoritma yang dapat dijalankan secara paralel.
+
+Varian algoritma paralel yang dapat digunakan diantaranya adalah varian dari algoritma penjumlahan, pengurangan, perkalian panjang, perkalian karatsuba, serta perkalian modular Montgomery. Seluruh algoritma paralel tersebut diimplementasikan dalam OpenSSL v1.1.1e. Pengujian terhadap implementasi tersebut dilakukan pada setiap algoritma yang digunakan, proses pertukaran kunci Diffie-Hellman, proses pembangkitan kunci RSA, serta proses enkripsi dan dekripsi RSA.
+
+\todo[inline]{hasil \& kesimpulan}
 
 \end{singlespacing}
 
