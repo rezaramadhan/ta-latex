@@ -198,35 +198,41 @@ typedef struct bignum_ctx_stack {
     \subsubsection{Submodul Asm} \label{sec:bn_asm}
       Submodul asm terdapat pada file |bn/bn_asm.c|. Submodul ini terdiri dari fungsi yang melakukan operasi langsung terhadap array yang ada didalam struktur BIGNUM. Sebagai contoh, |bn_add_words()| merupakan fungsi yang menjumlahkan dua array dengan ukuran yang sama dan menyimpannya pada sebuah array yang baru. Sebagian besar fungsi yang terdapat dalam submodul ini merupakan fungsi yang dapat diimplementasikan dalam assembly dengan sederhana sehingga kinerja yang dihasilkan lebih baik.
 
+      Beberapa implementasi Pseudocode dari subbab \ref{sec:parallelization} diimplementasikan pada submodul ini. Implementasi dilakukan pada submodul ini karena submodul ini merupakan modifikasi big integer pada level terrendah dalam modul BIGNUM. Dengan demikian, implementasi pada submodul ini akan digunakan oleh submodul-submodul lain dalam modul bignum yang menggunakan fungsi low level. 
+
       \begin{table}[h]
         \caption{Fungsi dalam submodul asm}
         \begin{tabular}{R{2.8cm}L{10.5cm}}
           \toprule
-          \textbf{Header Fungsi} & |BN_ULONG bn_add_words(BN_ULONG *a, const BN_ULONG *a, const BN_ULONG *b, int n)|  \\ \midrule
-          \textit{Deskripsi}     &                                                                                    \\
-          \textit{Prekondisi}    & -                                                                                  \\
-          \textit{Return Value}  &
+          \textbf{Header Fungsi} & |BN_ULONG bn_add_words(BN_ULONG *r, const BN_ULONG *a, const BN_ULONG *b, int n)|  \\ \midrule
+          \textit{Deskripsi} & Menjumlahkan dua array a dan b ($a+b$) yang merupakan variabel |d| dari |BIGNUM| dan menyimpan hasilnya pada array r.                                                                                     \\
+          \textit{Prekondisi}    & $length(a) = length(b) = n$                                 \\
+          \textit{Return Value}  & Carry
           \\ \bottomrule
           \textbf{Header Fungsi} & |BN_ULONG bn_sub_words(BN_ULONG *r, const BN_ULONG *a, const BN_ULONG *b, int n)|  \\ \midrule
-          \textit{Deskripsi}     &                                                                                    \\
-          \textit{Prekondisi}    & -                                                                                  \\
-          \textit{Return Value}  &
+          \textit{Deskripsi} & Mengurangi dua array b dari array a ($a-b$) yang merupakan variabel |d| dari |BIGNUM| dan menyimpan hasilnya pada array r.                                                                                     \\
+          \textit{Prekondisi}    & $length(a) = length(b) = length(r) n$                                 \\
+          \textit{Return Value}  & Carry
           \\ \bottomrule
           \textbf{Header Fungsi} & |BN_ULONG bn_mul_words(BN_ULONG *rp, const BN_ULONG *ap, int num, BN_ULONG w)|     \\ \midrule
-          \textit{Deskripsi}     &                                                                                    \\
-          \textit{Prekondisi}    & -                                                                                  \\
-          \textit{Return Value}  &
+          \textit{Deskripsi} & Mengalikan array ap terhadap sebuah elemen w dan menyimpan hasilnya pada rp. ($rp = ap * w$)                                                                                      \\
+          \textit{Prekondisi}    & $length(ap) = length(rp) = num$ -                                                                                  \\
+          \textit{Return Value}  & Carry
           \\ \bottomrule
           \textbf{Header Fungsi} & |BN_ULONG bn_mul_add_words(BN_ULONG *rp, const BN_ULONG *ap, int num, BN_ULONG w)| \\ \midrule
-          \textit{Deskripsi}     &                                                                                    \\
-          \textit{Prekondisi}    & -                                                                                  \\
-          \textit{Return Value}  &
+          \textit{Deskripsi} & Mengalikan array ap terhadap w, menjumlahkan hasilnya dengan a, dan menyimpannya pada rp. ($rp = ap + ap * w$)                                                                                    \\
+          \textit{Prekondisi}    & $length(ap) = length(rp) = num$ -                                                                                  \\
+          \textit{Return Value}  & Carry
           \\ \bottomrule
           \textbf{Header Fungsi} & |BN_ULONG bn_div_words(BN_ULONG h, BN_ULONG l, BN_ULONG d)|                        \\ \midrule
-          \textit{Deskripsi}     &                                                                                    \\
-          \textit{Prekondisi}    & -                                                                                  \\
-          \textit{Return Value}  &
+          \textit{Deskripsi}  & Membagi bilangan dua word $hl$ dengan bilangan satu word $d$ dan mengembalikan hasilnya.                                                                                   \\
+          \textit{Prekondisi}    & - -                                                                                  \\
+          \textit{Return Value}  & Hasil pembagian
+          \\ \bottomrule
+          \textbf{Header Fungsi} & |void bn_mul_comba8(BN_ULONG *r, BN_ULONG *a, BN_ULONG *b)|                        \\ \midrule
+          \textit{Deskripsi} &  Mengalikan bilangan 8 word a dan b dan menyimpan hasilnya pada r. ($r = a*b$)                                                                                    \\
+          \textit{Prekondisi}    & $length(a) = length(b) = 8, length(r) = 16$ -                                                                                  \\
+          \textit{Return Value}  & -
           \\ \bottomrule
         \end{tabular}
-
       \end{table}
