@@ -97,6 +97,7 @@
 
       \begin{algorithm}
         \caption{Algoritma Perkalian Karatsuba Paralel}
+        \label{alg:parallel_karatsuba}
         \begin{algorithmic}
           \Require{$A$ = [1..p], $B$ = [1..q] yang merepresentasikan Big Integer, $\beta$ adalah basis yang digunakan, $cutoff$ adalah batas maksimum Job yang dipanggil, $job_c$ adalah jumlah job saat ini yang diinisialisasi 1}
           \Statex
@@ -138,11 +139,11 @@
       \begin{figure}
           \centering
           \includegraphics[width=0.85\textwidth]{resources/img/ch-3/mul-karatsuba-example.png}
-          \caption{Contoh Perhitungan Penjumlahan secara Paralel}
+          \caption{Contoh Perhitungan Perkalian Karatsuba secara Paralel}
           \label{fig:mul_karatsuba_example}
       \end{figure}
 
-      Algoritma perkalian panjang serta algoritma perkalian comba merupakan algoritma yang berbasis proses iterasi pada sebuah array. Dengan demikian, metode paralelisasi yang dapat digunakan mirip dengan proses paralelisasi untuk fungsi penjumlahan dan pengurangan pada subbab \ref{sec:add_sub_parallel}. Array dibagi menjadi beberapa subarray yang akan dikomputasi oleh sebuah job secara paralel. Pseudocode yang dapat digunakan untuk paralelisasi algoritma dapat dilihat pada pseudocode \ref{alg:mul_parallel}.
+      Algoritma perkalian panjang merupakan algoritma yang berbasis proses iterasi pada sebuah array. Dengan demikian, metode paralelisasi yang dapat digunakan mirip dengan proses paralelisasi untuk fungsi penjumlahan dan pengurangan pada subbab \ref{sec:add_sub_parallel}. Array dibagi menjadi beberapa subarray yang akan dikomputasi oleh sebuah job secara paralel. Pseudocode yang dapat digunakan untuk paralelisasi algoritma dapat dilihat pada pseudocode \ref{alg:mul_parallel}.
 
       \begin{algorithm}
         \caption{Algoritma Perkalian Panjang Paralel}

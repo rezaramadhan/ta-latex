@@ -18,13 +18,13 @@
     Implementasi dilakukan pada sistem operasi Ubuntu 64 bit. Karena itu, implementasi library big number hanya berfokus pada openssl dengan yang memiliki konfigurasi makro sebagai berikut:
 
     \begin{enumerate}[label=\roman*.]
-      \item BN\_ULONG = unsigned long long
+      \item BN\_ULONG = unsigned long
       \item OPENSSL\_SMALL\_FOOTPRINT = false
       \item BN\_MUL\_COMBA = true
       \item BN\_RECURSION = true
       \item BN\_CTX\_POOL\_SIZE = 16
     \end{enumerate}
-    \todo{masukin lampiran?}
+    % \todo{masukin lampiran?}
     Konfigurasi makro tersebut digunakan dalam pemilihan dan manajemen struktur data yang digunakan serta pemilihan algoritma pada bagian tertentu. Sebagai contoh, algoritma yang digunakan dalam perkalian adalah algoritma karatsuba dan algoritma comba pada basis rekursif.
 
 
@@ -58,7 +58,7 @@ struct bignum_st {
 };
     \end{lstlisting}
 
-    |BN_ULONG| sendiri adalah sebuah makro yang menggantikan |unsigned long| pada komputer 32 bit atau |unsigned long long| pada komputer 64 bit.
+    |BN_ULONG| sendiri adalah sebuah makro yang menggantikan |unsigned long|.
 
     |d| adalah pointer untuk array of integer.
 
@@ -106,7 +106,7 @@ typedef struct bignum_ctx_stack {
     \subsubsection{Submodul Penjumlahan dan Pengurangan}
       Submodul penjumlahan dan pengurangan terdapat pada file |bn/BN_add.c|. Fungsi |BN_add()| pada adalah melakukan pengolahan data pada a dan b seperti mengecek negatif dan mengecek panjang masing-masing array. Jika a dan b memiliki tanda yang berbeda, akan dipanggil fungsi |BN_usub()| selain itu akan dipanggil fungsi |BN_uadd()|.
 
-      |BN\_uadd()| dan |BN_usub()| melakukan pengolahan data pada a dan b sehingga terdapat dua representasi array yang dapat diolah oleh |BN_add_words()| dan |BN_sub_words()|. Daftar fungsi yang terdapat pada submodul penjumlahan dan pengurangan dapat dilihat pada Tabel \ref{tab:bn_add_func}.
+      |BN_uadd()| dan |BN_usub()| melakukan pengolahan data pada a dan b sehingga terdapat dua representasi array yang dapat diolah oleh |BN_add_words()| dan |BN_sub_words()|. Daftar fungsi yang terdapat pada submodul penjumlahan dan pengurangan dapat dilihat pada Tabel \ref{tab:bn_add_func}.
 
       \begin{table}[!h]
         \caption{Fungsi dalam submodul penjumlahan dan pengurangan}
@@ -169,14 +169,14 @@ typedef struct bignum_ctx_stack {
 
       Algoritma perkalian comba hanya digunakan untuk |BIGNUM| yang memiliki panjang 4 atau 8 word. Implementasi ini dilakukan karena untuk jumlah word yang lebih tinggi, perkalian comba tidak menghasilkan hasil yang lebih baik dibandingkan dengan perkalian biasa. Implementasi algoritma perkalian comba terdapat pada fungsi |bn_mul_comba4()| dan |bn_mul_comba8()| di submodul asm.
 
-      Basis yang dipilih dalam perkalian karatsuba adalah ketika dua operand memiliki panjang 8 word. Ketika perkalian karatsuba mencapai basis, akan dipanggil algoritma perkalian comba dalam fungsi |bn_mul_comba8()|. Implementasi algoritma paralel karatsuba dalam pseudocode XXX diimplementasikan pada fungsi |bn_mul_recursive()| ini.
+      Basis yang dipilih dalam perkalian karatsuba adalah ketika dua operand memiliki panjang 8 word. Ketika perkalian karatsuba mencapai basis, akan dipanggil algoritma perkalian comba dalam fungsi |bn_mul_comba8()|. Implementasi algoritma paralel karatsuba dalam pseudocode \ref{alg:parallel_karatsuba} diimplementasikan pada fungsi |bn_mul_recursive()| ini.
 
-      Algoritma perkalian panjang pada fungsi |bn_mul()| akan memanggil fungsi |bn_mul_add_words()| dari submodul asm. Fungsi |bn_mul_add_words| inilah tempat algoritma paralel XXX diimplementasikan.
-      \todo{tambahin ref}
+      Algoritma perkalian panjang pada fungsi |bn_mul()| akan memanggil fungsi |bn_mul_add_words()| dari submodul asm. Fungsi |bn_mul_add_words| inilah tempat algoritma paralel \ref{alg:mul_parallel} diimplementasikan.
+      % \todo{tambahin ref}
 
     \subsubsection{Submodul Pembagian}
-      Submodul pembagian terdapat pada file |bn/bn_div.c|. Fungsi |BN_div()| merupakan implementasi algoritma pembagian panjang pada OpenSSL. Algoritma pembagian panjang membutuhkan divisor yang telah ternormalisasi, proses normalisasi pada implementasi ini dilakukan dengan melakukan left shift pada divisor sehingga bit paling signifikan yang dimiliki divisor bernilai 1. Proses normalisasi divisor dilakukan oleh fungsi |bn_left_align()|, sementara itu left shift pada number dilakukan oleh |bn_lshift_fixed_top()| yang terdapat pada submodul |bn_shift|.
-      \todo[inline]{cek lagi istilahnya, sesuaikan sama bab 2 (divisor, number, quotient, remainder)}
+      Submodul pembagian terdapat pada file |bn/bn_div.c|. Fungsi |BN_div()| merupakan implementasi algoritma pembagian panjang pada OpenSSL. Sesuai dengan penjelasan pada subbab \ref{sec:div_theory}, algoritma pembagian panjang membutuhkan divisor yang telah ternormalisasi. Proses normalisasi pada implementasi ini dilakukan dengan melakukan \textit{left shift} pada divisor sehingga bit paling signifikan yang dimiliki divisor bernilai 1. Proses normalisasi divisor dilakukan oleh fungsi |bn_left_align()|, sementara itu proses \textit{left shift} pada bilangan dibagi dilakukan oleh |bn_lshift_fixed_top()| yang terdapat pada submodul |bn_shift|.
+      % \todo[inline]{cek lagi istilahnya, sesuaikan sama bab 2 (divisor, number, quotient, remainder)}
 
       \begin{table}[h]
         \caption{Fungsi dalam submodul pembagian}
@@ -198,7 +198,19 @@ typedef struct bignum_ctx_stack {
     \subsubsection{Submodul Asm} \label{sec:bn_asm}
       Submodul asm terdapat pada file |bn/bn_asm.c|. Submodul ini terdiri dari fungsi yang melakukan operasi langsung terhadap array yang ada didalam struktur BIGNUM. Sebagai contoh, |bn_add_words()| merupakan fungsi yang menjumlahkan dua array dengan ukuran yang sama dan menyimpannya pada sebuah array yang baru. Sebagian besar fungsi yang terdapat dalam submodul ini merupakan fungsi yang dapat diimplementasikan dalam assembly dengan sederhana sehingga kinerja yang dihasilkan lebih baik.
 
-      Beberapa implementasi Pseudocode dari subbab \ref{sec:parallelization} diimplementasikan pada submodul ini. Implementasi dilakukan pada submodul ini karena submodul ini merupakan modifikasi big integer pada level terrendah dalam modul BIGNUM. Dengan demikian, implementasi pada submodul ini akan digunakan oleh submodul-submodul lain dalam modul bignum yang menggunakan fungsi low level. 
+      Beberapa implementasi Pseudocode dari subbab \ref{sec:parallelization} diimplementasikan pada submodul ini. Implementasi dilakukan pada submodul ini karena submodul ini merupakan modifikasi big integer pada level terrendah dalam modul BIGNUM. Dengan demikian, implementasi pada submodul ini akan digunakan oleh submodul-submodul lain dalam modul bignum yang menggunakan fungsi low level.
+
+      Terdapat satu struktur data tambahan yang dibuat dalam submodul ini. Struktur data dibuat karena penggunaan pthread terhadap fungsi hanya dapat menerima satu argumen dengan tipe data |void*|. Agar thread dapat mengolah data lebih dari satu, perlu dibuat sebuah struct yang berisi argumen dari fungsi awal. Akan dilakukan type casting antara struct yang dibuat dan |void*| dalam setiap pemanggilan thread. Strukur data yang dibuat dalam submodul ini dapat dilihat pada Source Code \ref{code:par_st}. Struktur data yang digunakan untuk penjumlahan adalah |add_args|
+
+      \begin{lstlisting}[caption={Struktur Data bignum}, label={code:par_st}]
+typedef struct _add_args_st {
+    BN_ULONG *r;
+    BN_ULONG *a;
+    BN_ULONG *b;
+    int n;
+    BN_ULONG carry;
+} add_args;
+      \end{lstlisting}
 
       \begin{table}[h]
         \caption{Fungsi dalam submodul asm}

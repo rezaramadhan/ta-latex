@@ -36,13 +36,12 @@
     Saat ini komputasi kriptografi kunci publik masih memerlukan proses komputasi yang lebih tinggi dibandingkan dengan kriptografi kunci simetris. Maka dari itu, kriptografi kunci publik biasanya hanya dilakukan untuk mengenkripsikan kunci yang akan digunakan dalam kriptografi kunci simetris.
 
     \subsubsection{Rivest–Shamir–Adleman (RSA)} \label{sec:rsa_theory}
-      \todo{edit lagi, bahasanya ngaco}
-      RSA merupakan salah satu algoritma kriptografi kunci publik yang hingga saat ini banyak digunakan. Algoritma RSA pertama kali dicetuskan oleh Ron Rivest, Adi Shamir, dan Leonard Adleman pada tahun 1978. RSA berdasar pada sifat matematis bahwa dalam sebuah pemangkatan modular dengan persamaan:
+      RSA merupakan salah satu algoritma kriptografi kunci publik yang hingga saat ini banyak digunakan. Algoritma RSA diciptakan oleh Ron Rivest, Adi Shamir, dan Leonard Adleman pada tahun 1978. RSA berdasar pada sifat matematis bahwa dalam sebuah perpangkatan modular yang memiliki persamaan:
       \begin{equation}
         (m^e)^d  \equiv  m \pmod{n}
       \end{equation}
 
-      Pencarian tiga bilangan bulat n, e, dan d dapat dilakukan dengan mudah; bahkan untuk bilangan n, e, dan d yang sangat besar. Namun, pencarian bilangan d akan susah dilakukan, bahkan jika kita mengetahui bilangan-bilangan lainnya. Selain itu mengingat operasi perpangkatan dapat ditukar, maka proses enkripsi dan dekripsi dapat dilakukan dengan metode yang sama, hanya menggunakan bilangan yang berbeda.
+      Pencarian bilangan d akan susah dilakukan bahkan jika kita mengetahui semua bilangan lainnya. Selain itu operasi perpangkatan memiliki sifat komutatif, dengan demikian proses enkripsi dan dekripsi dapat dilakukan dengan metode yang sama, dan hanya menggunakan bilangan yang berbeda.
 
       Terdapat beberapa proses yang terjadi pada algoritma RSA yaitu pembuatan \textit{public} dan \textit{private key}, distribusi \textit{public key}, enkripsi, serta dekripsi. Proses pembuatan public dan private key sendiri dilakukan dalam beberapa tahap yaitu:
 

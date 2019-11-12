@@ -1,4 +1,4 @@
-%!TEX root = ../../../tugas-akhir.tex
+%!TEX root = ../resources/csv/../resources/csv/../resources/csv/tugas-akhir.tex
 \section{Evaluasi}
   \subsection{Tujuan Pengujian}
     Pada penelitian ini pengujian dilakukan untuk melakukan evaluasi apakah modifikasi terhadap perangkat OpenSSL merupakan modifikasi yang baik. Pengujian dilakukan terhadap dua bagian dari OpenSSL, yaitu pengujian terhadap fungsionalitas OpenSSL serta pengujian terhadap kinerja OpenSSL.
@@ -23,7 +23,8 @@
       Kasus uji untuk setiap operasi aritmatika disimpan pada |openssl/test/recipes/10-test_bn_data|. Kasus uji untuk setiap operasi aritmatika memiliki file terpisah dengan operasi artimatika yang lain. Sebagai contoh, kasus uji untuk operasi perkalian disimpan pada file |bnmul.txt| pada direktori pengujian. Contoh kasus uji yang digunakan untuk pengujian fungsional dapat dilihat pada Lampiran \ref{sec:functional_testcase}.
 
     \subsubsection{Hasil Pengujian}
-      Pengujian fungsionalitas pada OpenSSL berhasil dilakukan. Tidak ada fungsionalitas dari OpenSSL yang rusak setelah dilakukan modifikasi pada \textit{source code} OpenSSL. \textit{Output} dari pengujian fungsional yang dilakukan dapat dilihat pada Lampiran XXX. \todo{tambahin}
+      Pengujian fungsionalitas pada OpenSSL berhasil dilakukan. Tidak ada fungsionalitas dari OpenSSL yang rusak setelah dilakukan modifikasi pada \textit{source code} OpenSSL.
+      % \textit{Output} dari pengujian fungsional yang dilakukan dapat dilihat pada Lampiran XXX. \todo{tambahin}
 
   \subsection{Pengujian Kinerja}
 
@@ -94,6 +95,7 @@ Perkalian RSA                & Panjang kunci (bit), panjang pesan (bit)        \
 
     \subsubsection{Hasil dan Analisis Pengujian}
 
+
       \subparagraph{Operasi Penjumlahan}
       \begin{figure}[h]
         \centering
@@ -104,15 +106,23 @@ Perkalian RSA                & Panjang kunci (bit), panjang pesan (bit)        \
               xlabel={Panjang Data},
               ylabel={Waktu}
             ]
-            \addplot[color=blue, discard if not={opr}{add}] table [x=tc_num, y=time_avg, col sep=comma] {resources/csv/bn_add.csv};
-            \addlegendentry{test01}
+            \addplot[color=gray, discard if not={opr}{add}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/bn1_add.csv};
+            \addlegendentry{local-1cpu}
+            \addplot[color=blue, discard if not={opr}{add}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/bn1_add.csv};
+            \addlegendentry{local-2cpu}
+            \addplot[color=red, discard if not={opr}{add}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/do/bn1_add.csv};
+            \addlegendentry{do-1cpu}
+            \addplot[color=green, discard if not={opr}{add}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/do/bn2_add.csv};
+            \addlegendentry{do-4cpu}
           \end{axis}
         \end{tikzpicture}
         \caption{Data Penjumlahan}
         \label{fig:data_add}
       \end{figure}
-
       \subparagraph{Operasi Pengurangan}
+
+
+
       \subparagraph{Operasi Perkalian}
       \begin{figure}[h]
         \centering
@@ -123,12 +133,22 @@ Perkalian RSA                & Panjang kunci (bit), panjang pesan (bit)        \
                 xlabel={Panjang Data},
                 ylabel={Waktu}
               ]
-            \addplot[color=blue, discard if not={opr}{mul}] table [x=tc_num, y=time_avg, col sep=comma] {resources/csv/bn_mul.csv};
+            \addplot[color=gray, discard if not={opr}{mul}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/bn2_mul.csv};
+            \addlegendentry{local-1cpu}
+            \addplot[color=blue, discard if not={opr}{mul}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/bn1_mul.csv};
+            \addlegendentry{local-2cpu}
+            \addplot[color=red, discard if not={opr}{mul}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/do/bn1_mul.csv};
+            \addlegendentry{do-1cpu}
+            \addplot[color=green, discard if not={opr}{mul}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/do/bn2_mul.csv};
+            \addlegendentry{do-4cpu}
           \end{axis}
         \end{tikzpicture}
         \caption{Data Perkalian}
         \label{fig:data_mul}
       \end{figure}
+
+
+
       \subparagraph{Operasi Pembagian}
       \begin{figure}[h]
         \centering
@@ -139,12 +159,21 @@ Perkalian RSA                & Panjang kunci (bit), panjang pesan (bit)        \
                 xlabel={Panjang Data},
                 ylabel={Waktu}
               ]
-            \addplot[color=blue, discard if not={opr}{div}] table [x=tc_num, y=time_avg, col sep=comma] {resources/csv/bn_div.csv};
+            \addplot[color=gray, discard if not={opr}{div}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/bn2_div.csv};
+            \addlegendentry{local-1cpu}
+            \addplot[color=blue, discard if not={opr}{div}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/bn1_div.csv};
+            \addlegendentry{local-2cpu}
+            \addplot[color=red, discard if not={opr}{div}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/do/bn1_div.csv};
+            \addlegendentry{do-1cpu}
+            \addplot[color=green, discard if not={opr}{div}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/do/bn2_div.csv};
+            \addlegendentry{do-4cpu}
           \end{axis}
         \end{tikzpicture}
         \caption{Data Pembagian}
         \label{fig:data_div}
       \end{figure}
+
+
 
       \subparagraph{Operasi Perkalian Modular}
       \begin{figure}[h]
@@ -156,12 +185,20 @@ Perkalian RSA                & Panjang kunci (bit), panjang pesan (bit)        \
                 xlabel={Panjang Data},
                 ylabel={Waktu}
               ]
-            \addplot[color=blue, discard if not={opr}{modmul}] table [x=tc_num, y=time_avg, col sep=comma] {resources/csv/bn_modmul.csv};
+            \addplot[color=gray, discard if not={opr}{modmul}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/bn2_modmul.csv};
+            \addlegendentry{local-1cpu}
+            \addplot[color=blue, discard if not={opr}{modmul}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/bn1_modmul.csv};
+            \addlegendentry{local-2cpu}
+            \addplot[color=red, discard if not={opr}{modmul}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/do/bn1_modmul.csv};
+            \addlegendentry{do-1cpu}
+            \addplot[color=green, discard if not={opr}{modmul}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/do/bn2_modmul.csv};
+            \addlegendentry{do-4cpu}
           \end{axis}
         \end{tikzpicture}
         \caption{Data Perkalian Modular}
         \label{fig:data_modmul}
       \end{figure}
+
 
       \subparagraph{Operasi Perpangkatan Modular}
       \begin{figure}[h]
@@ -173,7 +210,14 @@ Perkalian RSA                & Panjang kunci (bit), panjang pesan (bit)        \
                 xlabel={Panjang Data},
                 ylabel={Waktu}
               ]
-            \addplot[color=blue, discard if not={opr}{modexp}] table [x=tc_num, y=time_avg, col sep=comma] {resources/csv/bn_modexp.csv};
+            \addplot[color=gray, discard if not={opr}{modexp}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/bn2_modexp.csv};
+            \addlegendentry{local-1cpu}
+            \addplot[color=blue, discard if not={opr}{modexp}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/bn1_modexp.csv};
+            \addlegendentry{local-2cpu}
+            \addplot[color=red, discard if not={opr}{modexp}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/do/bn1_modexp.csv};
+            \addlegendentry{do-1cpu}
+            \addplot[color=green, discard if not={opr}{modexp}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/do/bn2_modexp.csv};
+            \addlegendentry{do-4cpu}
           \end{axis}
         \end{tikzpicture}
         \caption{Data Perpangkatan Modular}
@@ -191,6 +235,7 @@ Perkalian RSA                & Panjang kunci (bit), panjang pesan (bit)        \
                 ylabel={Waktu}
               ]
             \addplot [color=blue] table [x=key_size, y=time_avg, col sep=comma] {resources/csv/dh.csv};
+            \addlegendentry{test01}
           \end{axis}
         \end{tikzpicture}
         \caption{Data Pertukaran Kunci Diffie Hellman}
@@ -208,6 +253,7 @@ Perkalian RSA                & Panjang kunci (bit), panjang pesan (bit)        \
                 ylabel={Waktu}
               ]
             \addplot[color=blue, discard if not={e}{65537}] table [x=key_size, y=time_avg, col sep=comma] {resources/csv/rsa_gen.csv};
+            \addlegendentry{test01}
           \end{axis}
         \end{tikzpicture}
         \caption{Data Pembangkitan Kunci RSA}
@@ -225,28 +271,9 @@ Perkalian RSA                & Panjang kunci (bit), panjang pesan (bit)        \
                 ylabel={Waktu}
               ]
             \addplot [color=blue] table [x=msg_size, y=time_avg, col sep=comma] {resources/csv/rsa_enc.csv};
+            \addlegendentry{test01}
           \end{axis}
         \end{tikzpicture}
         \caption{Data Enkripsi dan Dekripsi RSA}
         \label{fig:data_rsa_enc}
       \end{figure}
-
-      % Langsung data speedup aja, data raw simpen di lampiran
-      %
-      % \begin{table}[ht]
-      % \caption{Test table} % title of Table
-      % \centering % used for centering table
-      % \begin{tabular}{c c c c} % centered columns (4 columns)
-      % \hline\hline %inserts double horizontal lines
-      % Case & Method\#1 & Method\#2 & Method\#3 \\ [0.5ex] % inserts table
-      % %heading
-      % \hline % inserts single horizontal line
-      % 1 & 50 & 837 & 970 \\ % inserting body of the table
-      % 2 & 47 & 877 & 230 \\
-      % 3 & 31 & 25 & 415 \\
-      % 4 & 35 & 144 & 2356 \\
-      % 5 & 45 & 300 & 556 \\ [1ex] % [1ex] adds vertical space
-      % \hline %inserts single line
-      % \end{tabular}
-      % \label{table:nonlin} % is used to refer this table in the text
-      % \end{table}
