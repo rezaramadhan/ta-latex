@@ -1,0 +1,50 @@
+\subsubsection{Submodul Perkalian}
+  Submodul perkalian terdapat pada file |bn/bn_mul.c|. Fungsi |bn_mul()| merupakan fungsi yang akan dipanggil untuk melakukan operasi perkalian big integer. Terdapat dua algoritma perkalian yang diimplementasikan dalam modul ini, yaitu algoritma perkalian panjang pada |bn_mul_normal()| dan algoritma perkalian karatsuba pada |bn_mul_recursive()|. Daftar fungsi yang relevan pada submodul ini dapat dilihat pada Tabel \ref{tab:bn_mul}.
+
+  \begin{table}[h]
+    \caption{Fungsi dalam submodul perkalian}
+    \label{tab:bn_mul}
+    \begin{tabular}{R{2.8cm}L{10.5cm}}
+
+      \toprule
+      \textbf{Header Fungsi} & |int BN_mul(BIGNUM *r, const BIGNUM *a, const BIGNUM *b, BN_CTX *ctx)| \\ \midrule
+      \textit{Deskripsi}     & Mengalikan $b$ pada $a$ dan menyimpan hasilya dalam $r, (r = a * b)$.\\
+      \textit{Prekondisi}    & -\\
+      \textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
+      \\ \bottomrule
+
+      \textbf{Header Fungsi} & |void bn_mul_normal(BN_ULONG *r, BN_ULONG *a, int na, BN_ULONG *b, int nb)| \\ \midrule
+      \textit{Deskripsi}     & Perkalian $a$ dan $b$ dengan menggunakan algoritma perkalian panjang, $a$ dan $b$ adalah array yang merepresentasikan operand perkalian.  \\
+      \textit{Prekondisi}    & $na = length(a)$, $nb = length(b)$ \\
+      \textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
+      \\ \bottomrule
+
+      \textbf{Header Fungsi} & |void bn_mul_recursive(BN_ULONG *r, BN_ULONG *a, BN_ULONG *b, int n2 int dna, int dnb, BN_ULONG *t)| \\ \midrule
+      \textit{Deskripsi}     & Perkalian $a$ dan $b$ dengan menggunakan algoritma perkalian karatsuba. $n2$ adalah panjang hasil perkalian \\
+      \textit{Prekondisi}    & $length(r) = 2*n2$. $ length(t) = 2*n2$. $n2 = 2^k, k \in \mathbb{Z} $. $dna = length(a) - n2$. $dnb = length(b) - n2$ \\
+      \textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
+      \\ \bottomrule
+    \end{tabular}
+  \end{table}
+
+  Algoritma perkalian comba hanya digunakan untuk |BIGNUM| yang memiliki panjang 4 atau 8 word. Implementasi ini dilakukan karena untuk jumlah word yang lebih tinggi, perkalian comba tidak menghasilkan hasil yang lebih baik dibandingkan dengan perkalian biasa. Implementasi algoritma perkalian comba terdapat pada fungsi |bn_mul_comba4()| dan |bn_mul_comba8()| di submodul asm.
+
+  Basis yang dipilih dalam perkalian karatsuba adalah ketika dua operand memiliki panjang 8 word. Ketika perkalian karatsuba mencapai basis, akan dipanggil algoritma perkalian comba dalam fungsi |bn_mul_comba8()|. Implementasi algoritma paralel karatsuba dalam pseudocode \ref{alg:parallel_karatsuba} diimplementasikan pada fungsi |bn_mul_recursive()| ini.
+
+  Algoritma perkalian panjang pada fungsi |bn_mul_normal()| akan memanggil fungsi |bn_mul_add_words()| dari submodul asm. Fungsi |bn_mul_add_words| inilah tempat algoritma paralel \ref{alg:mul_parallel} diimplementasikan.
+  % \todo{tambahin ref}
+
+  \begin{lstlisting}[caption={Struktur Data recursive\_args}, label={code:par_st}]
+typedef struct _recursive_args_st {
+    BN_ULONG *r;
+    BN_ULONG *a;
+    BN_ULONG *b;
+    int n2;
+    int dna;
+    int dnb;
+    BN_ULONG *t;
+    int used_thr;
+} recursive_args;
+  \end{lstlisting}
+
+  Terdapat strukur data tambahan yang dibuat pada submodul ini agar pemanggilan fungsi secara rekursif dapat dilakukan oleh pthread. Struct |recursive_args| berisi argumen yang dibutuhkan oleh |bn_mul_recursive()| serta \textit{counter} jumlah thread yang sudah dijalankan. \textit{Counter} jumlah thread digunakan untuk membatasi thread yang dipanggil agar tidak melebihi jumlah thread maksimum. Pemanggilan jumlah thread yang lebih besar dari jumlah thread maksimum mungkin menyebabkan \textit{false sharing} yang akan menurunkan kinerja submodul ini.
