@@ -1,4 +1,4 @@
-%!TEX root = ../resources/csv/../resources/csv/../resources/csv/tugas-akhir.tex
+%!TEX root = ../resources/csv/resources/csv/../resources/csv/resources/csv/../resources/csv/resources/csv/tugas-akhir.tex
 \section{Evaluasi}
   \subsection{Tujuan Pengujian}
     Pada penelitian ini pengujian dilakukan untuk melakukan evaluasi apakah modifikasi terhadap perangkat OpenSSL merupakan modifikasi yang baik. Pengujian dilakukan terhadap dua bagian dari OpenSSL, yaitu pengujian terhadap fungsionalitas OpenSSL serta pengujian terhadap kinerja OpenSSL.
@@ -96,133 +96,179 @@ Perkalian RSA                & Panjang kunci (bit), panjang pesan (bit)        \
     \subsubsection{Hasil dan Analisis Pengujian}
 
 
-      \subparagraph{Operasi Penjumlahan}
-      \begin{figure}[h]
-        \centering
-        \begin{tikzpicture}
+    \subparagraph{Operasi Penjumlahan}
+    \begin{figure}[h]
+      \centering
+      \begin{tikzpicture}
+        \begin{axis}[
+            x unit=Kbyte,
+            y SI prefix=milli,y unit=s,
+            xlabel={Panjang Data},
+            ylabel={Waktu}
+          ]
+          \addplot[color=orange,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/bn1_add.csv};
+          \addlegendentry{local-1cpu}
+          \addplot[color=blue,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/bn2_add.csv};
+          \addlegendentry{local-2cpu}
+          % \addplot[color=red,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/do/bn1_add.csv};
+          % \addlegendentry{do-1cpu}
+          % \addplot[color=green,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/do/bn2_add.csv};
+          % \addlegendentry{do-4cpu}
+        \end{axis}
+      \end{tikzpicture}
+      \caption{Data Penjumlahan}
+      \label{fig:data_add}
+    \end{figure}
+    \subparagraph{Operasi Pengurangan}
+
+
+
+    \subparagraph{Operasi Perkalian}
+    \begin{figure}[h]
+      \centering
+      \begin{tikzpicture}
           \begin{axis}[
-              x unit=bit,
-              y SI prefix=micro,y unit=s,
+              x unit=Kbyte,
+              y SI prefix=milli,y unit=s,
               xlabel={Panjang Data},
               ylabel={Waktu}
             ]
-            \addplot[color=gray, discard if not={opr}{add}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/bn1_add.csv};
-            \addlegendentry{local-1cpu}
-            \addplot[color=blue, discard if not={opr}{add}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/bn1_add.csv};
-            \addlegendentry{local-2cpu}
-            \addplot[color=red, discard if not={opr}{add}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/do/bn1_add.csv};
-            \addlegendentry{do-1cpu}
-            \addplot[color=green, discard if not={opr}{add}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/do/bn2_add.csv};
-            \addlegendentry{do-4cpu}
-          \end{axis}
-        \end{tikzpicture}
-        \caption{Data Penjumlahan}
-        \label{fig:data_add}
-      \end{figure}
-      \subparagraph{Operasi Pengurangan}
+          \addplot[color=orange,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/bn1_mul.csv};
+          \addlegendentry{local-1cpu}
+          \addplot[color=blue,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/bn2_mul.csv};
+          \addlegendentry{local-2cpu}
+          % \addplot[color=red,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/bn1_sqr.csv};
+          % \addlegendentry{do-2cpu}
+          % \addplot[color=green,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/do/bn2_mul.csv};
+          % \addlegendentry{do-4cpu}
+        \end{axis}
+      \end{tikzpicture}
+      \caption{Data Perkalian Panjang}
+      \label{fig:data_mul}
+    \end{figure}
+
+    \begin{figure}[h]
+      \centering
+      \begin{tikzpicture}
+          \begin{axis}[
+              x unit=Kbyte,
+              y SI prefix=milli,y unit=s,
+              xlabel={Panjang Data},
+              ylabel={Waktu}
+            ]
+          \addplot[color=orange,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/bn1_mul_recursive.csv};
+          \addlegendentry{local-1cpu}
+          \addplot[color=blue,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/bn2_mul_recursive.csv};
+          \addlegendentry{local-2cpu}
+          % \addplot[color=red,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/do/bn1_mul_recursive.csv};
+          % \addlegendentry{do-1cpu}
+          % \addplot[color=green,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/do/bn2_mul_recursive.csv};
+          % \addlegendentry{do-4cpu}
+        \end{axis}
+      \end{tikzpicture}
+      \caption{Data Perkalian Rekursif}
+      \label{fig:data_mul_recursive}
+    \end{figure}
+
+    \begin{figure}[h]
+      \centering
+      \begin{tikzpicture}
+          \begin{axis}[
+              x unit=Kbyte,
+              y SI prefix=milli,y unit=s,
+              xlabel={Panjang Data},
+              ylabel={Waktu}
+            ]
+          \addplot[color=orange, ] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/bn1_sqr.csv};
+          \addlegendentry{local-1cpu}
+          \addplot[color=blue,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/bn2_sqr.csv};
+          \addlegendentry{local-2cpu}
+          % \addplot[color=red,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/do/bn1_sqr.csv};
+          % \addlegendentry{do-1cpu}
+          % \addplot[color=green,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/do/bn2_sqr.csv};
+          % \addlegendentry{do-4cpu}
+        \end{axis}
+      \end{tikzpicture}
+      \caption{Data Perpangkatan Dua}
+      \label{fig:data_sqr}
+    \end{figure}
 
 
 
-      \subparagraph{Operasi Perkalian}
-      \begin{figure}[h]
-        \centering
-        \begin{tikzpicture}
-            \begin{axis}[
-                x unit=bit,
-                y SI prefix=micro,y unit=s,
-                xlabel={Panjang Data},
-                ylabel={Waktu}
-              ]
-            \addplot[color=gray, discard if not={opr}{mul}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/bn2_mul.csv};
-            \addlegendentry{local-1cpu}
-            \addplot[color=blue, discard if not={opr}{mul}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/bn1_mul.csv};
-            \addlegendentry{local-2cpu}
-            \addplot[color=red, discard if not={opr}{mul}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/do/bn1_mul.csv};
-            \addlegendentry{do-1cpu}
-            \addplot[color=green, discard if not={opr}{mul}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/do/bn2_mul.csv};
-            \addlegendentry{do-4cpu}
-          \end{axis}
-        \end{tikzpicture}
-        \caption{Data Perkalian}
-        \label{fig:data_mul}
-      \end{figure}
+    \subparagraph{Operasi Pembagian}
+    \begin{figure}[h]
+      \centering
+      \begin{tikzpicture}
+          \begin{axis}[
+              x unit=Kbyte,
+              y SI prefix=milli,y unit=s,
+              xlabel={Panjang Data},
+              ylabel={Waktu}
+            ]
+          \addplot[color=orange,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/bn1_div.csv};
+          \addlegendentry{local-1cpu}
+          \addplot[color=blue,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/bn2_div.csv};
+          \addlegendentry{local-2cpu}
+          % \addplot[color=red,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/do/bn1_div.csv};
+          % \addlegendentry{do-1cpu}
+          % \addplot[color=green,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/do/bn2_div.csv};
+          % \addlegendentry{do-4cpu}
+        \end{axis}
+      \end{tikzpicture}
+      \caption{Data Pembagian}
+      \label{fig:data_div}
+    \end{figure}
 
 
 
-      \subparagraph{Operasi Pembagian}
-      \begin{figure}[h]
-        \centering
-        \begin{tikzpicture}
-            \begin{axis}[
-                x unit=bit,
-                y SI prefix=micro,y unit=s,
-                xlabel={Panjang Data},
-                ylabel={Waktu}
-              ]
-            \addplot[color=gray, discard if not={opr}{div}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/bn2_div.csv};
-            \addlegendentry{local-1cpu}
-            \addplot[color=blue, discard if not={opr}{div}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/bn1_div.csv};
-            \addlegendentry{local-2cpu}
-            \addplot[color=red, discard if not={opr}{div}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/do/bn1_div.csv};
-            \addlegendentry{do-1cpu}
-            \addplot[color=green, discard if not={opr}{div}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/do/bn2_div.csv};
-            \addlegendentry{do-4cpu}
-          \end{axis}
-        \end{tikzpicture}
-        \caption{Data Pembagian}
-        \label{fig:data_div}
-      \end{figure}
+    \subparagraph{Operasi Perkalian Modular}
+    \begin{figure}[h]
+      \centering
+      \begin{tikzpicture}
+          \begin{axis}[
+              x unit=Kbyte,
+              y SI prefix=milli,y unit=s,
+              xlabel={Panjang Data},
+              ylabel={Waktu}
+            ]
+          \addplot[color=orange,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/bn1_modmul.csv};
+          \addlegendentry{local-1cpu}
+          \addplot[color=blue,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/bn2_modmul.csv};
+          \addlegendentry{local-2cpu}
+          % \addplot[color=red,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/do/bn1_modmul.csv};
+          % \addlegendentry{do-1cpu}
+          % \addplot[color=green,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/do/bn2_modmul.csv};
+          % \addlegendentry{do-4cpu}
+        \end{axis}
+      \end{tikzpicture}
+      \caption{Data Perkalian Modular}
+      \label{fig:data_modmul}
+    \end{figure}
 
 
-
-      \subparagraph{Operasi Perkalian Modular}
-      \begin{figure}[h]
-        \centering
-        \begin{tikzpicture}
-            \begin{axis}[
-                x unit=bit,
-                y SI prefix=micro,y unit=s,
-                xlabel={Panjang Data},
-                ylabel={Waktu}
-              ]
-            \addplot[color=gray, discard if not={opr}{modmul}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/bn2_modmul.csv};
-            \addlegendentry{local-1cpu}
-            \addplot[color=blue, discard if not={opr}{modmul}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/bn1_modmul.csv};
-            \addlegendentry{local-2cpu}
-            \addplot[color=red, discard if not={opr}{modmul}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/do/bn1_modmul.csv};
-            \addlegendentry{do-1cpu}
-            \addplot[color=green, discard if not={opr}{modmul}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/do/bn2_modmul.csv};
-            \addlegendentry{do-4cpu}
-          \end{axis}
-        \end{tikzpicture}
-        \caption{Data Perkalian Modular}
-        \label{fig:data_modmul}
-      \end{figure}
-
-
-      \subparagraph{Operasi Perpangkatan Modular}
-      \begin{figure}[h]
-        \centering
-        \begin{tikzpicture}
-            \begin{axis}[
-                x unit=bit,
-                y SI prefix=micro,y unit=s,
-                xlabel={Panjang Data},
-                ylabel={Waktu}
-              ]
-            \addplot[color=gray, discard if not={opr}{modexp}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/bn2_modexp.csv};
-            \addlegendentry{local-1cpu}
-            \addplot[color=blue, discard if not={opr}{modexp}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/bn1_modexp.csv};
-            \addlegendentry{local-2cpu}
-            \addplot[color=red, discard if not={opr}{modexp}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/do/bn1_modexp.csv};
-            \addlegendentry{do-1cpu}
-            \addplot[color=green, discard if not={opr}{modexp}] table [x=tc_num, y=time_avg, col sep=comma] {./resources/csv/do/bn2_modexp.csv};
-            \addlegendentry{do-4cpu}
-          \end{axis}
-        \end{tikzpicture}
-        \caption{Data Perpangkatan Modular}
-        \label{fig:data_modexp}
-      \end{figure}
+    \subparagraph{Operasi Perpangkatan Modular}
+    \begin{figure}[h]
+      \centering
+      \begin{tikzpicture}
+          \begin{axis}[
+              x unit=Kbyte,
+              y unit=s,
+              xlabel={Panjang Data},
+              ylabel={Waktu}
+            ]
+          \addplot[color=orange,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^6), col sep=comma] {./resources/csv/bn1_modexp.csv};
+          \addlegendentry{local-1cpu}
+          \addplot[color=blue,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^6), col sep=comma] {./resources/csv/bn2_modexp.csv};
+          \addlegendentry{local-2cpu}
+          % \addplot[color=red,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/do/bn1_modexp.csv};
+          % \addlegendentry{do-1cpu}
+          % \addplot[color=green,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/do/bn2_modexp.csv};
+          % \addlegendentry{do-4cpu}
+        \end{axis}
+      \end{tikzpicture}
+      \caption{Data Perpangkatan Modular}
+      \label{fig:data_modexp}
+    \end{figure}
 
       \subparagraph{Proses Pertukaran Kunci Diffie Hellman}
       \begin{figure}[h]

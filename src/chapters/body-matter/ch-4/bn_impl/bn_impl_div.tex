@@ -1,4 +1,6 @@
-\subsubsection{Submodul Pembagian}
+%!TEX root = ../../../../tugas-akhir.tex
+
+\subsubsection{Submodul Pembagian} \label{sec:impl_div}
   Submodul pembagian terdapat pada file |bn/bn_div.c|. Fungsi |BN_div()| merupakan implementasi algoritma pembagian panjang pada OpenSSL. Sesuai dengan penjelasan pada subbab \ref{sec:div_theory}, algoritma pembagian panjang membutuhkan divisor yang telah ternormalisasi. Proses normalisasi pada implementasi ini dilakukan dengan melakukan \textit{left shift} pada divisor sehingga bit paling signifikan yang dimiliki divisor bernilai 1. Proses normalisasi divisor dilakukan oleh fungsi |bn_left_align()|, sementara itu proses \textit{left shift} pada bilangan dibagi dilakukan oleh |bn_lshift_fixed_top()| yang terdapat pada submodul |bn_shift|.
   % \todo[inline]{cek lagi istilahnya, sesuaikan sama bab 2 (divisor, number, quotient, remainder)}
 

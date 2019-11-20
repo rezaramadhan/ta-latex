@@ -1,7 +1,7 @@
 %!TEX root = ../../../tugas-akhir.tex
 \section{Implementasi Algoritma Paralel pada Library big integer}
   \subsection{Lingkungan Implementasi} \label{sec:impl_env}
-    Sesuai dengan pertimbangan pada subbab \ref{sec:parallel_env}, implementasi algoritma paralel akan dilakukan dengan menggunakan pthread. Implementasi akan dilakukan menggunakan \textit{compiler} GCC versi 5.4.0 dan dijalankan pada sistem operasi Ubuntu 18.04 64-bit. Penggunaan TLS akan diuji pada penggunaan HTTPS pada web server yang diinstall pada sistem operasi. Web server yang digunakan adalah Apache2 dengan menggunakan modul tambahan mod\_ssl. Arsitektur sistem yang digunakan dapat dilihat pada Gambar \ref{fig:openssl_arch}
+    Sesuai dengan pertimbangan pada subbab \ref{sec:parallel_env}, kakas pemrograman paralel yang digunakan untuk implementasi algoritma paralel adalah pthread. Implementasi akan dilakukan menggunakan \textit{compiler} GCC versi 5.4.0 dan dijalankan pada sistem operasi Ubuntu 18.04 64-bit. Penggunaan TLS akan diuji pada HTTPS di sebuah web server yang di-\textit{install} pada sistem operasi. Web server yang digunakan adalah Apache2 dengan menggunakan modul mod\_ssl. Arsitektur sistem implementasi dapat dilihat pada Gambar \ref{fig:openssl_arch}
 
     \begin{figure}[h]
       \centering
@@ -11,7 +11,8 @@
     \end{figure}
 
     % Cek lagi jumlahnya
-    Secara default, jumlah maksimal thread maksimum yang akan digunakan oleh OpenSSL untuk menjalankan komputasi big integer secara paralel akan bergantung pada jumlah core yang terdapat pada lingkungan instalasi. Dalam aplikasi yang membutuhkan komputasi yang tinggi setiap thread akan berjalan secara terus menerus. Dengan demikian jumlah thread maksimum akan sama dengan jumlah aplikasi. Namun, aplikasi juga memiliki pilihan konfigurasi untuk menentukan jumlah thread maksimum yang dapat digunakan.
+    Jumlah thread yang berjalan pada OpenSSL paralel ditetapkan oleh nilai makro |NUM_THREAD|. Makro tersebut didefinisi pada file |bn_par.h| dan bernilai default 4. Nilai makro tersebut dapat diubah saat kompilasi \textit{source code} dengan menggunakan flag -D sesuai dengan kebutuhan aplikasi.
+
     % \todo{cite disini}
 
   \subsection{Batasan Implementasi}
@@ -22,7 +23,6 @@
       \item OPENSSL\_SMALL\_FOOTPRINT = false
       \item BN\_MUL\_COMBA = true
       \item BN\_RECURSION = true
-      \item BN\_CTX\_POOL\_SIZE = 16
     \end{enumerate}
     % \todo{masukin lampiran?}
     Konfigurasi makro tersebut digunakan dalam pemilihan dan manajemen struktur data yang digunakan serta pemilihan algoritma pada bagian tertentu. Sebagai contoh, algoritma yang digunakan dalam perkalian adalah algoritma karatsuba dan algoritma comba pada basis rekursif.
@@ -39,9 +39,9 @@
 
     Struktur \textit{source code} dapat dilihat pada Gambar \ref{fig:ossl_file_structure}. Direktori utama berisi pembagian dari fungsi aplikasi yang ada dalam OpenSSL. Beberapa fungsi tersebut adalah direktori |doc| yang berisi dokumentasi OpenSSL, |crypto| yang berisi library kriptografi, |ssl| yang berisi dari library komunikasi ssl, serta |test| yang berisi unit test yang dimiliki OpenSSL.
 
-    Direktori |crypto| berisi modul-modul yang membentuk libcrypto, dengan setiap modul terbentuk dalam sebuah direktori yang berbeda. Modul |bn| merupakan modul yang mengatasi perhitungan operasi aritmatika big integer. Selain itu, modul |dh| dan |rsa| merupakan modul yang menangani komputasi Diffie-Hellman dan RSA pada OpenSSL.
+    Direktori |crypto| berisi modul-modul yang membentuk libcrypto, dengan setiap modul tersimpan dalam sebuah direktori yang berbeda. Modul |bn| merupakan modul yang mengatasi perhitungan operasi aritmatika big integer. Selain itu, modul |dh| dan |rsa| merupakan modul yang menangani komputasi Diffie-Hellman dan RSA pada OpenSSL.
 
-    Modul |bn| memiliki beberapa submodul masing-masing merupakan file yang berbeda. Setiap submodul sendiri mengatasi fungsi yang terkait dengan submodul tersebut, ataupun operasi yang komputasinya mirip dengan submodul. Sebagai contoh, submodul |bn_add| merupakan submodul yang mengatasi operasi penjumlahan dan pengurangan pada big integer. Selain itu, submodul |bn_mul| merupakan submodul yang mengatasi operasi perkalian serta pemilihan algoritma perkalian yang digunakan dalam OpenSSL.
+    Modul |bn| memiliki beberapa submodul yang masing-masing terdiri dari sebuah file yang berbeda. Setiap submodul sendiri mengatasi fungsi yang terkait dengan submodul tersebut ataupun operasi yang komputasinya mirip dengan submodul. Sebagai contoh, submodul |bn_add| merupakan submodul yang mengatasi operasi penjumlahan dan pengurangan pada big integer. Selain itu, submodul |bn_mul| merupakan submodul yang mengatasi operasi perkalian serta pemilihan algoritma perkalian yang digunakan dalam OpenSSL.
 
     Direktori |test| dan |util| merupakan direktori yang digunakan dalam \textit{unit test} OpenSSL. Dalam direktori ini terdapat kasus uji dan script yang digunakan dalam unit test untuk setiap modul untuk melakukan test terhadap fungsionalitas OpenSSL. Penjelasan lebih jauh terhadap pengujian fungsionalitas OpenSSL dapat dilihat pada subbab \ref{sec:func_testing}
 
@@ -105,8 +105,8 @@ typedef struct bignum_ctx_stack {
 
     Fungsi yang menggunakan |BN_CTX| harus memanggil |BN_CTX_start()| sebelum penggunaan |BN_CTX| dan memanggil |BN_CTX_end()| setelah pemanggilan |BN_CTX|. Dua fungsi tersebut akan menyimpan dan menghitung jumlah BIGNUM yang didapat dari pemanggilan |BN_CTX_get()| pada fungsi tersebut.
 
-    \subsubsection{Struktur Data untuk Paralelisasi}
-    Terdapat beberapa struktur data tambahan yang dibuat untuk paralelisasi fungsi menggunakan pthread. Pemanggilan fungsi oleh pthread membutuhkan sebuah fungsi yang menerima satu argumen dengan tipe |void *|. Agar fungsi yang dijalankan secara paralel dapat mengolah lebih dari satu data, dibuat \textit{struct} khusus untuk setiap fungsi tersebut. Struktur data yang dibuat untuk digunakan oleh fungsi paralel dapat dilihat pada \textit{Source Code} \ref{code:parallel_struct}.
+    \subsubsection{Struktur Data Paralelisasi}
+    Terdapat beberapa struktur data tambahan yang dibuat untuk paralelisasi fungsi menggunakan pthread. Pemanggilan fungsi oleh pthread membutuhkan fungsi yang menerima satu argumen dengan tipe |void*|. Agar fungsi yang dijalankan secara paralel dapat mengolah lebih dari satu data, dibuat \textit{struct} khusus untuk setiap fungsi tersebut. Struktur data yang dibuat untuk digunakan oleh fungsi paralel dapat dilihat pada \textit{Source Code} \ref{code:parallel_struct}.
 
     \begin{lstlisting}[caption={Struktur Data Paralelisasi}, label={code:parallel_struct}]
 typedef struct _add_sub_args_st {
@@ -114,7 +114,6 @@ typedef struct _add_sub_args_st {
     const BN_ULONG *a;
     const BN_ULONG *b;
     int n;
-    int id;
     char type;
     BN_ULONG carry;
 } add_sub_args;
@@ -122,9 +121,10 @@ typedef struct _add_sub_args_st {
 typedef struct _mul_normal_args_st {
     BN_ULONG *r;
     const BN_ULONG *a;
-    BN_ULONG w;
-    int n;
-    BN_ULONG carry;
+    const BN_ULONG *b;
+    int na;
+    int nb;
+    int nr;
 } mul_normal_args;
 
 typedef struct _recursive_args_st {
@@ -139,9 +139,33 @@ typedef struct _recursive_args_st {
 } recursive_args;
     \end{lstlisting}
 
+    Setiap data dalam \textit{struct} tersebut merupakan argumen yang dibutuhkan oleh fungsi operasi aritmatika tertentu. Struktur |add_sub_args| merupakan struct yang digunakan untuk pemanggilan fungsi penjumlahan dan pengurangan secara paralel. Argumen yang dibutuhkan oleh penjumlahan dan pengurangan relatif sama, yaitu array of |BN_ULONG| a, b, dan r, bilangan bulat n yang merupakan panjang array, nilai carry hasil operasi fungsi, serta karakter type yang menentukan apakah struktur ini digunakan untuk penjumlahan atau pengurangan.
+
+    Struktur |mul_normal_args| digunakan dalam paralelisasi perkalian panjang. Struktur ini digunakan oleh fungsi |bn_mul_normal()| pada submodul perkalian. Sepeerti penjumlahan, array of |BN_ULONG| a, b, dan r merupakan array yang merepresentasikan sebuah |BIGNUM|. Perbedaan dari \textit{struct} ini dari |add_sub_args| terdapat bahwa panjang array a dan b dapat berbeda, dengan panjang array r adalah penjumlahan dari panjang array a dan panjang array b.
+
+    Struktur |recursive_args| adalah struktur yang digunakan untuk paralelisasi perkalian karatsuba yang dilakukan oleh fungsi |bn_mul_recursive()| dan |bn_mul_part_recursive()|. Selain argumen yang dibutuhkan oleh kedua fungsi tersebut, |recursive_args| juga menyimpan sebuah \textit{pointer to integer} |used| yang merupakan jumlah thread yang telah dipanggil selama fungsi tersebut dijalankan. Jumlah thread perlu disimpan karena pemanggilan fungsi secara rekursif akan dihentikan ketika jumlah thread sudah melebihi batas tertentu. Jumlah thread yang berlebihan dapat menurunkan kinerja karena mungkin terjadinya \textit{false sharing} pada CPU.
+
+    Setiap fungsi yang disebutkan pada subbab ini akan dijelaskan lebih lanjut pada subbab \ref{sec:impl_add} hingga \ref{sec:impl_div}.
+
   \subsection{Implementasi Modul Operasi Aritmatika}
+  \begin{table}[h]
+      \small
+      \caption{Keterkaitan Pseudocode dan Implementasi}
+      \label{tab:pseudocode_v_impl}
+      \begin{tabular}{C{2cm}C{2cm}C{2.8cm}C{2cm}C{3.5cm}}
+          \toprule
+          \multirow{2}{*}{\bfseries \shortstack{Operasi\\Aritmatika}} & \multirow{2}{*}{\bfseries \shortstack{Pseudocode\\Paralel}} & \multicolumn{3}{c}{\textbf{Implementasi}} \\ \cmidrule(l){3-5}
+                                              &                                     & \textbf{Submodul}                     & \textbf{Nama File}            & \textbf{Fungsi}  \\ \midrule
+          Penjumlahan                         & \ref{alg:parallel_add}              & Penjumlahan \& Pengurangan   & {\scriptsize \ttfamily bn\_add.c}              & {\scriptsize \ttfamily bn\_uadd()}                   \\
+          Pengurangan                         & Modifikasi \ref{alg:parallel_add}   & Penjumlahan \& Pengurangan   & {\scriptsize \ttfamily bn\_add.c}              & {\scriptsize \ttfamily bn\_usub()}                   \\
+          \multirow{2}{*}{Perkalian}          & \ref{alg:mul_parallel}              & Asm                          & {\scriptsize \ttfamily bn\_asm.c}              & {\scriptsize \ttfamily bn\_mul\_add\_words(), bn\_mul\_words()} \\
+                                              & \ref{alg:parallel_karatsuba}        & Perkalian                    & {\scriptsize \ttfamily bn\_mul.c}              & {\scriptsize \ttfamily bn\_mul\_recursive(), bn\_mul\_part\_recursive()}        \\ \bottomrule
+      \end{tabular}
+  \end{table}
+
+    Implementasi pseudocode paralel dari subbab \ref{sec:parallelization} untuk operasi aritmatika dilakukan pada modul |bn| di OpenSSL. Tabel \ref{tab:pseudocode_v_impl} menggambarkan keterkaitan antara pseudocode yang ada dan implementasinya pada sebuah modul dan fungsi tertentu. Penjelasan lebih lanjut mengenai implementasi pada setiap submodul tersebut dijelaskan pada subbab \ref{sec:impl_add} hingga \ref{sec:impl_div}
 
     \input{chapters/body-matter/ch-4/bn_impl/bn_impl_add.tex}
     \input{chapters/body-matter/ch-4/bn_impl/bn_impl_mul.tex}
     \input{chapters/body-matter/ch-4/bn_impl/bn_impl_div.tex}
-    \input{chapters/body-matter/ch-4/bn_impl/bn_impl_asm.tex}
+    % \input{chapters/body-matter/ch-4/bn_impl/bn_impl_asm.tex}

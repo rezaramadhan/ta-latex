@@ -1,34 +1,58 @@
-\subsubsection{Submodul Penjumlahan dan Pengurangan}
-  Submodul penjumlahan dan pengurangan terdapat pada file |bn/BN_add.c|. Fungsi |BN_add()| pada adalah melakukan pengolahan data pada a dan b seperti mengecek negatif dan mengecek panjang masing-masing array. Jika a dan b memiliki tanda yang berbeda, akan dipanggil fungsi |BN_usub()| selain itu akan dipanggil fungsi |BN_uadd()|.
+%!TEX root = ../../../../tugas-akhir.tex
+
+\subsubsection{Submodul Penjumlahan dan Pengurangan} \label{sec:impl_add}
+
+  \begin{table}[!h]
+     \small
+  \caption{Fungsi dalam submodul penjumlahan dan pengurangan}
+  \label{tab:bn_add_func}
+  \begin{tabular}{R{2.8cm}L{10.5cm}}
+    \toprule
+    \textbf{Header Fungsi} & |int BN_add(BIGNUM *r, const BIGNUM *a, const BIGNUM *b)|    \\ \midrule
+    \textit{Deskripsi}     & Menjumlahkan a dan b dan menyimpan hasilnya pada r $(a+b=r)$ \\
+    \textit{Prekondisi}    & -                                                            \\
+    \textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
+    \\ \bottomrule
+    \textbf{Header Fungsi} & |int BN_sub(BIGNUM *r, const BIGNUM *a, const BIGNUM *b)|    \\ \midrule
+    \textit{Deskripsi}     & Mengurangi b dari a dan menyimpan hasilnya pada r $(a-b=r)$  \\
+    \textit{Prekondisi}    & -                                                            \\
+    \textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
+    \\ \bottomrule
+    \textbf{Header Fungsi} & |int BN_uadd(BIGNUM *r, const BIGNUM *a, const BIGNUM *b)|   \\ \midrule
+    \textit{Deskripsi}     & Menjumlahkan a dan b dan menyimpan hasilnya pada r $(a+b=r)$ \\
+    \textit{Prekondisi}    & $a \geq 0$, $ b \geq 0$                                      \\
+    \textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
+    \\ \bottomrule
+    \textbf{Header Fungsi} & |int BN_usub(BIGNUM *r, const BIGNUM *a, const BIGNUM *b)|   \\ \midrule
+    \textit{Deskripsi}     & Mengurangi b dari a dan menyimpan hasilnya pada r $(a-b=r)$  \\
+    \textit{Prekondisi}    & $a \geq 0$, $b \geq 0$, $a \geq b$                           \\
+    \textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
+    \\ \bottomrule
+  \end{tabular}
+\end{table}
+
+  \begin{table}[!h]
+     \small
+  \caption{Fungsi tambahan untuk paralelisasi penjumlahan dan pengurangan}
+  \label{tab:bn_add_func_par}
+  \begin{tabular}{R{2.8cm}L{10.5cm}}
+    \toprule
+    \textbf{Header Fungsi} & |void *bn_add_sub_words_thread(void *ptr)|    \\ \midrule
+    \textit{Deskripsi}     & Fungsi untuk pemanggilan thread baru oleh pthread. \\
+    \textit{Prekondisi}    & -                                                            \\ \bottomrule
+    \textbf{Header Fungsi} & |void bn_resolve_carry(BN_ULONG carry, add_sub_args* arg)|    \\ \midrule
+    \textit{Deskripsi}     & Menjumlahkan nilai carry yang didapat dari thread[i] ke array of |BN_ULONG| hasil penjumlahan di thread[i+1] \\
+    \textit{Prekondisi}    & -                                                            \\ \bottomrule
+    \textbf{Header Fungsi} & |void bn_resolve_borrow(BN_ULONG borrow, add_sub_args* arg)|    \\ \midrule
+    \textit{Deskripsi}     & Menjumlahkan nilai borrow yang didapat dari thread[i] ke array of |BN_ULONG| hasil penjumlahan di thread[i+1] \\
+    \textit{Prekondisi}    & -                                                            \\ \bottomrule
+  \end{tabular}
+\end{table}
+
+  Submodul penjumlahan dan pengurangan terdapat pada file |bn/BN_add.c|. Fungsi |BN_add()| pada adalah melakukan pengolahan data pada a dan b seperti mengecek kenegatifan dan mengecek panjang masing-masing array. Jika a dan b memiliki tanda yang berbeda, akan dipanggil fungsi |BN_usub()| selain itu akan dipanggil fungsi |BN_uadd()|.
 
   |BN_uadd()| dan |BN_usub()| melakukan pengolahan data pada a dan b sehingga terdapat dua representasi array yang dapat diolah oleh |BN_add_words()| dan |BN_sub_words()|. Daftar fungsi yang terdapat pada submodul penjumlahan dan pengurangan dapat dilihat pada Tabel \ref{tab:bn_add_func}.
 
-  \begin{table}[!h]
-    \caption{Fungsi dalam submodul penjumlahan dan pengurangan}
-    \label{tab:bn_add_func}
-    \begin{tabular}{R{2.8cm}L{10.5cm}}
-      \toprule
-      \textbf{Header Fungsi} & |int BN_add(BIGNUM *r, const BIGNUM *a, const BIGNUM *b)|    \\ \midrule
-      \textit{Deskripsi}     & Menjumlahkan a dan b dan menyimpan hasilnya pada r $(a+b=r)$ \\
-      \textit{Prekondisi}    & -                                                            \\
-      \textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
-      \\ \bottomrule
-      \textbf{Header Fungsi} & |int BN_sub(BIGNUM *r, const BIGNUM *a, const BIGNUM *b)|    \\ \midrule
-      \textit{Deskripsi}     & Mengurangi b dari a dan menyimpan hasilnya pada r $(a-b=r)$  \\
-      \textit{Prekondisi}    & -                                                            \\
-      \textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
-      \\ \bottomrule
-      \textbf{Header Fungsi} & |int BN_uadd(BIGNUM *r, const BIGNUM *a, const BIGNUM *b)|   \\ \midrule
-      \textit{Deskripsi}     & Menjumlahkan a dan b dan menyimpan hasilnya pada r $(a+b=r)$ \\
-      \textit{Prekondisi}    & $a \geq 0$, $ b \geq 0$                                      \\
-      \textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
-      \\ \bottomrule
-      \textbf{Header Fungsi} & |int BN_usub(BIGNUM *r, const BIGNUM *a, const BIGNUM *b)|   \\ \midrule
-      \textit{Deskripsi}     & Mengurangi b dari a dan menyimpan hasilnya pada r $(a-b=r)$  \\
-      \textit{Prekondisi}    & $a \geq 0$, $b \geq 0$, $a \geq b$                           \\
-      \textit{Return Value}  & 1 jika fungsi berhasil dilakukan dan 0 jika tidak
-      \\ \bottomrule
-    \end{tabular}
-  \end{table}
+  |BN_add_words()| dan |BN_sub_words()| bukan merupakan bagian dari submodul ini, namun dalam submodul asm. Dua fungsi tersebut menerima masukan dua array dengan ukuran yang sama dan menjumlahkannya secara sekuensial.
 
-  |BN_add_words()| dan |BN_sub_words()| bukan merupakan bagian dari submodul ini, namun dalam submodul asm. Submodul asm dijelaskan lebih lanjut pada subbab \ref{sec:bn_asm}. Dua fungsi tersebut menerima masukan dua array dengan ukuran yang sama dan menjumlahkannya secara sekuensial. Penerapan algoritma paralel \ref{alg:add} pada OpenSSL terdapat pada fungsi ini.
+  Implementasi pseudocode \ref{alg:parallel_add} terdapat pada submodul ini. Implementasi tersebut terdapat pada fungsi |BN_uadd()| dan |BN_usub()|. Dalam impementasi, dibuat tiga fungsi tambahan, yaitu |bn_add_sub_words_thread()|, |bn_resolve_carry()|, serta |bn_resolve_borrow()|. Penjelasan lebih lanjut mengenai tiga fungsi ini dapat dilihat pada tabel \ref{tab:bn_add_func_par}. Perbedaan source code asli dengan source code yang telah dimodifikasi dapat dilihat pada Lampiran \ref{sec:code_modification}.
