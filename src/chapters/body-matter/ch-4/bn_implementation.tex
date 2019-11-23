@@ -158,7 +158,7 @@ typedef struct _recursive_args_st {
                                               &                                     & \textbf{Submodul}                     & \textbf{Nama File}            & \textbf{Fungsi}  \\ \midrule
           Penjumlahan                         & \ref{alg:parallel_add}              & Penjumlahan \& Pengurangan   & {\scriptsize \ttfamily bn\_add.c}              & {\scriptsize \ttfamily bn\_uadd()}                   \\
           Pengurangan                         & Modifikasi \ref{alg:parallel_add}   & Penjumlahan \& Pengurangan   & {\scriptsize \ttfamily bn\_add.c}              & {\scriptsize \ttfamily bn\_usub()}                   \\
-          \multirow{2}{*}{Perkalian}          & \ref{alg:mul_parallel}              & Asm                          & {\scriptsize \ttfamily bn\_asm.c}              & {\scriptsize \ttfamily bn\_mul\_add\_words(), bn\_mul\_words()} \\
+          \multirow{2}{*}{Perkalian}          & \ref{alg:mul_parallel}              & Perkalian                    & {\scriptsize \ttfamily bn\_mul.c}              & {\scriptsize \ttfamily bn\_mul\_normal()} \\
                                               & \ref{alg:parallel_karatsuba}        & Perkalian                    & {\scriptsize \ttfamily bn\_mul.c}              & {\scriptsize \ttfamily bn\_mul\_recursive(), bn\_mul\_part\_recursive()}        \\ \bottomrule
       \end{tabular}
   \end{table}

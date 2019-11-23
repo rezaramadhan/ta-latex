@@ -60,26 +60,7 @@
       Pengujian kinerja dibagi menjadi dua bagian besar. Bagian pertama adalah pengujian kinerja terhadap setiap fungsi yang ada dalam library big integer, sementara bagian kedua adalah pengujian kinerja terhadap penggunaan library dalam website yang menggunakan HTTPS.
 
       \subparagraph{Pengujian Library}
-      Pengujian library dilakukan terhadap beberapa fungsi dalam libcrypto, yaitu beberapa fungsi dalam modul |bn| serta modul |rsa| dan |dh| yang menggunakan operasi aritmatika big integer dalam modul crypto. Setiap pengujian dilakukan terhadap variabel yang berbeda. Sebagai contoh, pengujian proses enkripsi RSA dilakukan terhadap variabel panjang pesan dan panjang kunci yang berbeda. Daftar fungsi serta variabel yang digunakan dapat dilihat pada Tabel \ref{tab:lib_testing}.
-
-      \begin{table}[]
-        \centering
-        \caption{Daftar Fungsi yang Diuji dan Variabel Pengujian}
-        \label{tab:lib_testing}
-        \begin{tabular}{l c}
-          \toprule
-          \multicolumn{1}{c}{\textbf{Fungsi/Operasi/Proses}} & \textbf{Variabel Pengujian} \\ \midrule
-Penjumlahan dan pengurangan & \multirow{6}{*}{Panjang operand (bit)}          \\
-Perkalian                   &                                                 \\
-Pembagian                   &                                                 \\
-Perpangkatan                &                                                 \\
-Perkalian modular           &                                                 \\
-Pembagian modular           &                                                 \\
-Pertukaran kunci DH          & Panjang kunci (bit)                             \\
-Pembangkitan kunci RSA       & Panjang kunci (bit), nilai e                    \\
-Perkalian RSA                & Panjang kunci (bit), panjang pesan (bit)        \\ \bottomrule
-        \end{tabular}
-      \end{table}
+      Pengujian library dilakukan terhadap beberapa fungsi dalam libcrypto, yaitu beberapa fungsi dalam modul |bn| serta modul |rsa| dan |dh| yang menggunakan operasi aritmatika big integer dalam modul crypto. Setiap pengujian dilakukan terhadap satu variabel yang berbeda, variabel tersebut dapat dilihat pada grafik yang ada.
 
       \subparagraph{Pengujian HTTPS}
       Pengujian HTTPS dilakukan dengan menjalankan ApacheBench pada node lab dengan tujuan web yang dicek test01, test16, dan test32. ApacheBench menghasilkan beberapa data, namun kita hanya peduli pada data berikut.
@@ -110,18 +91,19 @@ Perkalian RSA                & Panjang kunci (bit), panjang pesan (bit)        \
           \addlegendentry{local-1cpu}
           \addplot[color=blue,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/bn2_add.csv};
           \addlegendentry{local-2cpu}
-          % \addplot[color=red,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/do/bn1_add.csv};
+          % \addplot[color=red,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/do/bn1b_add.csv};
           % \addlegendentry{do-1cpu}
-          % \addplot[color=green,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/do/bn2_add.csv};
+          % \addplot[color=green,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/do/bn2b_add.csv};
           % \addlegendentry{do-4cpu}
         \end{axis}
       \end{tikzpicture}
       \caption{Data Penjumlahan}
       \label{fig:data_add}
     \end{figure}
-    \subparagraph{Operasi Pengurangan}
 
+    Grafik \ref{fig:data_add} menggambarkan hasil pengujian untuk operasi penjumlahan. Tidak dilakukan pengujian untuk operasi pengurangan karena grafik yang dihasilkan akan sama dengan operasi penjumlahan. Pada pengujian ini dilakukan  seratus penjumlahan BIGNUM $a + b$ dengan panjang yang diubah dari 2KByte hingga 20KByte dengan jarak antar data 2KByte.
 
+    Grafik yang dihasilkan menunjukkan waktu yang diperlukan merupakan fungsi linear dari panjang data. Hal ini sesuai dengan fungsi penjumlahan yang memiliki kompleksitas $O(n)$. Hasil paralelisasi yang didapat tidak bagus. Overhead yang didapat dari pembuatan thread masih lebih besar dibandingkan dengan percepatan yang didapat, bahkan pada panjang data 20KByte. Hal ini terjadi karena operasi yang terdapat pada operasi ini hanyalah operasi penjumlahan saja.
 
     \subparagraph{Operasi Perkalian}
     \begin{figure}[h]
@@ -133,13 +115,13 @@ Perkalian RSA                & Panjang kunci (bit), panjang pesan (bit)        \
               xlabel={Panjang Data},
               ylabel={Waktu}
             ]
-          \addplot[color=orange,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/bn1_mul.csv};
+          \addplot[color=orange,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/bn1b_mul.csv};
           \addlegendentry{local-1cpu}
-          \addplot[color=blue,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/bn2_mul.csv};
+          \addplot[color=blue,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/bn2b_mul.csv};
           \addlegendentry{local-2cpu}
-          % \addplot[color=red,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/bn1_sqr.csv};
+          % \addplot[color=red,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/bn1b_sqr.csv};
           % \addlegendentry{do-2cpu}
-          % \addplot[color=green,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/do/bn2_mul.csv};
+          % \addplot[color=green,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/do/bn2b_mul.csv};
           % \addlegendentry{do-4cpu}
         \end{axis}
       \end{tikzpicture}
@@ -147,28 +129,9 @@ Perkalian RSA                & Panjang kunci (bit), panjang pesan (bit)        \
       \label{fig:data_mul}
     \end{figure}
 
-    \begin{figure}[h]
-      \centering
-      \begin{tikzpicture}
-          \begin{axis}[
-              x unit=Kbyte,
-              y SI prefix=milli,y unit=s,
-              xlabel={Panjang Data},
-              ylabel={Waktu}
-            ]
-          \addplot[color=orange,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/bn1_mul_recursive.csv};
-          \addlegendentry{local-1cpu}
-          \addplot[color=blue,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/bn2_mul_recursive.csv};
-          \addlegendentry{local-2cpu}
-          % \addplot[color=red,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/do/bn1_mul_recursive.csv};
-          % \addlegendentry{do-1cpu}
-          % \addplot[color=green,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/do/bn2_mul_recursive.csv};
-          % \addlegendentry{do-4cpu}
-        \end{axis}
-      \end{tikzpicture}
-      \caption{Data Perkalian Rekursif}
-      \label{fig:data_mul_recursive}
-    \end{figure}
+    Grafik \ref{fig:data_mul} menggambarkan hasil pengujian untuk operasi perkalian dengan algoritma perkalian panjang. Pada pengujian ini dilakukan seratus perkalian BIGNUM $a * b$ dengan panjang yang diubah dari 64Byte hingga 6,4KByte dengan jarak antar data 64Byte.
+
+    Operasi perkalian panjang memiliki kompleksitas $O(n^2)$, hal ini terlihat dari grafik bahwa fungsi waktu merupakan fungsi kuadratik terhadap panjang data. Terlihat pada grafik bahwa fungsi dengan paralelisasi awalnya memiliki waktu yang lebih lambat dibandingkan fungsi awal. Pada panjang data 1KByte, fungsi paralel sudah mulai memberikan hasil yang lebih cepat dibandingkan dengan data awal. Waktu yang dihasilkan oleh fungsi paralel lebih tidak stabil dibandingkan dengan fungsi non paralel, hal ini terjadi karena perlunya dilakukan alokasi memori tambahan untuk setiap thread yang dibuat, sementara itu alokasi memori tidak memiliki waktu eksekusi yang konsisten.
 
     \begin{figure}[h]
       \centering
@@ -179,13 +142,43 @@ Perkalian RSA                & Panjang kunci (bit), panjang pesan (bit)        \
               xlabel={Panjang Data},
               ylabel={Waktu}
             ]
-          \addplot[color=orange, ] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/bn1_sqr.csv};
+          \addplot[color=orange,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/bn1b_mul_recursive.csv};
           \addlegendentry{local-1cpu}
-          \addplot[color=blue,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/bn2_sqr.csv};
+          \addplot[color=blue,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/bn2b_mul_recursive.csv};
           \addlegendentry{local-2cpu}
-          % \addplot[color=red,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/do/bn1_sqr.csv};
+          % \addplot[color=red,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/do/bn1b_mul_recursive.csv};
           % \addlegendentry{do-1cpu}
-          % \addplot[color=green,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/do/bn2_sqr.csv};
+          % \addplot[color=green,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/do/bn2b_mul_recursive.csv};
+          % \addlegendentry{do-4cpu}
+        \end{axis}
+      \end{tikzpicture}
+      \caption{Data Perkalian Karatsuba}
+      \label{fig:data_mul_recursive}
+    \end{figure}
+
+    Grafik \ref{fig:data_mul_recursive} menggambarkan hasil pengujian untuk operasi perkalian dengan algoritma perkalian panjang. Pada pengujian ini dilakukan seratus perkalian BIGNUM $a * b$ dengan panjang yang diubah dari 64Byte hingga 6,4KByte dengan jarak antar data 64Byte.
+
+    Seperti data perkalian panjang, data fungsi paralel tidak stabil karena dilakukan alokasi memori untuk setiap kali pemanggilan thread. Fungsi perkalian karatsuba paralel mulai lebih cepat dibandingkan dengan fungsi non-paralel mulai dari panjang data 2KB. Hal ini terjadi karena overhead pemanggilan thread secara rekursif lebih tinggi dibandingkan dengan pemanggilan thread biasa.
+
+    \subparagraph{Operasi Perpangkatan Dua}
+
+
+    \begin{figure}[h]
+      \centering
+      \begin{tikzpicture}
+          \begin{axis}[
+              x unit=Kbyte,
+              y SI prefix=milli,y unit=s,
+              xlabel={Panjang Data},
+              ylabel={Waktu}
+            ]
+          \addplot[color=orange, ] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/bn1b_sqr.csv};
+          \addlegendentry{local-1cpu}
+          \addplot[color=blue,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/bn2b_sqr.csv};
+          \addlegendentry{local-2cpu}
+          % \addplot[color=red,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/do/bn1b_sqr.csv};
+          % \addlegendentry{do-1cpu}
+          % \addplot[color=green,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/do/bn2b_sqr.csv};
           % \addlegendentry{do-4cpu}
         \end{axis}
       \end{tikzpicture}
@@ -193,33 +186,9 @@ Perkalian RSA                & Panjang kunci (bit), panjang pesan (bit)        \
       \label{fig:data_sqr}
     \end{figure}
 
+    Grafik \ref{fig:data_sqr} menggambarkan hasil pengujian untuk operasi perkalian dengan algoritma perkalian panjang. Pada pengujian ini dilakukan seratus perpangkatan dua BIGNUM $a^2$ dengan panjang yang diubah dari 64Byte hingga 6,4KByte dengan jarak antar data 64Byte.
 
-
-    \subparagraph{Operasi Pembagian}
-    \begin{figure}[h]
-      \centering
-      \begin{tikzpicture}
-          \begin{axis}[
-              x unit=Kbyte,
-              y SI prefix=milli,y unit=s,
-              xlabel={Panjang Data},
-              ylabel={Waktu}
-            ]
-          \addplot[color=orange,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/bn1_div.csv};
-          \addlegendentry{local-1cpu}
-          \addplot[color=blue,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/bn2_div.csv};
-          \addlegendentry{local-2cpu}
-          % \addplot[color=red,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/do/bn1_div.csv};
-          % \addlegendentry{do-1cpu}
-          % \addplot[color=green,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/do/bn2_div.csv};
-          % \addlegendentry{do-4cpu}
-        \end{axis}
-      \end{tikzpicture}
-      \caption{Data Pembagian}
-      \label{fig:data_div}
-    \end{figure}
-
-
+    Tidak dilakukan paralelisasi khusus untuk operasi ini, namun penulis menemukan bug pada fungsi perpangkatan dua di OpenSSL. Pada fungsi awalnya, hanya dilakukan perkalian karatsuba hanya pada bilangan yang memiliki panjang bilangan pangkat dua. Selain itu akan dilakukan perkalian panjang yang dimodifikasi untuk perpangkatan dua. Karena perkalian karatsuba lebih efektif, maka penulis mengubah fungsi perpangkatan dua untuk memanggil fungsi perkalian karatsuba |bn1_mul_recursive()|. Karena itulah grafik yang didapat mirip dengan hasil perkalian karatsuba pada grafik \ref{fig:data_mul_recursive}.
 
     \subparagraph{Operasi Perkalian Modular}
     \begin{figure}[h]
@@ -231,19 +200,23 @@ Perkalian RSA                & Panjang kunci (bit), panjang pesan (bit)        \
               xlabel={Panjang Data},
               ylabel={Waktu}
             ]
-          \addplot[color=orange,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/bn1_modmul.csv};
+          \addplot[color=orange,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/bn1b_modmul.csv};
           \addlegendentry{local-1cpu}
-          \addplot[color=blue,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/bn2_modmul.csv};
+          \addplot[color=blue,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/bn2b_modmul.csv};
           \addlegendentry{local-2cpu}
-          % \addplot[color=red,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/do/bn1_modmul.csv};
+          % \addplot[color=red,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/do/bn1b_modmul.csv};
           % \addlegendentry{do-1cpu}
-          % \addplot[color=green,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/do/bn2_modmul.csv};
+          % \addplot[color=green,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/do/bn2b_modmul.csv};
           % \addlegendentry{do-4cpu}
         \end{axis}
       \end{tikzpicture}
       \caption{Data Perkalian Modular}
       \label{fig:data_modmul}
     \end{figure}
+
+    Grafik \ref{fig:data_modmul} menggambarkan hasil pengujian untuk operasi perkalian dengan algoritma perkalian panjang. Pada pengujian ini dilakukan seratus perkalian modular BIGNUM $a*b \mod m$ dengan panjang $a$ dan $b$ yang diubah dari 64Byte hingga 6,4KByte dengan jarak antar data 64Byte.
+
+    Perkalian modular $a*b \mod m$ dilakukan dengan melakukan perkalian karatsuba terhadap $a$ dan $b$, kemudian melakukan pembagian hasil perkalian tersebut pada $m$ dan mengambil sisanya. Karena itulah grafik yang didapat mirip dengan grafik perkalian karatsuba. Mirip dengan pengujian sebelumnya, fungsi paralel mulai lebih cepat pada panjang data 2KByte.
 
 
     \subparagraph{Operasi Perpangkatan Modular}
@@ -256,19 +229,21 @@ Perkalian RSA                & Panjang kunci (bit), panjang pesan (bit)        \
               xlabel={Panjang Data},
               ylabel={Waktu}
             ]
-          \addplot[color=orange,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^6), col sep=comma] {./resources/csv/bn1_modexp.csv};
+          \addplot[color=orange,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^6), col sep=comma] {./resources/csv/bn1b_modexp.csv};
           \addlegendentry{local-1cpu}
-          \addplot[color=blue,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^6), col sep=comma] {./resources/csv/bn2_modexp.csv};
+          \addplot[color=blue,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^6), col sep=comma] {./resources/csv/bn2b_modexp.csv};
           \addlegendentry{local-2cpu}
-          % \addplot[color=red,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/do/bn1_modexp.csv};
+          % \addplot[color=red,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/do/bn1b_modexp.csv};
           % \addlegendentry{do-1cpu}
-          % \addplot[color=green,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/do/bn2_modexp.csv};
+          % \addplot[color=green,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^3), col sep=comma] {./resources/csv/do/bn2b_modexp.csv};
           % \addlegendentry{do-4cpu}
         \end{axis}
       \end{tikzpicture}
       \caption{Data Perpangkatan Modular}
       \label{fig:data_modexp}
     \end{figure}
+
+    Grafik \ref{fig:data_modmul} menggambarkan hasil pengujian untuk operasi perkalian dengan algoritma perkalian panjang. Pada pengujian ini dilakukan seratus perpangkatan modular BIGNUM $a^p \mod m$ dengan panjang yang diubah dari 400Byte hingga 6,4KByte dengan jarak antar data 16Byte.
 
       \subparagraph{Proses Pertukaran Kunci Diffie Hellman}
       \begin{figure}[h]
