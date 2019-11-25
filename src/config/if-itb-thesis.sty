@@ -57,6 +57,8 @@
 %===============================================================================
 % Required Package
 \usepackage{titlesec}
+\usepackage{titletoc}
+
 
 % Chapter style
 % \chapterfont{\centering \large}
@@ -86,52 +88,62 @@
 
 
 
+
 %===============================================================================
-% titletoc Configuration
+% listing (code) Configuration
 %===============================================================================
-\usepackage{titletoc}
+% Required package
+\usepackage{listings}
+
+% Create config for line number format
+\makeatletter
+\def\lst@numbersymbol{}
+\lst@Key{numbersymbol}{}{\def\lst@numbersymbol{#1}}
+\lst@Key{numbers}{none}{%
+    \let\lst@PlaceNumber\@empty
+    \lstKV@SwitchCases{#1}%
+    {none&\\%
+     left&\def\lst@PlaceNumber{\llap{\normalfont
+                \lst@numberstyle{\thelstnumber\lst@numbersymbol}\kern\lst@numbersep}}\\%
+     right&\def\lst@PlaceNumber{\rlap{\normalfont
+                \kern\linewidth \kern\lst@numbersep
+                \lst@numberstyle{\lst@numbersymbol\thelstnumber}}}%
+    }{\PackageError{Listings}{Numbers #1 unknown}\@ehc}}
+\makeatother
+
+% Change 'Listing' -> 'Source Code'
+\renewcommand{\lstlistingname}{\textit{Source Code}}
+% 'List of Listing' -> 'Daftar Source Code'
+\renewcommand{\lstlistlistingname}{\MakeUppercase{Daftar \lstlistingname}}
+
+% listing Style
+\lstset{
+    float=tp,
+    floatplacement=tbp,
+    abovecaptionskip=0pt,
+    belowcaptionskip=10pt,
+    breaklines=true,
+    breakatwhitespace=false,
+    frame=single,
+    xleftmargin=2em,
+    framexleftmargin=1.5em,
+    numbersep=1.5em,
+    numbers=left,
+    numbersymbol=:,
+    numberstyle=\tiny\color{gray!75!black},
+    stepnumber=1,
+    language=C,
+    basicstyle=\linespread{1.15}\footnotesize\ttfamily\color{black},
+    keywordstyle=\bfseries\color{green!40!black},
+    commentstyle=\itshape\color{purple!40!black},
+    stringstyle=\color{orange},
+}
+\lstMakeShortInline[columns=fixed]|                 % Inline listing
 
 
-\renewcommand{\contentsname}{DAFTAR ISI}
-\renewcommand{\listfigurename}{DAFTAR GAMBAR}
-\renewcommand{\figurename}{Gambar}
-\renewcommand{\tablename}{Tabel}
 
-\titlecontents{chapter}[0pt]
-              {\bfseries}
-              {BAB \hspace*{1.8em} \contentslabel{2em}}{}
-              {\titlerule*[0.35pc]{.}\contentspage}
 
-\titlecontents{section}[3em] % ie, 1.5em (chapter) + 2.3em
-              {}
-              {\contentslabel{2.3em}}{}
-              {\titlerule*[0.35pc]{.}\contentspage}
-\titlecontents{subsection}[6em] % ie, 1.5em (chapter) + 2.3em
-              {}
-              {\contentslabel{2.9em}}{}
-              {\titlerule*[0.35pc]{.}\contentspage}
-\titlecontents{subsubsection}[9em] % ie, 1.5em (chapter) + 2.3em
-              {}
-              {\contentslabel{3.6em}}{}
-              {\titlerule*[0.35pc]{.}\contentspage}
 
-% Appendices
-\titlecontents{paragraph}[0em] % ie, 1.5em (chapter) + 2.3em
-              {}
-              {Lampiran \hspace*{1.6em} \contentslabel{1.6em}}{}
-              {\titlerule*[0.35pc]{.}\contentspage}
-
-% LoF & LoT
-\contentsuse{figure}{lof}
-\titlecontents{figure}[0em] % ie, 1.5em (chapter) + 2.3em
-              {}
-              {Gambar \hspace*{2.1em} \contentslabel{2.3em}}{}
-              {\titlerule*[0.35pc]{.}\contentspage}
-\contentsuse{table}{lot}
-\titlecontents{table}[0em] % ie, 1.5em (chapter) + 2.3em
-              {}
-              {Tabel \hspace*{2.1em} \contentslabel{2.3em}}{}
-              {\titlerule*[0.35pc]{.}\contentspage}
 
 
 %===============================================================================
@@ -215,60 +227,6 @@
 \renewcommand{\lightrulewidth}{0.02em}    % width of light (middle) table border
 \renewcommand{\heavyrulewidth}{0.1em}     % width of heavy (top & bottom) table border
 
-
-%===============================================================================
-% listing (code) Configuration
-%===============================================================================
-% Required package
-\usepackage{listings}
-
-% Create config for line number format
-\makeatletter
-\def\lst@numbersymbol{}
-\lst@Key{numbersymbol}{}{\def\lst@numbersymbol{#1}}
-\lst@Key{numbers}{none}{%
-    \let\lst@PlaceNumber\@empty
-    \lstKV@SwitchCases{#1}%
-    {none&\\%
-     left&\def\lst@PlaceNumber{\llap{\normalfont
-                \lst@numberstyle{\thelstnumber\lst@numbersymbol}\kern\lst@numbersep}}\\%
-     right&\def\lst@PlaceNumber{\rlap{\normalfont
-                \kern\linewidth \kern\lst@numbersep
-                \lst@numberstyle{\lst@numbersymbol\thelstnumber}}}%
-    }{\PackageError{Listings}{Numbers #1 unknown}\@ehc}}
-\makeatother
-
-% Change 'Listing' -> 'Source Code'
-\renewcommand{\lstlistingname}{\textit{Source Code}}
-% 'List of Listing' -> 'Daftar Source Code'
-\renewcommand{\lstlistlistingname}{Daftar of \lstlistingname}
-
-% listing Style
-\lstset{
-    float=tp,
-    floatplacement=tbp,
-    abovecaptionskip=0pt,
-    belowcaptionskip=10pt,
-    breaklines=true,
-    breakatwhitespace=false,
-    frame=single,
-    xleftmargin=2em,
-    framexleftmargin=1.5em,
-    numbersep=1.5em,
-    numbers=left,
-    numbersymbol=:,
-    numberstyle=\tiny\color{gray!75!black},
-    stepnumber=1,
-    language=C,
-    basicstyle=\linespread{1.15}\footnotesize\ttfamily\color{black},
-    keywordstyle=\bfseries\color{green!40!black},
-    commentstyle=\itshape\color{purple!40!black},
-    stringstyle=\color{orange},
-}
-\lstMakeShortInline[columns=fixed]|                 % Inline listing
-
-
-
 %===============================================================================
 % fancyvrb (code) Configuration
 %===============================================================================
@@ -310,3 +268,78 @@
 \MakeRobust{\Call}
 \algrenewcommand\algorithmicrequire{\textbf{Prekondisi:}}
 \algrenewcommand\algorithmicensure{\textbf{Postcondition:}}
+
+
+%===============================================================================
+% titletoc Configuration
+%===============================================================================
+
+
+\renewcommand{\contentsname}{DAFTAR ISI}
+\renewcommand{\listfigurename}{DAFTAR GAMBAR}
+\renewcommand{\listtablename}{DAFTAR TABEL}
+\renewcommand{\figurename}{Gambar}
+\renewcommand{\tablename}{Tabel}
+
+\titlecontents{chapter}[0pt]
+              {\bfseries}
+              {BAB \hspace*{1.8em} \contentslabel{2em}}{}
+              {\titlerule*[0.35pc]{.}\contentspage}
+
+\titlecontents{section}[3em] % ie, 1.5em (chapter) + 2.3em
+              {}
+              {\contentslabel{2.3em}}{}
+              {\titlerule*[0.35pc]{.}\contentspage}
+\titlecontents{subsection}[6em] % ie, 1.5em (chapter) + 2.3em
+              {}
+              {\contentslabel{2.9em}}{}
+              {\titlerule*[0.35pc]{.}\contentspage}
+\titlecontents{subsubsection}[9em] % ie, 1.5em (chapter) + 2.3em
+              {}
+              {\contentslabel{3.6em}}{}
+              {\titlerule*[0.35pc]{.}\contentspage}
+
+% Appendices
+\titlecontents{paragraph}[0em] % ie, 1.5em (chapter) + 2.3em
+              {}
+              {Lampiran \hspace*{1.6em} \contentslabel{1.6em}}{}
+              {\titlerule*[0.35pc]{.}\contentspage}
+
+% LoF & LoT
+\contentsuse{figure}{lof}
+\titlecontents{figure}[0em] % ie, 1.5em (chapter) + 2.3em
+              {}
+              {Gambar \hspace*{2.1em} \contentslabel{2.3em}}{}
+              {\titlerule*[0.35pc]{.}\contentspage}
+\contentsuse{table}{lot}
+\titlecontents{table}[0em] % ie, 1.5em (chapter) + 2.3em
+              {}
+              {Tabel \hspace*{2.1em} \contentslabel{2.3em}}{}
+              {\titlerule*[0.35pc]{.}\contentspage}
+
+
+% List of Listings
+
+\contentsuse{lstlisting}{lol}
+\titlecontents{lstlisting}[0em] % ie, 1.5em (chapter) + 2.3em
+              {}
+              {\textit{Source Code} \hspace*{2.1em} \contentslabel{2.3em}}{}
+              {\titlerule*[0.35pc]{.}\contentspage}
+
+\contentsuse{lstlisting}{lol}
+\titlecontents{lstlisting}[0em] % ie, 1.5em (chapter) + 2.3em
+              {}
+              {\textit{Source Code} \hspace*{2.1em} \contentslabel{2.3em}}{}
+              {\titlerule*[0.35pc]{.}\contentspage}
+
+\contentsuse{algorithm}{loa}
+\titlecontents{algorithm}[0em] % ie, 1.5em (chapter) + 2.3em
+              {}
+              {\textit{Pseudocode} \hspace*{2.1em} \contentslabel{2.3em}}{}
+              {\titlerule*[0.35pc]{.}\contentspage}
+
+\let\listofalgorithms\listoftables
+\patchcmd{\listofalgorithms}{\listtablename}{\listalgorithmname}{}{}
+\patchcmd{\listofalgorithms}{\listtablename}{\listalgorithmname}{}{}
+\patchcmd{\listofalgorithms}{\listtablename}{\listalgorithmname}{}{}
+\patchcmd{\listofalgorithms}{lot}{loa}{}{}

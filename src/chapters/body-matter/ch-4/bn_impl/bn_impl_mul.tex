@@ -39,7 +39,7 @@
     \textit{Deskripsi}     & Fungsi untuk pemanggilan thread baru oleh pthread.\\
     \textit{Prekondisi}    & -\\
     \bottomrule
-    
+
     \textbf{Header Fungsi} & |void start_mul_recursive_thread((pthread_t *thr, recursive_args *arg, BN_ULONG *r, BN_ULONG *a, BN_ULONG *b, int n2, int dna, int dnb, BN_ULONG *tmp_thr, int *used_thr))| \\ \midrule
     \textit{Deskripsi}     & Pemanggilan thread baru, menambahkan jumlah used\_thread, serta \textit{error handling}\\
     \textit{Prekondisi}    & Sama dengan fungsi |bn_mul_recursive|.\\
@@ -65,3 +65,13 @@
   Basis yang dipilih dalam perkalian karatsuba adalah ketika dua operand memiliki panjang 8 word. Ketika perkalian karatsuba mencapai basis, akan dipanggil algoritma perkalian comba dalam fungsi |bn_mul_comba8()|. Implementasi algoritma paralel karatsuba dalam pseudocode \ref{alg:parallel_karatsuba} diimplementasikan pada fungsi |bn_mul_recursive()| serta |bn_mul_part_recursive()|. Perbedaan source code yang telah dimodifikasi dapat dilihat pada Lampiran \ref{sec:code_modification}.
 
   Algoritma perkalian panjang pada fungsi |bn_mul_normal()| akan memanggil fungsi |bn_mul_add_words()| dari submodul asm. Implementasi pseudocode \ref{alg:mul_parallel} terdapat pada fungsi ini.
+
+
+\subsection{Submodul Perpangkatan Dua}
+    Submodul perpangkatan dua terdapat pada file |bn/bn_sqr.c|. Fungsi |BN_sqr()| merupakan fungsi yang dipanggil untuk melakukan perpangkatan dua sebuah bilangan bulat. Fungsi ini banyak digunakan pada proses perpangkatan modular mengingat perpangkatan modular menggunakan algoritma perpangkatan \textit{sliding window} seperti yang dijelaskan pada subbab XXXX.
+
+    Fungsi |BN_sqr()| seharusnya dapat melakukan perkalian $a*a$ lebih cepat dibandingkan dengan pemanggilan fungsi |BN_mul()| dengan parameter $a$ dan $b$ yang sama. Hal ini terjadi karena adanya simetri dalam perkalian sehingga terdapat nilai yang tidak perlu dihitung berulang-ulang. Terdapat dua algoritma yang digunakan |BN_sqr()|, yaitu algoritma perkalian panjang yang dimodifikasi serta algoritma perkalian karatsuba. Algoritma perkalian karatsuba digunakan jika panjang array merupakan bilangan pangkat dua, selain itu akan digunakan algoritma perkalian panjang yang dimodifikasi.
+
+    Tidak terdapat paralelisasi pada submodul ini, namun penulis menemukan sebuah bug yang mengurangi kinerja fungsi |BN_sqr()|. Penggunaan algoritma perkalian panjang yang dimodifikasi memang lebih cepat dibandingkan dengan algoritma perkalian panjang yang digunakan submodul perkalian, namun algoritma ini tidak lebih cepat dibandingkan dengan penggunaan algoritma perkalian karatsuba. Paralelisasi yang telah dilakukan pada perkalian karatsuba tentu lebih mempercepat lebih jauh.
+
+    Karena itu, dilakukan modifikasi terhadap pemilihan algoritma yang digunakan pada submodul ini. Untuk panjang array yang merupakan bilangan pangkat dua, digunakan algoritma karatsuba yang dimodifikasi, selain itu digunakan algoritma karatsuba pada submodul perkalian yang telah diparalelisasi.
