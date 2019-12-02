@@ -50,7 +50,7 @@
 
     Pada OpenSSL, sebuah big integer direpresentasikan dalam struktur data |BIGNUM|. |BIGNUM| terdiri dari sebuah array dengan ukuran dinamis dan beberapa variabel integer yang menyimpan informasi tambahan. Dengan demikian secara teori |BIGNUM| tidak memiliki nilai maksimum. Untuk keperluan paralelisasi, |BIGNUM| dapat digunakan tanpa mengubah strukturnya sedikitpun. BIGNUM sendiri merupakan sebuah \textit{struct} yang memiliki deklarasi sesuai pada Source Code \ref{code:bignum_st}.
 
-    \begin{lstlisting}[caption={Struktur Data bignum}, label={code:bignum_st}]
+    \begin{lstlisting}[caption={Struktur Data bignum},captionpos=b, label={code:bignum_st}]
 struct bignum_st {
        BN_ULONG *d;
        int top;
@@ -74,7 +74,7 @@ struct bignum_st {
 
     % jelasin lebih jauh
 
-    \begin{lstlisting}[caption={Struktur bignum\_ctx}, label={code:bignum_ctx}]
+    \begin{lstlisting}[caption={Struktur bignum\_ctx},captionpos=b, label={code:bignum_ctx}]
 struct bignum_ctx {
     BN_POOL pool;
     BN_STACK stack;
@@ -108,7 +108,7 @@ typedef struct bignum_ctx_stack {
     \subsubsection{Struktur Data Paralelisasi}
     Terdapat beberapa struktur data tambahan yang dibuat untuk paralelisasi fungsi menggunakan pthread. Pemanggilan fungsi oleh pthread membutuhkan fungsi yang menerima satu argumen dengan tipe |void*|. Agar fungsi yang dijalankan secara paralel dapat mengolah lebih dari satu data, dibuat \textit{struct} khusus untuk setiap fungsi tersebut. Struktur data yang dibuat untuk digunakan oleh fungsi paralel dapat dilihat pada \textit{Source Code} \ref{code:parallel_struct}.
 
-    \begin{lstlisting}[caption={Struktur Data Paralelisasi}, label={code:parallel_struct}]
+    \begin{lstlisting}[caption={Struktur Data Paralelisasi},captionpos=b, label={code:parallel_struct}]
 typedef struct _add_sub_args_st {
     BN_ULONG *r;
     const BN_ULONG *a;

@@ -245,6 +245,8 @@
 
     Grafik \ref{fig:data_modmul} menggambarkan hasil pengujian untuk operasi perkalian dengan algoritma perkalian panjang. Pada pengujian ini dilakukan seratus perpangkatan modular BIGNUM $a^p \mod m$ dengan panjang yang diubah dari 400Byte hingga 6,4KByte dengan jarak antar data 16Byte.
 
+    Fungsi paralel mulai lebih cepat daripada fungsi perpangkatan modular secara eksponensial pada panjang data sekitar 1KB. Variabel yang paling berpengaruh pada perpangkatan modular adalah panjang data modulus. Hal ini terjadi karena proses perkalian dan perpangkatan hanya dilakukan pada range modulus tersebut saja.
+
       \subparagraph{Proses Pertukaran Kunci Diffie Hellman}
       \begin{figure}[h]
         \centering
@@ -263,38 +265,29 @@
         \label{fig:data_dh}
       \end{figure}
 
-      \subparagraph{Proses Pembangkitan Kunci RSA}
-      \begin{figure}[h]
-        \centering
-        \begin{tikzpicture}
-            \begin{axis}[
-                x unit=bit,
-                y SI prefix=micro,y unit=s,
-                xlabel={Panjang Kunci},
-                ylabel={Waktu}
-              ]
-            \addplot[color=blue, discard if not={e}{65537}] table [x=key_size, y=time_avg, col sep=comma] {resources/csv/rsa_gen.csv};
-            \addlegendentry{test01}
-          \end{axis}
-        \end{tikzpicture}
-        \caption{Data Pembangkitan Kunci RSA}
-        \label{fig:data_rsa_gen}
-      \end{figure}
-
       \subparagraph{Proses Enkripsi dan Dekripsi RSA}
-      \begin{figure}[h]
-        \centering
-        \begin{tikzpicture}
-            \begin{axis}[
-                x unit=bit,
-                y SI prefix=micro,y unit=s,
-                xlabel={Panjang Pesan},
-                ylabel={Waktu}
-              ]
-            \addplot [color=blue] table [x=msg_size, y=time_avg, col sep=comma] {resources/csv/rsa_enc.csv};
-            \addlegendentry{test01}
-          \end{axis}
-        \end{tikzpicture}
-        \caption{Data Enkripsi dan Dekripsi RSA}
-        \label{fig:data_rsa_enc}
-      \end{figure}
+
+        \begin{figure}[h]
+          \centering
+          \begin{tikzpicture}
+              \begin{axis}[
+                  x unit=Kbyte,
+                  y unit=s,
+                  xlabel={Panjang Data},
+                  ylabel={Waktu}
+                ]
+              \addplot[color=orange, mark=x] table [x expr=\thisrow{key_size}/(8*1024), y expr=\thisrow{time_avg}/(10^6), col sep=comma] {./resources/csv/rsa_enc1b.csv};
+              \addlegendentry{local-1cpu}
+              \addplot[color=blue,mark=o] table [x expr=\thisrow{key_size}/(8*1024), y expr=\thisrow{time_avg}/(10^6), col sep=comma] {./resources/csv/rsa_enc2b.csv};
+              \addlegendentry{local-2cpu}
+              % \addplot[color=red,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^6), col sep=comma] {./bn9num_modexp.csv};
+              % \addlegendentry{num}
+              % \addplot[color=green,] table [x expr=\thisrow{tc_num}/(8*1024), y expr=\thisrow{time_avg}/(10^6), col sep=comma] {./bn9numexp_modexp.csv};
+              % \addlegendentry{numexp}
+            \end{axis}
+          \end{tikzpicture}
+          \caption{Data RSA encrypt}
+          \label{fig:data_rsa_enc}
+        \end{figure}
+
+        Seperti data perpangkatan modular, proses enkripsi dan dekripsi RSA paralel mulai lebih cepat pada panjang kunci ~1KB (8096 byte). Hal ini terjadi karena fungsi enkripsi RSA pada dasarnya merupakan operasi perpangkatan modular terhadap plaintext dengan menggunakan private key sebagai eksponen.

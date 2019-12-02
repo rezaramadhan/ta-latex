@@ -5,16 +5,6 @@
 
   Terdapat satu struktur data tambahan yang dibuat dalam submodul ini. Struktur data dibuat karena penggunaan pthread terhadap fungsi hanya dapat menerima satu argumen dengan tipe data |void*|. Agar thread dapat mengolah data lebih dari satu, perlu dibuat sebuah struct yang berisi argumen dari fungsi awal. Akan dilakukan type casting antara struct yang dibuat dan |void*| dalam setiap pemanggilan thread. Strukur data yang dibuat dalam submodul ini dapat dilihat pada Source Code \ref{code:par_st}. Struktur data yang digunakan untuk penjumlahan adalah |add_args|
 
-  \begin{lstlisting}[caption={Struktur Data add\_sub\_args}, label={code:par_st}]
-typedef struct _add_args_st {
-BN_ULONG *r;
-BN_ULONG *a;
-BN_ULONG *b;
-int n;
-BN_ULONG carry;
-} add_sub_args;
-  \end{lstlisting}
-
   \begin{table}[h]
     \caption{Fungsi dalam submodul asm}
     \begin{tabular}{R{2.8cm}L{10.5cm}}
