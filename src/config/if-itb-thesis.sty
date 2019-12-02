@@ -262,7 +262,8 @@
 
 % Change 'Algorithm' -> Pseudocode
 \makeatletter
-  \renewcommand{\ALG@name}{Pseudocode}
+  \renewcommand{\ALG@name}{\textit{Pseudocode}}
+  \renewcommand{\listalgorithmname}{\MakeUppercase{Daftar \ALG@name}}
 \makeatother
 
 \newcommand*\Let[2]{\State #1 $\gets$ #2}

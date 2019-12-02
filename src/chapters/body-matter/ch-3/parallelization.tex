@@ -148,6 +148,16 @@
         \end{algorithmic}
       \end{algorithm}
 
+        Contoh perkalian dengan menggunakan algoritma perkalian panjang paralel dapat dilihat pada Gambar \ref{fig:mul_normal_example}. Perkalian pada contoh tersebut merupakan perkalian antara $3857*2942$ pada basis 10 dengan jumlah job yang dibangkitkan adalah 2.
+
+        \begin{figure}
+            \centering
+            \includegraphics[width=0.85\textwidth]{resources/img/ch-3/mul-normal-example.png}
+            \caption{Contoh Perhitungan Perkalian Panjang secara Paralel}
+            \label{fig:mul_normal_example}
+        \end{figure}
+
+
     \subsubsection{Pembagian}\label{sec:div_parallel}
       Algoritma pembagian panjang yang digunakan OpenSSL tidak bisa dijalankan secara paralel mengingat setiap iterasi pencarian quotient membutuhkan nilai yang telah diupdate dari langkah sebelumnya. Namun, terdapat beberapa algoritma yang dapat membantu langkah pemilihan quotient pada baris ke-9 di pseudocode \ref{alg:long_div}. \citet{parallel_short_div_emmart} dan \citet{parallel_short_div_takahashi} telah melakukan penelitian mengenai pembagian \textit{multiple-precision big integer} terhadap bilangan \textit{single-word}.
 
