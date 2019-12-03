@@ -10,25 +10,21 @@
   \textit{Big integer} sering digunakan pada perhitungan kriptografi, mengingat bahwa perhitungan kriptografi membutuhkan bilangan yang besar agar kunci yang digunakan aman. Sebagai contoh, disarankan untuk menggunakan kunci sebesar 256bit untuk AES dan kunci sebesar 2048 bit untuk RSA \citep{key_suggestion} agar enkripsi yang digunakan aman. Jumlah bit yang digunakan tersebut lebih besar dari jumlah bit yang dapat ditangani oleh ALU. Selain perhitungan kriptografi, big number juga umum digunakan untuk menghitung nilai konstanta matematis seperti $\pi$ \citep{bn_pi}, .
 
 
-  \subsection{Struktur Big Integer}
-
-    Big integer memiliki dua representasi yang umum digunakan, yaitu Fixed Radix Number Systems (FRNS) dan Residue Number Systems (RNS). FRNS merupakan representasi bilangan dimana bilangan dituliskan sebagai penjumlahan dari komponen-komponennya \citep{modern_comp_math}. Sebuah RNS memiliki himpunan $H$ yang memiliki elemen bilangan bulat $\{m_1,m_2,...,m_p\}$, representasi integer $X$ adalah sebuah himpunan $H_x$ dimana elemennya adalah $X \mod m_i$ \citep{rns_survey}. Subbab \ref{sec:frns} menjelaskan lebih lanjut mengenai FRNS, sementara RNS dijelaskan lebih jauh pada subbab \ref{sec:rns}.
-
-    Penggunaan RNS maupun FRNS masing-masing memiliki kekurangan dan kelebihan yang berbeda. Pendekatan berbasis komponen pada RNS menyebabkan operasi aritmatika pada RNS dapat dijalankan secara paralel, dengan tidak adanya ketergantungan untuk masing-masing elemen himpunan. Namun, beberapa operasi aritmatika dasar seperti pembagian dan perbandingan antar dua bilangan akan menjadi lebih lambat \citep{gpu_bignum}.
-
-    \subsubsection{Fixed Radix Number Systems} \label{sec:frns}
+  \subsection{Representasi Big Integer}
 
       \citet{modern_comp_math} menyatakan bahwa sebuah bilangan bulat dapat direpresentasikan sebagai penjumlahan dari komponen-komponennya. Jika kita memilih sebuah bilangan bulat positif $\beta$ sebagai basis dengan $\beta > 1 $ semua bilangan bulat positif $A$ yang memiliki basis $\beta$ dengan memiliki panjang $n$ dapat dituliskan sebagai:
       \begin{equation} \label{eq:frns_rep}
-        A = \alpha_{n-1}\beta^{n-1}+...+\alpha_{1}\beta+\alpha_{0}
+        A = a_{n-1}\beta^{n-1}+a_{n-2}\beta^{n-2}+...+a_{1}\beta+a_{0}
       \end{equation}
       dengan $0 \leq \alpha \leq \beta -1$.
 
-      Representasi integer positif di komputer 64 bit menggunakan $\beta = 2$ dan $n = 32$ sehingga nilai maksimum yang dapat direpresentasikan adalah $2^{64}$. Untuk representasi big integer nilai $n$ tidak memiliki batas, sementara nilai $\beta$ yang digunakan sesuai dengan jumlah maksimum bilangan dapat diproses pada komputer tersebut. Pada representasi big integer di komputer 64 bit, digunakan $\beta = 2^{64}$.
+      Selain penulisan pada persamaan \ref{eq:frns_rep}, A juga dapat ditulis dalam notasi basis-n seperti $A = (a_{n-1} a_{n-2} ... a_{1} a_{0})_\beta$.
+
+      Representasi integer positif di komputer 64 bit menggunakan $\beta = 2$ dan $n = 64$ sehingga nilai maksimum yang dapat direpresentasikan adalah $2^{64}$. Untuk representasi big integer nilai $n$ tidak memiliki batas, sementara nilai $\beta$ yang digunakan sesuai dengan jumlah maksimum bilangan dapat diproses pada komputer tersebut. Pada representasi big integer di komputer 64 bit, digunakan $\beta = 2^{64}$.
 
       % Physical yang umum, array
       % masuk bab 3?
-      Representasi ideal big integer pada komputer adalah menggunakan list of integer atau array of integer. Penggunaan list menyebabkan big integer tidak memiliki nilai maksimum, sementara itu penggunaan array membuat akses nilai yang tersimpan lebih cepat. Dengan demikian, penggunaan array of integer lebih umum digunakan untuk merepresentasikan big integer. Ilustrasi array of integer yang merepresentasikan big integer dapat dilihat pada Gambar \ref{fig:frns_ref}.
+      Representasi ideal big integer pada komputer adalah menggunakan list of integer atau array of integer. Penggunaan list menyebabkan big integer tidak memiliki nilai maksimum, sementara itu penggunaan array membuat akses nilai yang tersimpan lebih cepat. Penggunaan array of integer lebih umum digunakan untuk merepresentasikan big integer. Ilustrasi array of integer yang merepresentasikan big integer dapat dilihat pada Gambar \ref{fig:frns_ref}.
 
       \begin{figure}[h]
         \centering
@@ -37,53 +33,31 @@
         \label{fig:frns_ref}
       \end{figure}
 
-      Gambar \ref{fig:frns_ref} memberikan gambaran bahwa untuk merepresentasikan big integer $A = \alpha_{n-1}\beta^{n-1}+...+\alpha_{1}\beta+\alpha_{0}$, dapat digunakan array $A = [0..n-1]$, dengan nilai $\beta$ dapat disimpan pada sebuah variabel terpisah. Sebagai contoh, array $N = [2^{29}, 3^{31}, 2^{54}, 3^{27}]$ merupakan representasi dari big integer $N = 3^{27}*2^{192} + 2^{54}*2^{128} + 3^{31}*2^{64} + 2^{29}$.
-
-    \subsubsection{Residue Number Systems} \label{sec:rns}
-      \citet{rns_survey} menyatakan bahwa RNS memiliki sebuah himpunan bilangan bulat relatif prima $\{m_1,m_2,...,m_p\}$. Nilai terbesar yang dapat direpresentasikan oleh RNS adalah sebesar $M$, dimana
-
-      \begin{equation}
-        M = m_1 * m_2 * ... * m_p
-      \end{equation}
-
-      Sebuah bilangan bulat $X$ memiliki sebuah representasi RNS ${x_1,x_2,...,x_p}$ dengan $X_i$ adalah
-
-      \begin{equation}
-        X_i = X \mod m_i
-      \end{equation}
-
-      % \todo[inline]{Tambahin penjelasan lebih jauh tentang Chinese Remainder Theorem disini}
-
-      Representasi RNS dalam komputer dapat menggunakan set dibandingkan dengana array ataupun list. Setiap elemen dalam representasi RNS relatif independen satu sama lainnya. Dengan demikian, urutan penyimpanan setiap elemen tersebut serta urutan operasi setiap elemen tidak berpengaruh pada nilai big integer yang direpresentasikan dalam RNS. Penggunaan RNS membuat beberapa operasi aritmatika terhadap big integer dapat dilakukan secara paralel dengan mudah.
-
+      Gambar \ref{fig:frns_ref} memberikan gambaran bahwa untuk merepresentasikan big integer $A = (a_{n-1} a_{n-2} ... a_{1} a_{0})_\beta$, dapat digunakan array $A = [0..n-1]$, dengan nilai $\beta$ dapat disimpan pada sebuah variabel terpisah. Sebagai contoh, array $N = [2^{29}, 3^{31}, 2^{54}, 3^{27}]$ merupakan representasi dari big integer $N = 3^{27}*2^{192} + 2^{54}*2^{128} + 3^{31}*2^{64} + 2^{29}$.
 
   \subsection{Operasi Aritmatika}
 
-    Proses operasi aritmatika yang dilakukan dalam representasi FRNS dan RNS berbeda. Karena itu, subbab \ref{sec:add_sub_theory} sampai subbab \ref{sec:div_theory} akan membahas bagaimana setiap operasi aritmatika dilakukan pada masing-masing operasi.
-
-
     \subsubsection{Penjumlahan dan Penguragan} \label{sec:add_sub_theory}
-      subparagraph{Representasi FRNS}
 
-      Operasi penjumlahan dan pengurangan pada FRNS memiliki cara yang sama penjumlahan dan pengurangan manual oleh tangan. Merujuk pada persamaan \ref{eq:frns_rep}, proses penjumlahan dan pengurangan dilakukan dari $\alpha_0$ hingga $\alpha_{n-1}$ dengan menggunakan bilangan \textit{carry over} dan \textit{borrow} jika dibutuhkan.
+      Operasi penjumlahan dan pengurangan merupakan algoritma yang biasa digunakan dalam melakukan penjumlahan dan pengurangan yang diajarkan di sekolah dasar. Merujuk pada persamaan \ref{eq:frns_rep}, proses penjumlahan dan pengurangan dilakukan dari $\alpha_0$ hingga $\alpha_{n-1}$ dengan menggunakan bilangan \textit{carry over} atau \textit{borrow} jika dibutuhkan.
 
-      Untuk penjumlahan dan pengurangan dua bilangan $A = a_{n-1}\beta^{n-1}+...+a_{1}\beta+a_{0}$ dan $B = b_{n-1}\beta^{n-1}+...+b_{1}\beta+b_{0}$, akan dihasilkan bilangan $C = c_{n-1}\beta^{n-1}+...+c_{1}\beta+c_{0}$. Pseudocode \ref{alg:add} adalah algoritma yang dapat digunakan untuk menghitung $C$ dari Penjumlahan $A$ dan $B$.
+      Untuk penjumlahan dan pengurangan dua bilangan $A = (a_{n-1} a_{n-2} ... a_{1} a_{0})_\beta$ dan $B = (b_{n-1} b_{n-2} ... b_{1} b_{0})_\beta$, akan dihasilkan bilangan $C = (c_{n-1} c_{n-2} ... c_{1} c_{0})_\beta$. Pseudocode \ref{alg:add} adalah algoritma yang dapat digunakan untuk menghitung $C$ dari Penjumlahan $A$ dan $B$.
 
       \begin{algorithm}
         \caption{Algoritma Penjumlahan}
         \label{alg:add}
         \begin{algorithmic}[1]
-          \Require{$x$ dan $y$ adalah array [1..n] yang merepresentasikan Big Integer, $\beta$ adalah basis yang digunakan}
+          \Require{$A$ dan $B$ adalah array [1..n] yang merepresentasikan Big Integer, $\beta$ adalah basis yang digunakan}
           \Statex
-          \Function{Add}{$x$, $y$, $num$}
-          \Let{$z$}{\Call{NewArray}{$n$}}
+          \Function{Add}{$A$, $A$, $n$}
+          \Let{$C$}{\Call{NewArray}{$n$}}
           \Let{$carry$}{0}
           \For{$i \gets 1$, $i \gets i + 1$ to $n$}
-          \Let{$n$}{$carry$ + $x[i]$ + $y[i]$}
+          \Let{$n$}{$carry$ + $A[i]$ + $B[i]$}
           \Let{$carry$}{$n \div \beta$}
-          \Let{$z[i]$}{$n \mod \beta$}
+          \Let{$C[i]$}{$n \mod \beta$}
           \EndFor
-          \Let{$z[n+1]$}{$carry$}
+          \Let{$C[n+1]$}{$carry$}
           \State \Return{$z$}
           \EndFunction
         \end{algorithmic}
@@ -91,19 +65,9 @@
 
       Algoritma yang digunakan dalam pengurangan hampir sama dengan penggunaan algoritma \ref{alg:add}. Hal yang berbeda hanyalah pada baris ke-5 dengan $n = x[i] - y[i] - carry $
 
-      subparagraph{Representasi RNS}
-
-      \citet{rns_sharoun} menyatakan bahwa dalam sistem RNS dengan elemen $\{m_1,m_2,...,m_p\}$, penjumlahan dan pengurangan dua bilangan $A$ dan $B$ yang memiliki representasi RNS $\{b_1,b_2,...,b_p\}$ dan $\{b_1,b_2,...,b_p\}$,  menghasilkan $C$ yang memiliki representasi $\{c_1,c_2,...,c_p\}$ dengan nilai $c_i$ sebagai berikut
-      \begin{equation}
-        c_i = (a_i \pm b_i) \mod m_i
-      \end{equation}
-
-
-
     \subsubsection{Perkalian} \label{sec:mul_theory}
 
-      subparagraph{Representasi FRNS}
-      Terdapat beberapa algoritma yang dapat dilakukan dalam perkalian dua bilangan besar. Pada subbab ini akan dibahas tiga algoritma perkalian, yaitu algoritma perkalian panjang, algoritma comba, dan algoritma perkalian Karatsuba. Ketiga algoritma tersebut merupakan algoritma yang digunakan oleh OpenSSL.
+      Terdapat beberapa algoritma yang dapat dilakukan dalam perkalian dua bilangan besar. Pada subbab ini akan dibahas tiga algoritma perkalian, yaitu algoritma perkalian panjang, algoritma perkalian comba dan algoritma perkalian Karatsuba. Ketiga algoritma tersebut merupakan algoritma yang digunakan oleh OpenSSL.
 
       Algoritma perkalian panjang adalah algoritma perkalian yang biasa diajarkan dalam sekolah dasar. Algoritma perkalian panjang $A*B$ berdasarkan pada proses mengkalikan satu digit A pada B, geser hasilnya sesuai posisi digit A yang digunakan, lalu jumlahkan seluruh hasil perkalian tersebut. Algoritma ini memiliki kompeksitas $O(n^2)$ terhadap perkalian. Pseudocode \ref{alg:mul} merupakan gambaran dari algoritma perkalian panjang.
 
@@ -160,16 +124,8 @@
         \end{algorithmic}
       \end{algorithm}
 
+    \subsubsection{Pembagian}\label{sec:div_theory}
 
-      subparagraph{Representasi RNS}
-      Sifat penjumlahan dan pengurangan yang dibahas pada subbab \ref{sec:add_sub_theory} juga berlaku pada perkalian di representasi RNS. Perkalian dua bilangan $A$ dan $B$ dalam representasi RNS, akan menghasilkan $C$ yang memiliki representasi $\{c_1,c_2,...,c_p\}$ dengan nilai $c_i$ sebagai berikut
-      \begin{equation}
-        c_i = (a_i * b_i) \mod m_i
-      \end{equation}
-
-    \subsubsection{Pembagian dan Modulo}\label{sec:div_theory}
-
-      subparagraph{Representasi FRNS}
       Seperti perkalian, terdapat beberapa algoritma yang dapat digunakan dalam pembagian. Seperti operasi aritmatika sebelumnya, algoritma pembagian yang banyak digunakan adalah algoritma pembagian panjang yang diajarkan pada sekolah dasar. Pada implementasinya di komputer, algoritma ini memiliki prekondisi divisor yang telah dinormalisasi. Divisor yang dinormalisasi adalah divisor $D = [0..n-1]$ yang menggunakan basis $\beta$, berlaku $D[n-1] > \beta/2$. Pseudocode \ref{alg:long_div} menjelaskan algoritma ini dalam bentuk pseudocode.
 
       \begin{algorithm}
@@ -179,44 +135,154 @@
           \Require{$N = [0..n+m-1], D = [0..n-1]$ bilangan bulat dalam representasi array.}
           \Statex
           \Function{LongDiv}{$D, N, \beta$}
-          \Let{$Q$}{\Call{NewArray}{m}}
-          \Let{$is_bigger$}{\Call{BigIntCompare}{$N$, \Call{Mul}{$D, \beta^m$}}}
-          \If{$is_bigger$}
-          \Let{$Q[m]$}{1}
-          \Else
-          \Let{$Q[m]$}{0}
-          \EndIf
-          \For{$i \gets m$, $i \gets i - 1$ downto $n$}
-          \Let{$Q[i]$}{$\lfloor\frac{N[n+i]\beta + N[n+j-1]}{D[n-1]}\rfloor$}
-          \Let{$Q[i]$}{\Call{Min}{$Q[i],\beta$}}
-          \Let{$N$}{$N$-\Call{Mul}{$Q[i], D}*\beta^i$}
-          \While{$A$ < 0}
-          \Let{$Q[i]$}{$Q[i] - 1$}
-          \Let{$N$}{$N+N\beta^i$}
-          \EndWhile
-          \Let{$R$}{$A$}
-          \State \Return{$Q, R$}
-          \EndFor
+              \Let{$Q$}{\Call{NewArray}{m}}
+              \Let{$is_bigger$}{\Call{BigIntCompare}{$N$, \Call{Mul}{$D, \beta^m$}}}
+              \If{$is_bigger$}
+                \Let{$Q[m]$}{1}
+              \Else
+                \Let{$Q[m]$}{0}
+              \EndIf
+              \For{$i \gets m$, $i \gets i - 1$ downto $n$}
+                  \Let{$Q[i]$}{$\lfloor\frac{N[n+i]\beta + N[n+j-1]}{D[n-1]}\rfloor$}
+                  \Let{$Q[i]$}{\Call{Min}{$Q[i],\beta$}}
+                  \Let{$N$}{$N$-\Call{Mul}{$Q[i], D}*\beta^i$}
+                  \While{$A$ < 0}
+                      \Let{$Q[i]$}{$Q[i] - 1$}
+                      \Let{$N$}{$N+N\beta^i$}
+                  \EndWhile
+                  \Let{$R$}{$A$}
+              \EndFor
+              \State \Return{$Q, R$}
           \EndFunction
         \end{algorithmic}
 
       \end{algorithm}
 
-      \citet{div_burnikel_ziegler} memperkenalkan algoritma pembagian cepat yang berjalan pada kompleksitas $2K(n)+O(n \log n)$ dengan $K(n)$ adalah waktu berjalannya algoritma perkalian karatsuba.
-      % \todo[inline]{jelasin dasarnya apa, div\&conquer, recursive}
-      %
-      % \begin{algorithm}
-      %   \caption{Algoritma Pembagian Burnikel-Ziegler}
-      %   \label{alg:div_burnikel_ziegler}
-      %   \begin{algorithmic}
-      %     \Require{$N$ dan $D$ adalah bilangan bulat}
-      %     \Statex
-      %     \Function{DivRepeatedSub}{$N$, $D$}
-      %
-      %     \EndFunction
-      %   \end{algorithmic}
-      % \end{algorithm}
+      % \citet{div_burnikel_ziegler} memperkenalkan algoritma pembagian cepat yang berjalan pada kompleksitas $2K(n)+O(n \log n)$ dengan $K(n)$ adalah waktu berjalannya algoritma perkalian karatsuba.
+    \subsubsection{Perpangkatan}
+        Perpangkatan merupakan operasi yang membutuhkan waktu komputasi paling tinggi dibandingkan dengan operasi aritmatika dasar yang lain. Algoritma naif adalah melakukan perkalian secara berulang sebanyak jumlah perpangkatan. Namun, terdapat beberapa algoritma perpangkatan yang dapat digunakan untuk melakukan perpangkatan secara lebih efektif.
+        \citet{exp_method} menjelaskan tiga algoritma perpangkatan $r=a^e$; yaitu metode binary, metode \textit{m}-ary, dan metode sliding window.
 
-      subparagraph{Representasi RNS}
+        Perpangkatan binary yang biasa juga disebut \textit{square and multiply} merupakan metode yang berbasis pada penulisan eksponen $e$ dalam basis binary $e=(e_{n-1} e_{n-2} ... e_{1} e_{0})_2$. Algoritma akan melakukan iterasi baik dari digit terbesar hingga digit terkecil; melakukan perkalian jika pada $a$ jika $e_{i} = 1$, dan melakukan perpangkatan dua ketika berpindah ke $e_{i}$ selanjutnya. Pseudocode \ref{alg:binary_exp} menggambarkan pseudocode untuk algoritma ini.
 
-      Pembagian dalam RNS cukup kompleks. Mengingat bahwa kinerja pembagian pada RNS pasti lebih buruk dibandingkan dengan pembagian pada FRNS, maka algoritma pembagian pada RNS tidak dibahas lebih lanjut.
+        \begin{algorithm}
+          \caption{Algoritma Perpangkatan Binary}
+          \label{alg:binary_exp}
+          \begin{algorithmic}[1]
+            \Require{$a = [0..m],$ bilangan bulat dalam representasi array. $e = [0..n-1]$ bilangan bulat dalam basis binary}
+            \Statex
+
+              \Function{BinExp}{$A, E$}
+            \Let{$r$}{$1$}
+            \For {$i \gets n-1$, $i \gets i - 1$ downto $0$}
+                \Let{$r$}{$r*r$}
+                \If {$e[i] = 1$}
+                    \Let{$r$}{$r*a$}
+                \EndIf
+            \EndFor
+            \State \Return{$r$}
+            \EndFunction
+          \end{algorithmic}
+        \end{algorithm}
+
+        Algoritma perpangkatan binary dapat digeneralisir lebih jauh dengan menuliskan $e$ pada basis apapun. Penulisan $e$ sebagai $e=(e_{n-1} e_{n-2} ... e_{1} e_{0})_n$ merubah baris ke-4 pada Pseudocode \ref{alg:binary_exp} menjadi $r \gets r^{n}$ dan baris ke-5 dan 6 menjadi $r \gets r*a^{E[i]}$. Generalisasi pada algoritma binary ini merupakan algoritma \textit{m}-ary.
+
+        Algoritma sliding window merupakan modifikasi dari algoritma binary dan algoritma \textit{m}-ary dengan menuliskan $e$ sebagai binary namun melakukan operasi pada beberapa bit sekaligus. Sebagai contoh, E =  17647 dapat dituliskan dalam binary sebagai 100010011101111. Algoritma perpangkatan window akan melakukan partisi E menjadi 1\underline{000}1\underline{00}111\underline{0}1111. Proses perpangkatan kemudian akan dilakukan pada masing-masing elemen window. Untuk mempercepat komputasi, dapat dilakukan prekomputasi elemen window non-nol yaitu $A^{(1)_2}$, $A^{(11)_2}$ $A^{(111)_2}$, dan $A^{(1111)_2}$. Pseudocode \ref{alg:window_exp} merupakan pseudocode yang menggambarkan algoritma perpangkatan window.
+
+        \begin{algorithm}
+          \caption{Algoritma Perpangkatan Sliding Window}
+          \label{alg:window_exp}
+          \begin{algorithmic}[1]
+            \Require{$A = [0..m],$ bilangan bulat dalam representasi array. $E = [0..n-1]$ bilangan bulat dalam basis binary}
+            \Statex
+
+            \Function{WindowExp}{$A, E$}
+            \Let{$w$}{\Call{Partition}{$E$}}
+            \Let{$r$}{$1$}
+            \For {$i \gets 0$, $i \gets i + 1$ to $length(w)$}
+                \Let{$r$}{$r^{2^{length(w[i])}}$}
+                \Let{$r$}{$r*a^{w[i]}$}
+            \EndFor
+            \State \Return{$r$}
+            \EndFunction
+          \end{algorithmic}
+        \end{algorithm}
+
+    \subsubsection{Perkalian Modular} \label{sec:modmul}
+    % jelasin perkalian dasar a*b mod n = (a mod n * b mod n) mod n
+    Operasi perkalian modular merupakan operasi yang lebih kompleks dibandingkan dengan operasi perkalian biasa. Metode paling sederhana untuk melakukan perkalian modular $(a*b) \mod n$ adalah dengan melakukan perkalian antara $a$ dan $b$ kemudian menggunakan algoritma pembagian untuk menemukan modulus $n$ dari $a*b$ \citep{applied_crypto}.
+
+    % jelasin montgomery multiplication, basisnya, perkalian, mont reduction
+    Selain algoritma sederhana tersebut, algoritma perkalian modular montgomery adalah sebuah algoritma perkalian modular yang lain. Algoritma ini berbasis pada bentuk representasi montgomery, yaitu transformasi nilai $a \mod n$ ke ruang montgomery dengan mengkalikan dengan sebuah integer $R$ sehingga terdapat $a' = aR \mod n$ \citep{mont_mul_bertoni}. Dalam implementasinya, nilai $R$ merupakan nilai $2^k$ sehingga proses perkalian dan pembagian terhadap $R$ dapat dilakukan dengan cepat dengan melakukan \textit{bit shifting}.
+
+    Untuk mendapatkan kembali nilai $a$ dari ruang montgomery, perlu dilakukan reduksi montgomery yang dijelaskan pada Pseudocode \ref{alg:mont_redc}. Reduksi modular montgomery ini lebih efektif dibandingkan dengan proses pembagian biasa. Pembagian dan modulo pada reduksi montgomery dilakukan oleh $R$, karena $R$ merupakan bilangan pangkat dua, maka proses pembagian dapat dilakukan dengan \textit{left shift} dan modulo dapat dilakukan dengan \textit{bit masking}.
+
+    \begin{algorithm}
+      \caption{Algoritma Reduksi Montgomery \citep{montmul_original}}
+      \label{alg:mont_redc}
+      \begin{algorithmic}[1]
+        \Statex
+
+        \Function{MontRedc}{$A, R, N$}
+            \Let{$Ni$}{$-1/n \mod R$}
+            \Let{$k$}{$(A \mod R) * (Ni \mod R)$}
+            \Let{$a$}{$(T + kN)/R$}
+            \If{$a \geq T$}
+                \Let{$a$}{$a - N$}
+            \EndIf
+            \State \Return{$a$}
+        \EndFunction
+      \end{algorithmic}
+    \end{algorithm}
+
+    Perkalian montgomery merupakan perkalian antara dua bilangan pada ruang montgomery dan juga menghasilkan bilangan pada ruang montgomery. Perkalian dua bilangan pada ruang montgomery secara langsung tidak menghasilkan bilangan pada ruang montgomery, sehingga perlu dilakukan reduksi montgomery pada hasil perkalian tersebut. Persamaan \ref{eq:montmul} menjelaskan pernyataan tersebut lebih lanjut, sementara \textit{Pseudocode} \ref{alg:montmul} menjelaskan algoritma perkalian modular montgomery dalam pseudocode.
+
+    \begin{equation} \label{eq:montmul}
+        \begin{split}
+            a'b' &= (aR * bR) \mod n\\
+                 &= (abR^2) \mod n\\
+                 &= (c'R^{-1}) \mod n
+        \end{split}
+    \end{equation}
+
+    \begin{algorithm}
+      \caption{Algoritma Perkalian Montgomery \citep{montmul_original}}
+      \label{alg:montmul}
+      \begin{algorithmic}[1]
+        \Require{$A, B$ merupakan bilangan dalam ruang montgomery.}
+        \Statex
+
+        \Function{MulMont}{$A, B, N, R$}
+            \Let{$C$}{$A*B$}
+            \Let{$C$}{\Call{MontRedc}{$C, R, N$}}
+            \State \Return{$C$}
+        \EndFunction
+      \end{algorithmic}
+    \end{algorithm}
+
+    \subsubsection{Perpangkatan Modular}
+    Algoritma yang dapat digunakan untuk melakukan perpangkatan modular sama dengan algoritma dalam perpangkatan biasa. Perbedaan dalam perpangkatan modular adalah penggunaan perkalian modular alih-alih perkalian biasa. Proses perkalian modular yang dilakukan telah dijelaskan dalam subbab \ref{sec:modmul}.
+
+    Sebagai contoh, \textit{Pseudocode} \ref{alg:window_modexp} merupakan algoritma perpangkatan modular sliding window yang menggunakan perkalian modular biasa. Untuk menggunakan perkalian montgomery, hanya perlu diubah pemanggilan fungsi ModMul() menjadi fungsi ModMulMont().
+
+    \begin{algorithm}
+      \caption{Algoritma Perpangkatan Modular Sliding Window}
+      \label{alg:window_modexp}
+      \begin{algorithmic}[1]
+        \Require{$A = [0..m],$ bilangan bulat dalam representasi array. $E = [0..n-1]$ bilangan bulat dalam basis binary}
+        \Statex
+
+        \Function{WindowModExp}{$A, E, M$}
+        \Let{$w$}{\Call{Partition}{$E$}}
+        \State \Call{PrecomputeA}{$A, w$}
+        \Let{$r$}{$1$}
+        \For {$i \gets 0$, $i \gets i + 1$ to $length(w)$}
+            \For {$j \gets 0$, $i \gets j + 1$ to $length(w[i])$}
+                \Let{$r$}{\Call{ModMul}{$r, r, M$}}
+            \EndFor
+            \Let{$r$}{\Call{ModMul}{$r, a^{w[i]}, M$}}
+        \EndFor
+        \State \Return{$r$}
+        \EndFunction
+      \end{algorithmic}
+    \end{algorithm}
